@@ -3,7 +3,6 @@
   "scripts": {
     "build": "webpack"
   },
-  
   "dependencies": {
     "@opentok/client": "^2.22.1",
     "browserify": "^17.0.0",

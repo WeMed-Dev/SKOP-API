@@ -1,5 +1,5 @@
 const OT = require('@opentok/client');
-
+var $ = require( "jquery" ); 
 
 function handleError(error) {
     if (error) {
@@ -87,7 +87,8 @@ class Skop {
         .then(function(mediaStreamObj) {
             console.log(mediaStreamObj);
             console.log(mediaStreamObj.getAudioTracks()); // this gives a MediaStreamTrack[] so we can get the audio source and modify and then set it to the publisher.
-
+            
+           
         })
         
     }
