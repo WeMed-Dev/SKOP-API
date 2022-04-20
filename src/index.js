@@ -1,5 +1,5 @@
 const OT = require('@opentok/client');
-var $ = require( "jquery" ); 
+
 
 function handleError(error) {
     if (error) {
