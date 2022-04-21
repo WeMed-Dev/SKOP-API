@@ -1,12 +1,8 @@
 const OT = require('@opentok/client');
 
-
 function handleError(error) {
-    if (error) {
-      console.error(error);
-    }
+    if (error) console.error(error);
 }
-
 
 class Skop {
 
@@ -35,8 +31,6 @@ class Skop {
         this.#usingSkop = false;
         this.#isPatient = isPatient;
       
-        
-
         /**
          * @@type {OT.Session} The session object.
          */
@@ -86,6 +80,9 @@ class Skop {
      * @param {*} heartZone 
      */
     async ModifyAudio(heartZone) {
+
+        // TODO: Modify the audio differently for every heartZones.
+
         try{
             // define variables
             var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -95,12 +92,12 @@ class Skop {
             //Create the biquad filter
             let biquadFilter = audioCtx.createBiquadFilter();
             biquadFilter.type = "lowshelf"; // IT WILL BE PARTICULARLY IMPORTANT TO CHOSE A GOOD PARAMETER HERE USING THIS LINK : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
+            biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
             biquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
-            // biquadFilter.connect(audioCtx.destination); UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
+            biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
             
             // Sets the OT.publisher Audio Source to be the modified stream.
             this.setAudioSource(audioSource.mediaStream.getAudioTracks()[0])
@@ -109,6 +106,8 @@ class Skop {
             handleError(err)
         }
     }
+
+
 
     /**
      * 
@@ -131,11 +130,19 @@ class Skop {
         this.ModifyAudio(heartZone) 
     }
 
-    stopUsingSkop(){
-        this.setUsingSkop(false)
-        /**
-         * TODO: find a way to set the publisher's audio back to default.
-         */
+    async stopUsingSkop(){
+        try{
+            this.setUsingSkop(false)
+            /**
+             * TODO: check if this works.
+             */
+            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+            let defStreamTrack = defaultAudio.getAudioTracks()[0];
+            this.setAudioSource(defStreamTrack);
+            console.log("SKOP : Audio input set to default - No modifications")
+        }catch(err){
+            handleError(err)
+        }
     }
 
     isUsingSkop() { 

@@ -11,4 +11,25 @@ const token = "T1==cGFydG5lcl9pZD00NzQ3ODA3MSZzaWc9NTljZDE4NGQzNTVjZDgwNGNlYzMzO
 
 let test = new Skop.Skop(sessionId, token, apiKey, true, true, "Aortic");
 
+// const buttonSkop = document.getElementById("skop");
+let select = document.getElementById("zones");
+const buttonConversation  = document.getElementById("conv");
+const container = document.getElementById("current");
+
+// buttonSkop.addEventListener('click', () => {
+//     test.useSkop("Aortic");
+//     container.innerHTML = "Using Skop";
+// })
+
+buttonConversation.addEventListener('click', () => {
+    test.stopUsingSkop();
+    container.innerHTML = "Mode : Conversation"; 
+})
+
+
+select.addEventListener("change", (e) => {
+    container.innerHTML = "Utilisation du Skop pour la zone  "  + e.target.value;
+    test.useSkop(e.target.value);
+});
+
 
