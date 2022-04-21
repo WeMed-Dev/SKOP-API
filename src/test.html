@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>API WEMED</title>
+    <link rel="stylesheet" href="../style/global.css">
+</head>
+<body>
+
+</body>
+<script>
+    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    navigator.mediaDevices.getUserMedia ({audio: true,video: false}).then(stream => {
+
+        let audioSource = audioCtx.createMediaStreamSource(stream);
+
+        //Create the biquad filter
+        let biquadFilter = audioCtx.createBiquadFilter();
+        biquadFilter.type = "lowshelf";
+        biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
+        biquadFilter.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+        // connect the nodes together
+
+        audioSource.connect(biquadFilter);
+        biquadFilter.connect(audioCtx.destination);
+    
+    }).catch(err => {
+        console.log(err);
+    });    
+    
+   
+</script>
+</html>
+
+
+
