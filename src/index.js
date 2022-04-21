@@ -11,9 +11,9 @@ function handleError(error) {
 class Skop {
 
     /**
-    * @type {string} Indicates the current mode between conversation and gain.
+    * @type {boolean} Indicates the current mode between conversation and gain.
     */
-    #mode;
+    #usingSkop;
 
     /**
     * @type {boolean} Indicates if the user is the patient. If not this indicates that the user is the doctor.
@@ -30,11 +30,11 @@ class Skop {
      */
     #publisher;
 
-    constructor(sessionId, token, apiKey, isPatient, mode, heartZone) {
+    constructor(sessionId, token, apiKey, isPatient) {
 
-        this.#mode = mode;
+        this.#usingSkop = false;
         this.#isPatient = isPatient;
-        this.#heartZone = heartZone;
+      
         
 
         /**
@@ -74,40 +74,76 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
+     
         
     }
 
-    grabPatientAudio(){
-        if(!this.#isPatient){
-            console.log("The user has to be a patient.");
-            return;
-        } 
-        let constraintObj = {audio: true, video: false}; // this way of getting MediaStreamTracks could be useful if we need to switch between a microphone and the SKOP audio.
-        navigator.mediaDevices.getUserMedia(constraintObj)
-        .then(function(mediaStreamObj) {
-            console.log(mediaStreamObj);
-            console.log(mediaStreamObj.getAudioTracks()); // this gives a MediaStreamTrack[] so we can get the audio source and modify and then set it to the publisher.
+  
+    
+    /**
+     * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone. 
+     * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
+     * @param {*} heartZone 
+     */
+    async ModifyAudio(heartZone) {
+        try{
+            // define variables
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
+            let audioSource = audioCtx.createMediaStreamSource(stream);
+
+            //Create the biquad filter
+            let biquadFilter = audioCtx.createBiquadFilter();
+            biquadFilter.type = "lowshelf"; // IT WILL BE PARTICULARLY IMPORTANT TO CHOSE A GOOD PARAMETER HERE USING THIS LINK : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+            biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
+            biquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
+
+            // connect the nodes together
+            audioSource.connect(biquadFilter);
+            // biquadFilter.connect(audioCtx.destination); UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
             
-           
-        })
-        
+            // Sets the OT.publisher Audio Source to be the modified stream.
+            this.setAudioSource(audioSource.mediaStream.getAudioTracks()[0])
+            console.log("SKOP : Audio input modified")
+        }catch(err){
+            handleError(err)
+        }
     }
 
-
+    /**
+     * 
+     * @returns The current MediaStreamTrack of the user. 
+     */
     getAudioSource() {
       return this.#publisher.getAudioSource();
     }
 
+    /**
+     * Sets the users current's Audio source.
+     * @param {MediaStreamTrack} audioSource 
+     */
     setAudioSource(audioSource) {
         this.#publisher.setAudioSource(audioSource);
     }
 
-    getMode() { 
-        return this.#mode;
+    useSkop(heartZone){
+        this.setUsingSkop(true);
+        this.ModifyAudio(heartZone) 
     }
 
-    setMode(mode){
-        this.#mode = mode;
+    stopUsingSkop(){
+        this.setUsingSkop(false)
+        /**
+         * TODO: find a way to set the publisher's audio back to default.
+         */
+    }
+
+    isUsingSkop() { 
+        return this.#usingSkop;
+    }
+
+    setUsingSkop(isUsingSkop){
+        this.#usingSkop = isUsingSkop;
     }
 
     getIsPatient() {
@@ -123,7 +159,7 @@ class Skop {
     }
 
     /**
-     * @param {heartZone} heartZone Takes on of the four heart zones. [Pulmonary, Aortic, Tricuspid, Mitral]
+     * @param {heartZone} heartZone Can be set to one of the heart zones. [Pulmonary, Aortic, Tricuspid, Mitral]
      */
     setHeartZone(heartZone) {
         this.#heartZone = heartZone;
