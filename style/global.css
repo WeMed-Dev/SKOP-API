@@ -14,10 +14,14 @@ body{
 h1{
     color:#3F4BE6;
     font-size:2.5em;
-   
     text-align:center;
     margin:0;
+}
 
+#infos{
+    font-size:1.5em;
+    font-weight: 600;
+    margin: 10px;
 }
 
 
@@ -95,7 +99,6 @@ option:hover{
     align-items:center;
     flex-direction:row;
     margin : 20px;
-
     font-weight: 600;
     font-size:1.5em;
 }
