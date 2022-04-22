@@ -22,6 +22,11 @@ class Skop {
     #heartZone;
 
     /**
+     * @type {OT.Session} The session object.
+     */
+    #session
+
+    /**
      * @type {OT.session.publisher}  The publisher object.
      */
     #publisher;
@@ -35,6 +40,7 @@ class Skop {
          * @@type {OT.Session} The session object.
          */
         var session = OT.initSession(apiKey, sessionId);
+        this.#session = session;
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
@@ -43,7 +49,10 @@ class Skop {
               width: '100%',
               height: '100%'
             };
-            session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+            var subscriber = session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+            console.log(subscriber.stream)
+            console.log(session.getSubscribersForStream(event.stream))
+
         });
 
         session.on('sessionDisconnected', function sessionDisconnected(event) {
@@ -68,7 +77,8 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
-     
+        
+       
         
     }
 
@@ -95,7 +105,7 @@ class Skop {
             handleError(error);
         }
 
-        // test
+        // test TODO: do that the input audio is not the doctor's microphone but the patient's audio input.
         try{
             // define variables
             var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -106,7 +116,7 @@ class Skop {
             let biquadFilter = audioCtx.createBiquadFilter();
             biquadFilter.type = "lowshelf"; // IT WILL BE PARTICULARLY IMPORTANT TO CHOSE A GOOD PARAMETER HERE USING THIS LINK : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
             biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-            biquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
+            biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
@@ -135,6 +145,19 @@ class Skop {
         }
     }
 
+    // TODO: comprendre comment marche les signaux
+    signal(signal) {
+        this.#session.signal({
+            type: 'foo',
+            data: "hello"
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
 
     /**
      * 
