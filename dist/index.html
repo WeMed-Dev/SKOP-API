@@ -9,15 +9,15 @@
     <body>
         <div id="main">
             <h1>
-                API WEMED
+                API WEMED SAMPLE
              </h1>   
-     
+             <div id="infos"> </div>
              <div class="buttons">
+                <button id="patient" class="button" onclick="call('patient')">Patient</button>
+                <button id="medecin" class="button" onclick="call('medecin')">Medecin</button>
                 <!-- <button id="skop">SKOP</button> -->
                  <button id="conv">CONVERSATION</button>
                  <div id="div-select">
-                   
-
                     <select name="zones" id="zones">
                       <option class="zones-value" value="...">Exemple</option>  
                       <option class="zones-value" value="Aortique">Aortique</option>
@@ -36,6 +36,63 @@
     </body>
 
     <script src="Skop.js"></script>
-    <script src="../src/app.js"></script>
-    
+    <!-- <script src="../src/app.js"></script> -->
+    <script>
+        // fetch("https://test-wemed.herokuapp.com/session")
+        // .then(data => data.json())
+        // .then(data => console.log(data))
+
+        const apiKey = 47478071;
+        const sessionId = "1_MX40NzQ3ODA3MX5-MTY1MDYxOTk4MDk3OH5vZURHVzh5d1JnNVpudmxDWGNEdjF2Qkh-fg";
+        const token = "T1==cGFydG5lcl9pZD00NzQ3ODA3MSZzaWc9ZTU3YTJhZGQ0YTgzZjFkMWM5ZWRkMDNkMTM1ZjNlOTA3OTZmYTI0MjpzZXNzaW9uX2lkPTFfTVg0ME56UTNPREEzTVg1LU1UWTFNRFl4T1RrNE1EazNPSDV2WlVSSFZ6aDVkMUpuTlZwdWRteERXR05FZGpGMlFraC1mZyZjcmVhdGVfdGltZT0xNjUwNjE5OTgxJnJvbGU9cHVibGlzaGVyJm5vbmNlPTE2NTA2MTk5ODEuMDE4NjEwNzEzMzU0NTkmaW5pdGlhbF9sYXlvdXRfY2xhc3NfbGlzdD0="
+
+        let buttonConversation  = document.getElementById("conv");
+        let select = document.getElementById("zones");
+        let container = document.getElementById("current");
+        let infos = document.getElementById("infos");
+        let buttonPatient = document.getElementById("patient");
+        let buttonMedecin = document.getElementById("medecin");
+
+        // Hiding the content that is for the doctor.
+        buttonConversation.style.display   = "none";
+        select.style.display              = "none";
+        container.style.display           = "none";
+
+        
+        function call(role){
+            //Removing the previous button because the role is chosen.
+            buttonPatient.remove();
+            buttonMedecin.remove();
+
+            let test = new Skop.Skop(apiKey, token, sessionId, role);
+
+            if(test.getRole() === "medecin"){
+
+                // Displaying the content that is for the doctor.
+                buttonConversation.style.display   = "block";
+                select.style.display              = "block";
+                container.style.display           = "block";
+
+                buttonConversation.addEventListener('click', () => {
+                    test.stopUsingSkop();
+                    container.innerHTML = "Mode : Conversation"; 
+                })
+                select.addEventListener("change", (e) => {
+                    container.innerHTML = "Utilisation du Skop pour la zone  "  + e.target.value;
+                    test.useSkop(e.target.value);
+                });
+            }else if(test.getRole() === "patient"){
+                buttonConversation.remove();
+                select.remove();
+                container.remove();
+            }
+
+            // Display the role of the user
+            infos.innerHTML = "Role : " + test.getRole() + "<br>";
+        
+
+       
+
+        }            
+    </script>
 </html>

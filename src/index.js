@@ -11,11 +11,11 @@ class Skop {
     */
     #usingSkop;
 
-    /**
-    * @type {boolean} Indicates if the user is the patient. If not this indicates that the user is the doctor.
-    */
-    #isPatient;
 
+    /**
+     * @type {string} Indicates the role of the user. [Patient, Doctor]
+     */
+    #role
     /**
     * @type {string} Indicates which part of the heart the doctor is going to listen to.
     */
@@ -26,10 +26,10 @@ class Skop {
      */
     #publisher;
 
-    constructor(sessionId, token, apiKey, isPatient) {
+    constructor(apiKey, token, sessionId, role) {
 
         this.#usingSkop = false;
-        this.#isPatient = isPatient;
+        this.#role = role;
       
         /**
          * @@type {OT.Session} The session object.
@@ -72,17 +72,30 @@ class Skop {
         
     }
 
-  
-    
     /**
      * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone. 
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone 
      */
     async ModifyAudio(heartZone) {
+        try{
+            if(heartZone === "Aortic"){
+                // TODO: modify audio to listen to the aortic zone
+            }
+            else if(heartZone === "Mitrale"){
+                // TODO: modify audio to listen to the mitral zone
+            }
+            else if(heartZone === "Pulmonary"){
+                // TODO: modify audio to listen to the pulmonary zone
+            }
+            else if(heartZone === "Tricuspid"){
+                // TODO: modify audio to listen to the tricuspid zone
+            }
+        }catch(error){
+            handleError(error);
+        }
 
-        // TODO: Modify the audio differently for every heartZones.
-
+        // test
         try{
             // define variables
             var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -107,6 +120,20 @@ class Skop {
         }
     }
 
+    async defaultAudio(){
+        try{
+          
+            /**
+             * TODO: check if this works.
+             */
+            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+            let defStreamTrack = defaultAudio.getAudioTracks()[0];
+            this.setAudioSource(defStreamTrack);
+            console.log("SKOP : Audio input set to default - No modifications")
+        }catch(err){
+            handleError(err)
+        }
+    }
 
 
     /**
@@ -131,18 +158,8 @@ class Skop {
     }
 
     async stopUsingSkop(){
-        try{
-            this.setUsingSkop(false)
-            /**
-             * TODO: check if this works.
-             */
-            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
-            let defStreamTrack = defaultAudio.getAudioTracks()[0];
-            this.setAudioSource(defStreamTrack);
-            console.log("SKOP : Audio input set to default - No modifications")
-        }catch(err){
-            handleError(err)
-        }
+        this.setUsingSkop(false)
+        this.defaultAudio()
     }
 
     isUsingSkop() { 
@@ -153,12 +170,12 @@ class Skop {
         this.#usingSkop = isUsingSkop;
     }
 
-    getIsPatient() {
-        return this.#isPatient;
+    getRole() {
+        return this.#role;
     }
 
-    setIsPatient(isPatient) {
-        this.#isPatient = isPatient;
+    setRole(role) {
+        this.#role = role;
     }
 
     getHeartZone() {
@@ -173,17 +190,4 @@ class Skop {
     }
 }
 
-
 module.exports = { Skop : Skop,};
-
-
-
-
-
-
-   
-
-
-
-
-
