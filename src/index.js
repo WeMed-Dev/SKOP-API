@@ -110,7 +110,7 @@ class Skop {
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
-            biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
+            // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
             
             // Sets the OT.publisher Audio Source to be the modified stream.
             this.setAudioSource(audioSource.mediaStream.getAudioTracks()[0])
