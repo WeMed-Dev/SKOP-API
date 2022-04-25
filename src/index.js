@@ -31,7 +31,10 @@ class Skop {
      */
     #publisher;
 
+ 
+
     constructor(apiKey, token, sessionId, role) {
+        var self = this;
 
         this.#usingSkop = false;
         this.#role = role;
@@ -43,20 +46,23 @@ class Skop {
         this.#session = session;
 
         //subscribe to a new stream in the session
+        
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
               insertMode: 'append',
               width: '100%',
               height: '100%'
             };
-            var subscriber = session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
-            console.log(subscriber.stream)
-            console.log(session.getSubscribersForStream(event.stream))
-
+            session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         });
-
+        
         session.on('sessionDisconnected', function sessionDisconnected(event) {
             console.log('You were disconnected from the session.', event.reason);
+        });
+
+        session.on("signal", function(event) {
+            console.log("Signal data: " + event.data);
+            self.ModifyAudio(event.data.heartZone)
         });
 
         // initialize the publisher
@@ -89,6 +95,9 @@ class Skop {
      */
     async ModifyAudio(heartZone) {
         try{
+            // Only the patient's audio needs to be modified.
+            if(this.#role === "doctor") return
+
             if(heartZone === "Aortic"){
                 // TODO: modify audio to listen to the aortic zone
             }
@@ -146,10 +155,10 @@ class Skop {
     }
 
     // TODO: comprendre comment marche les signaux
-    signal(signal) {
+    signalToPatient(signal) {
         this.#session.signal({
             type: 'foo',
-            data: "hello"
+            data: signal
         }, function(error) {
             if (error) {
                 console.log('Error sending signal:' + error.message);
@@ -158,6 +167,10 @@ class Skop {
             }
         })
     }
+
+
+    
+
 
     /**
      * 
