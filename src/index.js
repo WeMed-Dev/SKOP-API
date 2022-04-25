@@ -133,7 +133,7 @@ class Skop {
             let biquadFilter = audioCtx.createBiquadFilter();
             biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
             biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
-            biquadFilter.gain.setValueAtTime(50, audioCtx.currentTime);
+            biquadFilter.gain.setValueAtTime(40, audioCtx.currentTime);
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
