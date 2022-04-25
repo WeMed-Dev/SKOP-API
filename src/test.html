@@ -11,6 +11,11 @@
 
 </body>
 <script>
+    fetch("https://test-wemed.herokuapp.com/session")
+    .then(response => response.json())
+    .then(response => console.log(response))
+
+
     var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     navigator.mediaDevices.getUserMedia ({audio: true,video: false}).then(stream => {
 
