@@ -77,6 +77,7 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
+
         
        
         
@@ -130,7 +131,9 @@ class Skop {
         }
     }
 
-    async defaultAudio(){
+    
+
+    async DefaultAudio(){
         try{
           
             /**
