@@ -64,10 +64,11 @@ class Skop {
         session.on("signal", function(event) {
             console.log("Signal data: " + event.data);
             if(event.data == "default"){
-                self.#defaultAudio();
+                self.stopUsingSkop();
                 return;
             } 
-            self.#ModifyAudio(event.data.heartZone)
+            
+            self.useSkop(event.data.heartZone)
         });
 
         // initialize the publisher
@@ -96,6 +97,7 @@ class Skop {
      * @param {*} heartZone 
      */
     async #ModifyAudio(heartZone) {
+        
         try{
             // Only the patient's audio needs to be modified.
             if(this.#role === "doctor") return
@@ -116,25 +118,32 @@ class Skop {
             handleError(error);
         }
 
+        
+
         // test TODO: do that the input audio is not the doctor's microphone but the patient's audio input.
         try{
+            
+            
             // define variables
             var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
             let audioSource = audioCtx.createMediaStreamSource(stream);
-
+            let audioDestination = audioCtx.createMediaStreamDestination();
             //Create the biquad filter
             let biquadFilter = audioCtx.createBiquadFilter();
-            biquadFilter.type = "lowshelf"; // IT WILL BE PARTICULARLY IMPORTANT TO CHOSE A GOOD PARAMETER HERE USING THIS LINK : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            biquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-            biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
+            biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+            biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
+            biquadFilter.gain.setValueAtTime(50, audioCtx.currentTime);
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
+            biquadFilter.connect(audioDestination);
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
             
             // Sets the OT.publisher Audio Source to be the modified stream.
-            this.setAudioSource(audioSource.mediaStream.getAudioTracks()[0])
+            this.setAudioSource(audioDestination.stream.getAudioTracks()[0])
+            console.log(audioDestination)
+            
             console.log("SKOP : Audio input modified")
         }catch(err){
             handleError(err)
@@ -143,10 +152,6 @@ class Skop {
 
     async #defaultAudio(){
         try{
-          
-            /**
-             * TODO: check if this works.
-             */
             let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
             this.setAudioSource(defStreamTrack);
@@ -189,13 +194,13 @@ class Skop {
     useSkop(heartZone){
         if(this.#role === "doctor") return;
         this.setUsingSkop(true);
-        this.ModifyAudio(heartZone) 
+        this.#ModifyAudio(heartZone) 
     }
 
     async stopUsingSkop(){
         if(this.#role === "doctor") return;
         this.setUsingSkop(false)
-        this.defaultAudio()
+        this.#defaultAudio()
     }
 
     isUsingSkop() { 
