@@ -36,18 +36,9 @@
     </body>
 
     <script src="Skop.js"></script>
-    <!-- <script src="../src/app.js"></script> -->
     <script>
-        // fetch("https://test-wemed.herokuapp.com/session")
-        // .then(data => data.json())
-        // .then(data => console.log(data))
 
-        // const apiKey = 47478071;
-        // const sessionId = "1_MX40NzQ3ODA3MX5-MTY1MDYxOTk4MDk3OH5vZURHVzh5d1JnNVpudmxDWGNEdjF2Qkh-fg";
-        // const token = "T1==cGFydG5lcl9pZD00NzQ3ODA3MSZzaWc9ZTU3YTJhZGQ0YTgzZjFkMWM5ZWRkMDNkMTM1ZjNlOTA3OTZmYTI0MjpzZXNzaW9uX2lkPTFfTVg0ME56UTNPREEzTVg1LU1UWTFNRFl4T1RrNE1EazNPSDV2WlVSSFZ6aDVkMUpuTlZwdWRteERXR05FZGpGMlFraC1mZyZjcmVhdGVfdGltZT0xNjUwNjE5OTgxJnJvbGU9cHVibGlzaGVyJm5vbmNlPTE2NTA2MTk5ODEuMDE4NjEwNzEzMzU0NTkmaW5pdGlhbF9sYXlvdXRfY2xhc3NfbGlzdD0="
-
-
-        //récupération des données de la session
+        // ------------Récupération de données de session------------ //
         var apiKey
         var sessionId
         var token
@@ -59,6 +50,10 @@
             sessionId = data.sessionId
             token = data.token
         })
+        // --------------------------------------------------------- //
+
+
+    
 
         let buttonConversation  = document.getElementById("conv");
         let select = document.getElementById("zones");
@@ -89,7 +84,8 @@
                 container.style.display           = "block";
 
                 buttonConversation.addEventListener('click', () => {
-                    test.stopUsingSkop();
+                  
+                    test.signalToPatient("default");
                     container.innerHTML = "Mode : Conversation"; 
                 })
                 select.addEventListener("change", (e) => {
