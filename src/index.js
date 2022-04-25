@@ -34,6 +34,7 @@ class Skop {
  
 
     constructor(apiKey, token, sessionId, role) {
+        // Used to access objects in functions.
         var self = this;
 
         this.#usingSkop = false;
@@ -62,7 +63,11 @@ class Skop {
 
         session.on("signal", function(event) {
             console.log("Signal data: " + event.data);
-            self.ModifyAudio(event.data.heartZone)
+            if(event.data == "default"){
+                self.#defaultAudio();
+                return;
+            } 
+            self.#ModifyAudio(event.data.heartZone)
         });
 
         // initialize the publisher
@@ -83,9 +88,6 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
-        
-       
-        
     }
 
     /**
@@ -93,7 +95,7 @@ class Skop {
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone 
      */
-    async ModifyAudio(heartZone) {
+    async #ModifyAudio(heartZone) {
         try{
             // Only the patient's audio needs to be modified.
             if(this.#role === "doctor") return
@@ -139,7 +141,7 @@ class Skop {
         }
     }
 
-    async defaultAudio(){
+    async #defaultAudio(){
         try{
           
             /**
@@ -154,7 +156,6 @@ class Skop {
         }
     }
 
-    // TODO: comprendre comment marche les signaux
     signalToPatient(signal) {
         this.#session.signal({
             type: 'foo',
@@ -167,9 +168,6 @@ class Skop {
             }
         })
     }
-
-
-    
 
 
     /**
@@ -189,11 +187,13 @@ class Skop {
     }
 
     useSkop(heartZone){
+        if(this.#role === "doctor") return;
         this.setUsingSkop(true);
         this.ModifyAudio(heartZone) 
     }
 
     async stopUsingSkop(){
+        if(this.#role === "doctor") return;
         this.setUsingSkop(false)
         this.defaultAudio()
     }
