@@ -14,7 +14,7 @@
              <div id="infos"> </div>
              <div class="buttons">
                 <button id="patient" class="button" onclick="call('patient')">Patient</button>
-                <button id="medecin" class="button" onclick="call('medecin')">Medecin</button>
+                <button id="medecin" class="button" onclick="call('doctor')">Medecin</button>
                 <!-- <button id="skop">SKOP</button> -->
                  <button id="conv">CONVERSATION</button>
                  <div id="div-select">
@@ -42,9 +42,23 @@
         // .then(data => data.json())
         // .then(data => console.log(data))
 
-        const apiKey = 47478071;
-        const sessionId = "1_MX40NzQ3ODA3MX5-MTY1MDYxOTk4MDk3OH5vZURHVzh5d1JnNVpudmxDWGNEdjF2Qkh-fg";
-        const token = "T1==cGFydG5lcl9pZD00NzQ3ODA3MSZzaWc9ZTU3YTJhZGQ0YTgzZjFkMWM5ZWRkMDNkMTM1ZjNlOTA3OTZmYTI0MjpzZXNzaW9uX2lkPTFfTVg0ME56UTNPREEzTVg1LU1UWTFNRFl4T1RrNE1EazNPSDV2WlVSSFZ6aDVkMUpuTlZwdWRteERXR05FZGpGMlFraC1mZyZjcmVhdGVfdGltZT0xNjUwNjE5OTgxJnJvbGU9cHVibGlzaGVyJm5vbmNlPTE2NTA2MTk5ODEuMDE4NjEwNzEzMzU0NTkmaW5pdGlhbF9sYXlvdXRfY2xhc3NfbGlzdD0="
+        // const apiKey = 47478071;
+        // const sessionId = "1_MX40NzQ3ODA3MX5-MTY1MDYxOTk4MDk3OH5vZURHVzh5d1JnNVpudmxDWGNEdjF2Qkh-fg";
+        // const token = "T1==cGFydG5lcl9pZD00NzQ3ODA3MSZzaWc9ZTU3YTJhZGQ0YTgzZjFkMWM5ZWRkMDNkMTM1ZjNlOTA3OTZmYTI0MjpzZXNzaW9uX2lkPTFfTVg0ME56UTNPREEzTVg1LU1UWTFNRFl4T1RrNE1EazNPSDV2WlVSSFZ6aDVkMUpuTlZwdWRteERXR05FZGpGMlFraC1mZyZjcmVhdGVfdGltZT0xNjUwNjE5OTgxJnJvbGU9cHVibGlzaGVyJm5vbmNlPTE2NTA2MTk5ODEuMDE4NjEwNzEzMzU0NTkmaW5pdGlhbF9sYXlvdXRfY2xhc3NfbGlzdD0="
+
+
+        //récupération des données de la session
+        var apiKey
+        var sessionId
+        var token
+    
+        fetch("https://test-wemed.herokuapp.com/session")
+        .then(data => data.json())
+        .then(data => {
+            apiKey = data.apiKey
+            sessionId = data.sessionId
+            token = data.token
+        })
 
         let buttonConversation  = document.getElementById("conv");
         let select = document.getElementById("zones");
@@ -52,6 +66,7 @@
         let infos = document.getElementById("infos");
         let buttonPatient = document.getElementById("patient");
         let buttonMedecin = document.getElementById("medecin");
+
 
         // Hiding the content that is for the doctor.
         buttonConversation.style.display   = "none";
@@ -66,7 +81,7 @@
 
             let test = new Skop.Skop(apiKey, token, sessionId, role);
 
-            if(test.getRole() === "medecin"){
+            if(test.getRole() === "doctor"){
 
                 // Displaying the content that is for the doctor.
                 buttonConversation.style.display   = "block";
@@ -79,21 +94,18 @@
                 })
                 select.addEventListener("change", (e) => {
                     container.innerHTML = "Utilisation du Skop pour la zone  "  + e.target.value;
-                    test.useSkop(e.target.value);
+                    test.signalToPatient(e.target.value);
                 });
             }else if(test.getRole() === "patient"){
                
                 buttonConversation.remove();
                 select.remove();
                 container.remove();
+             
             }
 
             // Display the role of the user
             infos.innerHTML = "Role : " + test.getRole() + "<br>";
-        
-        
-       
-
         }            
     </script>
 </html>
