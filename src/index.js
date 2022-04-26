@@ -117,13 +117,13 @@ class Skop {
             // Only the patient's audio needs to be modified.
             if(this.#role === "doctor") return
 
-            if(heartZone === "Aortic"){
+            if(heartZone === "Aortic"){ 
                 // TODO: modify audio to listen to the aortic zone
             }
             else if(heartZone === "Mitrale"){
                 // TODO: modify audio to listen to the mitral zone
             }
-            else if(heartZone === "Pulmonary"){
+            else if(heartZone === "Pulmonary"){ // > 80 & < 500 => gain limité
                 // TODO: modify audio to listen to the pulmonary zone
             }
             else if(heartZone === "Tricuspid"){
@@ -135,7 +135,7 @@ class Skop {
 
         
 
-        // TODO: do that the input audio is not the doctor's microphone but the patient's audio input.
+        
         try{
             
             
@@ -147,8 +147,8 @@ class Skop {
             //Create the biquad filter
             let biquadFilter = audioCtx.createBiquadFilter();
             biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
-            biquadFilter.gain.setValueAtTime(30, audioCtx.currentTime);
+            biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime); // 250Hz
+            biquadFilter.gain.setValueAtTime(30, audioCtx.currentTime); // slideRange
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
