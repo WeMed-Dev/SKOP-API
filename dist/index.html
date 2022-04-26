@@ -8,10 +8,7 @@
 
     <body>
         <div id="main">
-            <h1>
-                API WEMED SAMPLE
-             </h1>   
-             <div id="infos"> </div>
+            <h1> API WEMED SAMPLE </h1>   
              <div class="buttons">
                 <button id="patient" class="button" onclick="call('patient')">Patient</button>
                 <button id="medecin" class="button" onclick="call('doctor')">Medecin</button>
@@ -19,20 +16,22 @@
                  <button id="conv">CONVERSATION</button>
                  <div id="div-select">
                     <select name="zones" id="zones">
-                      <option class="zones-value" value="...">Exemple</option>  
-                      <option class="zones-value" value="Aortique">Aortique</option>
-                      <option class="zones-value" value="Mitrale">Mitrale</option>
-                      <option class="zones-value" value="Pulmonaire">Pulmonaire</option>
-                      <option class="zones-value" value="Tricuspide">Tricuspide</option>
+                      <option class="zones-value" value="...">Heart Zones</option>  
+                      <option class="zones-value" value="Aortic">Aortique</option>
+                      <option class="zones-value" value="Mitral">Mitrale</option>
+                      <option class="zones-value" value="Pulmonary">Pulmonaire</option>
+                      <option class="zones-value" value="Tricuspid">Tricuspide</option>
                     </select> 
                  </div>
-                
+               
              </div>
-     
-             <div id="current">Les informations sur l'utilisation du Skop seront affichées ici.</div>
+             <div id="div-range" >
+                 <h4 id="gain-output">Gain : ... </h4>
+                <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
+            </div>
+        
+            <div id="infos"> </div>
         </div>
-       
-  
     </body>
 
     <script src="Skop.js"></script>
@@ -57,16 +56,18 @@
 
         let buttonConversation  = document.getElementById("conv");
         let select = document.getElementById("zones");
-        let container = document.getElementById("current");
         let infos = document.getElementById("infos");
         let buttonPatient = document.getElementById("patient");
         let buttonMedecin = document.getElementById("medecin");
 
+        let divRange = document.getElementById("div-range")
+        let gainRange = document.getElementById("gainRange");
+        let gainOutput = document.getElementById("gain-output");
 
         // Hiding the content that is for the doctor.
         buttonConversation.style.display   = "none";
         select.style.display              = "none";
-        container.style.display           = "none";
+        divRange.style.display = "none"
 
         
         function call(role){
@@ -81,27 +82,34 @@
                 // Displaying the content that is for the doctor.
                 buttonConversation.style.display   = "block";
                 select.style.display              = "block";
-                container.style.display           = "block";
-
+               
                 buttonConversation.addEventListener('click', () => {
-                  
-                    test.signalToPatient("default");
-                    container.innerHTML = "Mode : Conversation"; 
+                    test.signalHeartZone("default");
+                    divRange.style.display = "none"
                 })
                 select.addEventListener("change", (e) => {
-                    container.innerHTML = "Utilisation du Skop pour la zone  "  + e.target.value;
-                    test.signalToPatient(e.target.value);
+                  
+                    test.signalHeartZone(e.target.value);
+                    divRange.style.display = "flex"
                 });
+
+
+                gainRange.oninput = function() {
+                    gainOutput.innerHTML = "Gain : " + this.value;
+                    test.signalGain(this.value);
+                }
+
+
             }else if(test.getRole() === "patient"){
                
                 buttonConversation.remove();
                 select.remove();
-                container.remove();
+                
              
             }
 
             // Display the role of the user
-            infos.innerHTML = "Role : " + test.getRole() + "<br>";
+            infos.innerHTML = "ROLE : " + test.getRole() + "<br>";
         }            
     </script>
 </html>
