@@ -1,16 +1,24 @@
 const OT = require('@opentok/client');
 
+
+/**
+ * Displays any error messages.
+ * @param {*} error 
+ */
 function handleError(error) {
     if (error) console.error(error);
 }
 
+/**
+ * Name : Skop
+ * Description : It represents an instance of a session using the SKOP.
+ **/
 class Skop {
 
     /**
     * @type {boolean} Indicates the current mode between conversation and gain.
     */
     #usingSkop;
-
 
     /**
      * @type {string} Indicates the role of the user. [Patient, Doctor]
@@ -32,11 +40,18 @@ class Skop {
     #publisher;
 
  
-
+    /**
+     * Creates the instance of the SKOP. 
+     * Initializes the session and the publisher.
+     * If there is a subscriber, it subscribes to the session.
+     * @param {*} apiKey  The API key of the session.
+     * @param {*} token  The token of the session.
+     * @param {*} sessionId  The session id of the session.
+     * @param {*} role  The role of the user. [Patient, Doctor]
+     */
     constructor(apiKey, token, sessionId, role) {
         // Used to access objects in functions.
         var self = this;
-
         this.#usingSkop = false;
         this.#role = role;
       
@@ -47,7 +62,6 @@ class Skop {
         this.#session = session;
 
         //subscribe to a new stream in the session
-        
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
               insertMode: 'append',
@@ -61,6 +75,7 @@ class Skop {
             console.log('You were disconnected from the session.', event.reason);
         });
 
+        // When a user receive a signal it is handled here.
         session.on("signal", function(event) {
             console.log("Signal data: " + event.data);
             if(event.data == "default"){
@@ -120,7 +135,7 @@ class Skop {
 
         
 
-        // test TODO: do that the input audio is not the doctor's microphone but the patient's audio input.
+        // TODO: do that the input audio is not the doctor's microphone but the patient's audio input.
         try{
             
             
@@ -133,7 +148,7 @@ class Skop {
             let biquadFilter = audioCtx.createBiquadFilter();
             biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
             biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
-            biquadFilter.gain.setValueAtTime(40, audioCtx.currentTime);
+            biquadFilter.gain.setValueAtTime(30, audioCtx.currentTime);
 
             // connect the nodes together
             audioSource.connect(biquadFilter);
