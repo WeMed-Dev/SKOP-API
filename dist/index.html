@@ -88,7 +88,8 @@
                 select.style.display              = "block";
                
                 buttonConversation.addEventListener('click', () => {
-                    test.signalHeartZone("default");
+                    test.signalStopUsingSkop();
+                    test.skop();
                     divRange.style.display = "none"
                 })
                 select.addEventListener("change", (e) => {

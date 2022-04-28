@@ -40,6 +40,14 @@ class Skop {
      */
     #filter
 
+    #filterClass
+
+    #filteringInitiated = false
+
+    DOCTOR_ROLE = "doctor"
+    PATIENT_ROLE = "patient"
+
+
 
  
     /**
@@ -56,6 +64,7 @@ class Skop {
         const self = this;
         this.#usingSkop = false;
         this.#role = role;
+        this.#filterClass = new Filter();
 
         /**
          * @@type {OT.Session} The session object.
@@ -79,22 +88,22 @@ class Skop {
 
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:heartZone", function(event) {
-            console.log("Signal data: " + event.data);
-            if(event.data === "default"){
-                self.stopUsingSkop().then(
-                    console.log("Stopped using Skop")
-                ).catch(e => {
-                    console.log("Error stopping using Skop" + e);
-                });
-                return;
-            }
+            //console.log("Signal data: " + event.data);
             self.useSkop(event.data)
+        });
+
+        session.on("signal:stop", function(event) {
+            self.stopUsingSkop().then(
+                console.log("Stopped using Skop")
+            ).catch(e => {
+                console.log("Error stopping using Skop" + e);
+            });
         });
 
 
         // When a user receive a signal with a gain, it modifies the gain of the user.
         session.on("signal:gain", function(event) {
-            console.log("Signal data: " + event.data);
+            //console.log("Signal data: " + event.data);
             self.setGain(event.data)
         });
 
@@ -120,82 +129,33 @@ class Skop {
 
     //--------- SKOP MANIPULATION METHODS ---------//
 
+    skop(heartZone){
+        if(heartZone === undefined){
+            console.log("UNDEFINED HEART ZONE");
+        }
+        if(heartZone === null){
+            console.log("NULL HEART ZONE");
+        }
+    }
+
+
     useSkop(heartZone){
-        if(this.#role === "doctor") return;
+        if(this.#role === this.DOCTOR_ROLE) return;
+        if(!this.#filteringInitiated) {
+            this.#filteringInitiated = true;
+            this.#filterClass.init(this, heartZone)
+        }
+        else {
+            this.#filterClass.filtering(heartZone);
+        }
         this.setUsingSkop(true);
-        this.#ModifyAudio(heartZone)
     }
 
     async stopUsingSkop(){
-        if(this.#role === "doctor") return;
+        if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(false)
-        await this.#defaultAudio();
+        this.#filterClass.defaultAudio(this.#publisher);
     }
-
-    //--------- AUDIO MANIPULATION METHODS ---------//
-
-    /**
-     * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone. 
-     * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
-     * @param {*} heartZone 
-     */
-    async #ModifyAudio(heartZone) {
-        
-        try{
-            // Only the patient's audio needs to be modified.
-            if(this.#role === "doctor") return
-
-            // define variables
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
-            let audioSource = audioCtx.createMediaStreamSource(stream);
-            let audioDestination = audioCtx.createMediaStreamDestination();
-            //Create the biquad filter
-            let biquadFilter = audioCtx.createBiquadFilter();
-            this.#filter = biquadFilter;
-           
-            biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
-            biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
-            
-            
-            if(heartZone === "Pulmonary"){ // les ondes entres 80 et 500 sont limitées
-                biquadFilter.type = "peaking";
-                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
-                biquadFilter.gain.setValueAtTime(-10, audioCtx.currentTime); 
-            }
-
-            // connect the nodes together
-            audioSource.connect(biquadFilter);
-            biquadFilter.connect(audioDestination);
-
-            // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
-            
-            // Sets the OT.publisher Audio Source to be the modified stream.
-            this.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-
-
-
-            console.log("SKOP : Audio input modified")
-        }catch(error){
-            handleError(error);
-        }
-    }
-
-
-
-
-    async #defaultAudio(){
-        try{
-            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
-            let defStreamTrack = defaultAudio.getAudioTracks()[0];
-            this.setAudioSource(defStreamTrack);
-            console.log("SKOP : Audio input set to default - No modifications")
-        }catch(err){
-            handleError(err)
-        }
-    }
-
 
     //------ SIGNALING ------//
 
@@ -203,6 +163,19 @@ class Skop {
         this.#session.signal({
             type: 'heartZone',
             data: signal
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
+
+    signalStopUsingSkop() {
+        this.#session.signal({
+            type: 'stop',
+            data: 'stop'
         }, function(error) {
             if (error) {
                 console.log('Error sending signal:' + error.message);
@@ -255,14 +228,103 @@ class Skop {
      * Sets the current level of gain of the patient's Skop audio output.
      */
     setGain(gain){
-        if(this.#role === "doctor") return;
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
+        if(this.#role === this.DOCTOR_ROLE) return;
+        //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
+
+        this.#filterClass.setGain(gain);
     }
 
     setUsingSkop(isUsingSkop){
         this.#usingSkop = isUsingSkop;
     }
+}
+
+class Filter{
+
+    audioCtx;
+    biquadFilter;
+    audioSource;
+    audioDestination;
+    initialised = false;
+    AORTIC = "Aortic";
+    MITRAL = "Mitral";
+    PULMONARY = "Pulmonary";
+    TRICUSPID = "Tricuspid";
+
+
+    constructor(){
+        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this.biquadFilter = this.audioCtx.createBiquadFilter();
+
+        this.audioDestination = this.audioCtx.createMediaStreamDestination();
+    }
+
+    async init(skop, heartZone){
+        try{
+            this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+            this.audioSource = this.audioCtx.createMediaStreamSource(this.mediaStream);
+
+
+            this.biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+            this.biquadFilter.frequency.setValueAtTime(10000, this.audioCtx.currentTime); // 250Hz
+            this.biquadFilter.gain.setValueAtTime(50, this.audioCtx.currentTime);
+
+            // If the zone is Pulmonary, we need to set the filter to a different frequency
+            if (heartZone == this.PULMONARY){
+                this.biquadFilter.type = "peaking";
+                this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
+                this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
+            }
+
+            // connect the nodes together
+            this.audioSource.connect(this.biquadFilter);
+            this.biquadFilter.connect(this.audioDestination);
+            //this.biquadFilter.connect(this.audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
+
+            // Sets the OT.publisher Audio Source to be the modified stream.
+            skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
+
+            this.initialised = true;
+            console.log("Filter initialised");
+        }catch (error){
+            handleError(error);
+        }
+
+    }
+
+    /**
+     * Change the filter mode, type and frequency depending on the category.
+     * @param category The category of heart zones being listened to. { "cardiac", "respiratory" }
+     */
+    filtering(category){
+        if(category === this.AORTIC || category === this.MITRAL || category === this.TRICUSPID){
+            this.biquadFilter.type = "lowshelf";
+            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
+            this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
+        }else if(category === this.PULMONARY){
+            this.biquadFilter.type = "peaking";
+            this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
+            this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
+        }
+    }
+
+    defaultAudio(skop){
+        try{
+            let defaultAudio = navigator.mediaDevices.getUserMedia({audio: true,video: false})
+                .then(stream => {
+                    let defStreamTrack = stream.getAudioTracks()[0];
+                    skop.setAudioSource(defStreamTrack);
+                })
+        }catch (error){
+            handleError(error);
+        }
+    }
+
+    setGain(gain){
+        this.biquadFilter.gain.setValueAtTime(gain, this.audioCtx.currentTime);
+    }
+
 }
 
 
