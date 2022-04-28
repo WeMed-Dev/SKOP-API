@@ -24,10 +24,6 @@ class Skop {
      * @type {string} Indicates the role of the user. [Patient, Doctor]
      */
     #role
-    /**
-    * @type {string} Indicates which part of the heart the doctor is going to listen to.
-    */
-    #heartZone;
 
     /**
      * @type {OT.Session} The session object.
@@ -44,6 +40,7 @@ class Skop {
      */
     #filter
 
+
  
     /**
      * Creates the instance of the SKOP. 
@@ -56,14 +53,14 @@ class Skop {
      */
     constructor(apiKey, token, sessionId, role) {
         // Used to access objects in functions.
-        var self = this;
+        const self = this;
         this.#usingSkop = false;
         this.#role = role;
-      
+
         /**
          * @@type {OT.Session} The session object.
          */
-        var session = OT.initSession(apiKey, sessionId);
+        const session = OT.initSession(apiKey, sessionId);
         this.#session = session;
 
         //subscribe to a new stream in the session
@@ -83,8 +80,12 @@ class Skop {
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:heartZone", function(event) {
             console.log("Signal data: " + event.data);
-            if(event.data == "default"){
-                self.stopUsingSkop();
+            if(event.data === "default"){
+                self.stopUsingSkop().then(
+                    console.log("Stopped using Skop")
+                ).catch(e => {
+                    console.log("Error stopping using Skop" + e);
+                });
                 return;
             }
             self.useSkop(event.data)
@@ -117,19 +118,35 @@ class Skop {
         });
     }
 
+    //--------- SKOP MANIPULATION METHODS ---------//
+
+    useSkop(heartZone){
+        if(this.#role === "doctor") return;
+        this.setUsingSkop(true);
+        this.#ModifyAudio(heartZone)
+    }
+
+    async stopUsingSkop(){
+        if(this.#role === "doctor") return;
+        this.setUsingSkop(false)
+        await this.#defaultAudio();
+    }
+
+    //--------- AUDIO MANIPULATION METHODS ---------//
+
     /**
      * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone. 
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone 
      */
-    async #ModifyAudio(heartZone, gain) {
+    async #ModifyAudio(heartZone) {
         
         try{
             // Only the patient's audio needs to be modified.
             if(this.#role === "doctor") return
 
             // define variables
-            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
             let audioSource = audioCtx.createMediaStreamSource(stream);
             let audioDestination = audioCtx.createMediaStreamDestination();
@@ -138,11 +155,11 @@ class Skop {
             this.#filter = biquadFilter;
            
             biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime); // 250Hz
-            biquadFilter.gain.setValueAtTime(50, audioCtx.currentTime); // use a variable gain instead of a constant gain
+            biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
+            biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
             
             
-            if(heartZone == "Pulmonary"){ // (ondes > 80 && ondes < 500 => gain limité) == les ondes entres 80 et 500 sont limitées
+            if(heartZone === "Pulmonary"){ // les ondes entres 80 et 500 sont limitées
                 biquadFilter.type = "peaking";
                 biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
                 biquadFilter.gain.setValueAtTime(-10, audioCtx.currentTime); 
@@ -157,12 +174,16 @@ class Skop {
             // Sets the OT.publisher Audio Source to be the modified stream.
             this.setAudioSource(audioDestination.stream.getAudioTracks()[0])
 
-            
+
+
             console.log("SKOP : Audio input modified")
         }catch(error){
             handleError(error);
         }
     }
+
+
+
 
     async #defaultAudio(){
         try{
@@ -174,6 +195,9 @@ class Skop {
             handleError(err)
         }
     }
+
+
+    //------ SIGNALING ------//
 
     signalHeartZone(signal) {
         this.#session.signal({
@@ -200,68 +224,46 @@ class Skop {
             }
         })
     }
-  
+
+
+    //----- GETTER & SETTER -----//
+    /**
+     * Returns the current role of the user.
+     * @returns {string} The role of the user.
+     */
+    getRole(){
+        return this.#role;
+    }
 
     /**
-     * 
-     * @returns The current MediaStreamTrack of the user. 
+     *  Returns the audio source of the user, if it is available.
+     * @returns The current MediaStreamTrack of the user.
      */
     getAudioSource() {
-      return this.#publisher.getAudioSource();
+        return this.#publisher.getAudioSource();
     }
 
     /**
      * Sets the users current's Audio source.
-     * @param {MediaStreamTrack} audioSource 
+     * @param {MediaStreamTrack} audioSource
      */
     setAudioSource(audioSource) {
         this.#publisher.setAudioSource(audioSource);
     }
 
-    useSkop(heartZone, gain){
-        if(this.#role === "doctor") return;
-        this.setUsingSkop(true);
-        this.#ModifyAudio(heartZone, gain) 
-    }
-
-    async stopUsingSkop(){
-        if(this.#role === "doctor") return;
-        this.setUsingSkop(false)
-        this.#defaultAudio()
-    }
-
-    isUsingSkop() { 
-        return this.#usingSkop;
-    }
-
-    setUsingSkop(isUsingSkop){
-        this.#usingSkop = isUsingSkop;
-    }
-
-    getRole() {
-        return this.#role;
-    }
-
-    setRole(role) {
-        this.#role = role;
-    }
-
-    getHeartZone() {
-        return this.#heartZone;
-    }
-
     /**
-     * @param {heartZone} heartZone Can be set to one of the heart zones. [Pulmonary, Aortic, Tricuspid, Mitral]
+     * Sets the current level of gain of the patient's Skop audio output.
      */
-    setHeartZone(heartZone) {
-        this.#heartZone = heartZone;
-    }
-
     setGain(gain){
         if(this.#role === "doctor") return;
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
     }
+
+    setUsingSkop(isUsingSkop){
+        this.#usingSkop = isUsingSkop;
+    }
 }
+
 
 module.exports = { Skop : Skop,};
