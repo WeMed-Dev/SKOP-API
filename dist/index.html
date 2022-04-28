@@ -23,7 +23,7 @@
                       <option class="zones-value" value="Tricuspid">Tricuspide</option>
                     </select> 
                  </div>
-               
+                <a id="download">Download</a>
              </div>
              <div id="div-range" >
                  <h4 id="gain-output">Gain : ... </h4>
@@ -64,10 +64,14 @@
         let gainRange = document.getElementById("gainRange");
         let gainOutput = document.getElementById("gain-output");
 
+        let buttonDownload = document.getElementById("download");
+
         // Hiding the content that is for the doctor.
         buttonConversation.style.display   = "none";
         select.style.display              = "none";
         divRange.style.display = "none"
+
+        buttonDownload.style.display = "none";
 
         
         function call(role){
@@ -104,7 +108,7 @@
                
                 buttonConversation.remove();
                 select.remove();
-                
+                buttonDownload.style.display = "block";
              
             }
 
