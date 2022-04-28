@@ -8,35 +8,16 @@
     <link rel="stylesheet" href="../style/global.css">
 </head>
 <body>
-
+    <p id="res"> </p>
 </body>
 <script>
-    fetch("https://test-wemed.herokuapp.com/session")
-    .then(response => response.json())
-    .then(response => console.log(response))
+    const server = 'localhost:3000';
+    fetch("localhost:3000/api/hello")
+        .then(response => response.json())
+        .catch(function(error){
+            console.log(error);
+        })
 
-
-    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    navigator.mediaDevices.getUserMedia ({audio: true,video: false}).then(stream => {
-
-        let audioSource = audioCtx.createMediaStreamSource(stream);
-
-        //Create the biquad filter
-        let biquadFilter = audioCtx.createBiquadFilter();
-        biquadFilter.type = "lowshelf";
-        biquadFilter.frequency.setValueAtTime(10000, audioCtx.currentTime);
-        biquadFilter.gain.setValueAtTime(0.05, audioCtx.currentTime);
-
-        // connect the nodes together
-
-        audioSource.connect(biquadFilter);
-        biquadFilter.connect(audioCtx.destination);
-    
-    }).catch(err => {
-        console.log(err);
-    });    
-    
-   
 </script>
 </html>
 
