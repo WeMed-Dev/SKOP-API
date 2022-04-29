@@ -92,6 +92,7 @@ class Skop {
             self.useSkop(event.data)
         });
 
+        //When a patient receives a signal:stop it stops the filtering.
         session.on("signal:stop", function(event) {
             self.stopUsingSkop().then(
                 console.log("Stopped using Skop")
@@ -128,16 +129,14 @@ class Skop {
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
-
     skop(heartZone){
-        if(heartZone === undefined){
-            console.log("UNDEFINED HEART ZONE");
+        if(heartZone === null || heartZone === undefined || heartZone === ""){
+            this.signalStopUsingSkop();
         }
-        if(heartZone === null){
-            console.log("NULL HEART ZONE");
+        else{
+            this.signalHeartZone(heartZone);
         }
     }
-
 
     useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
