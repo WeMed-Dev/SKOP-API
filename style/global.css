@@ -103,10 +103,9 @@ button:hover, a:hover{
 }
 
 
-@media only screen and (max-width: 480px) {
-    body{
-        background-color:blue;
-
+@media screen and (max-width: 600px) {
+    body {
+        background-color: olive;
     }
 }
 
