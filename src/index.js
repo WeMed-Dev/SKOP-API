@@ -257,6 +257,7 @@ class Filter{
 
     audioCtx;
     biquadFilter;
+    biquadFilterHighFreq;
     audioSource;
     audioDestination;
     initialised = false;
@@ -269,7 +270,7 @@ class Filter{
     constructor(){
         this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         this.biquadFilter = this.audioCtx.createBiquadFilter();
-
+        this.biquadFilterHighFreq = this.audioCtx.createBiquadFilter();
         this.audioDestination = this.audioCtx.createMediaStreamDestination();
     }
 
@@ -278,6 +279,10 @@ class Filter{
             this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             this.audioSource = this.audioCtx.createMediaStreamSource(this.mediaStream);
 
+            //test attenuation
+            this.biquadFilterHighFreq.type = "highshelf";
+            this.biquadFilterHighFreq.frequency.value = 1000;
+            this.biquadFilterHighFreq.gain.value = -10;
 
             this.biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
