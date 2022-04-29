@@ -280,8 +280,8 @@ class Filter{
 
 
             this.biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            this.biquadFilter.frequency.setValueAtTime(10000, this.audioCtx.currentTime); // 250Hz
-            this.biquadFilter.gain.setValueAtTime(50, this.audioCtx.currentTime);
+            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
+            this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
 
             // If the zone is Pulmonary, we need to set the filter to a different frequency
             if (heartZone === this.PULMONARY){
