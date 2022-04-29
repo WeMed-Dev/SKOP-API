@@ -81,6 +81,11 @@ class Skop {
             };
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         });
+
+        //disconnect from a destroyed stream
+        session.on('streamDestroyed', function streamDestroyed(event) {
+           console.log(event)
+        });
         
         session.on('sessionDisconnected', function sessionDisconnected(event) {
             console.log('You were disconnected from the session.', event.reason);
