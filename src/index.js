@@ -88,13 +88,14 @@ class Skop {
 
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:heartZone", function(event) {
-            //console.log("Signal data: " + event.data);
+            if(this.#role === this.DOCTOR_ROLE) return;
             self.useSkop(event.data)
             console.log("Using Skop - " + event.data);
         });
 
         //When a patient receives a signal:stop it stops the filtering.
         session.on("signal:stop", function(event) {
+            if(this.#role === this.DOCTOR_ROLE) return;
             self.stopUsingSkop().then(
                 console.log("Stopped using Skop")
             ).catch(e => {
