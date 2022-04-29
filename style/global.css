@@ -45,6 +45,7 @@ button, a{
     min-width: 200px;
     border-radius: 5px;
     border: #3F4BE6 solid 3px;
+    background-color: white;
     margin: 20px;
     font-weight: 600;
     font-size: medium;
@@ -110,11 +111,15 @@ button:hover, a:hover{
     }
     .buttons{
         flex-direction:column;
+
     }
 
     button, a{
         margin: 10px;
+        background-color: white;
     }
+
+
 
 
 }
