@@ -35,14 +35,13 @@ class Skop {
      */
     #publisher;
 
-    /**
-     * @type {BiquadFilterNode} The filter node used to modify the audio.
-     */
-    #filter
-
     #filterClass
 
-    #filteringInitiated = false
+    #filteringInitiated = false;
+
+    #recorder;
+
+
 
     DOCTOR_ROLE = "doctor"
     PATIENT_ROLE = "patient"
@@ -57,7 +56,7 @@ class Skop {
      * @param {*} apiKey  The API key of the session.
      * @param {*} token  The token of the session.
      * @param {*} sessionId  The session id of the session.
-     * @param {*} role  The role of the user. [Patient, Doctor]
+     * @param {string} role  The role of the user. [Patient, Doctor]
      */
     constructor(apiKey, token, sessionId, role) {
         // Used to access objects in functions.
@@ -65,6 +64,7 @@ class Skop {
         this.#usingSkop = false;
         this.#role = role;
         this.#filterClass = new Filter();
+        this.#recorder = new Recorder();
 
         /**
          * @@type {OT.Session} The session object.
@@ -140,20 +140,30 @@ class Skop {
 
     useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
+
         if(!this.#filteringInitiated) {
             this.#filteringInitiated = true;
-            this.#filterClass.init(this, heartZone)
+            this.#filterClass.init(this, heartZone).then(
+                this.#recorder.startRecording()
+            )
+
         }
         else {
+            // to avoid error when the user is using the skop and then receives a new signal, the recording is stopped.
+            this.#recorder.stopRecording();
             this.#filterClass.filtering(heartZone);
+            this.#recorder.startRecording();
         }
+
         this.setUsingSkop(true);
+
     }
 
     async stopUsingSkop(){
         if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(false)
         this.#filterClass.defaultAudio(this.#publisher);
+        this.#recorder.stopRecording();
     }
 
     //------ SIGNALING ------//
@@ -237,6 +247,10 @@ class Skop {
     setUsingSkop(isUsingSkop){
         this.#usingSkop = isUsingSkop;
     }
+
+    getRecorder(){
+        return this.#recorder;
+    }
 }
 
 class Filter{
@@ -270,7 +284,7 @@ class Filter{
             this.biquadFilter.gain.setValueAtTime(50, this.audioCtx.currentTime);
 
             // If the zone is Pulmonary, we need to set the filter to a different frequency
-            if (heartZone == this.PULMONARY){
+            if (heartZone === this.PULMONARY){
                 this.biquadFilter.type = "peaking";
                 this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
                 this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
@@ -283,9 +297,8 @@ class Filter{
 
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
-
+            skop.getRecorder().init(this.audioDestination.stream);
             this.initialised = true;
-            console.log("Filter initialised");
         }catch (error){
             handleError(error);
         }
@@ -324,6 +337,71 @@ class Filter{
         this.biquadFilter.gain.setValueAtTime(gain, this.audioCtx.currentTime);
     }
 
+    getAudioDestination(){
+        return this.audioDestination;
+    }
+
+}
+
+/**
+ * Records the audio from the Skop when used on the patient.
+ */
+class Recorder{
+    audioCtx;
+    audioDestination;
+    mediaRecorder;
+    audioChunks;
+    audioBlob;
+    audioURL;
+    audio;
+
+    constructor() {
+        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioChunks = [];
+    }
+
+    init(filterAudio){
+        this.audioDestination = filterAudio;
+        this.mediaRecorder = new MediaRecorder(filterAudio);
+
+        this.mediaRecorder.addEventListener("dataavailable", event => {
+            this.audioChunks.push(event.data);
+        });
+
+        this.mediaRecorder.addEventListener("stop", () => {
+            this.audioBlob = new Blob(this.audioChunks, {type: "audio/wav"});
+            this.audioUrl = URL.createObjectURL(this.audioBlob);
+            this.audio = new Audio(this.audioUrl);
+            this.audioChunks = [];
+        });
+
+        console.log("Recorder initialised");
+    }
+
+    startRecording(){
+        if(this.mediaRecorder === undefined){
+            console.log("Recorder not initialised");
+            return;
+        }
+        this.mediaRecorder.start();
+    }
+
+    stopRecording(){
+        this.mediaRecorder.stop();
+        this.downloadAudio();
+    }
+
+    downloadAudio(){
+        let a = document.createElement("a");
+        a.href = this.audioUrl;
+        a.download = "audio.wav";
+        document.body.appendChild(a);
+        a.click();
+    }
+
+    getAudio(){
+        return this.audio;
+    }
 }
 
 
