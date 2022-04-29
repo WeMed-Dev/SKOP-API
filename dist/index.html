@@ -88,13 +88,11 @@
                 select.style.display              = "block";
                
                 buttonConversation.addEventListener('click', () => {
-                    test.signalStopUsingSkop();
                     test.skop();
                     divRange.style.display = "none"
                 })
                 select.addEventListener("change", (e) => {
-                  
-                    test.signalHeartZone(e.target.value);
+                    test.skop(e.target.value);
                     divRange.style.display = "flex"
                 });
 
