@@ -107,6 +107,14 @@ button:hover, a:hover{
     body{
         background-color: blue;
     }
+
+    .buttons{
+        flex-direction:column;
+    }
+
+    button, a{
+        margin: 10px;
+    }
 }
 
 
