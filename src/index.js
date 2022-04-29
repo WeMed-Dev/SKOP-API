@@ -90,6 +90,7 @@ class Skop {
         session.on("signal:heartZone", function(event) {
             //console.log("Signal data: " + event.data);
             self.useSkop(event.data)
+            console.log("Using Skop - " + event.data);
         });
 
         //When a patient receives a signal:stop it stops the filtering.
