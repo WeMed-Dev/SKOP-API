@@ -144,15 +144,15 @@ class Skop {
         if(!this.#filteringInitiated) {
             this.#filteringInitiated = true;
             this.#filterClass.init(this, heartZone).then(
-                this.#recorder.startRecording()
+                //this.#recorder.startRecording()
             )
 
         }
         else {
             // to avoid error when the user is using the skop and then receives a new signal, the recording is stopped.
-            this.#recorder.stopRecording();
+            //this.#recorder.stopRecording();
             this.#filterClass.filtering(heartZone);
-            this.#recorder.startRecording();
+            //this.#recorder.startRecording();
         }
 
         this.setUsingSkop(true);
@@ -163,7 +163,7 @@ class Skop {
         if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(false)
         this.#filterClass.defaultAudio(this.#publisher);
-        this.#recorder.stopRecording();
+        //this.#recorder.stopRecording();
     }
 
     //------ SIGNALING ------//
@@ -297,7 +297,7 @@ class Filter{
 
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
-            skop.getRecorder().init(this.audioDestination.stream);
+            //skop.getRecorder().init(this.audioDestination.stream);
             this.initialised = true;
         }catch (error){
             handleError(error);
