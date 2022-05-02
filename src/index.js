@@ -321,18 +321,23 @@ class Filter{
      * @param skop The skop object that is being listened to.
      */
     filtering(heartZone, skop){
-        console.log("Filtering");
-        if(heartZone === this.AORTIC || heartZone === this.MITRAL || heartZone === this.TRICUSPID){
-            this.biquadFilter.type = "lowshelf";
-            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
-            this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
-        }else if(heartZone === this.PULMONARY){
-            this.biquadFilter.type = "peaking";
-            this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
-            this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
+        try{
+            if(heartZone === this.AORTIC || heartZone === this.MITRAL || heartZone === this.TRICUSPID){
+                this.biquadFilter.type = "lowshelf";
+                this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
+                this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
+            }else if(heartZone === this.PULMONARY){
+                this.biquadFilter.type = "peaking";
+                this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
+                this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
+            }
+
+            skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
+        }
+        catch (error){
+            handleError(error);
         }
 
-        skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
     }
 
     defaultAudio(skop){
