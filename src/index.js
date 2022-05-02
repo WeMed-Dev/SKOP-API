@@ -148,7 +148,6 @@ class Skop {
         if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(false)
         this.#filterClass.defaultAudio(this.#publisher);
-        //this.#recorder.stopRecording();
     }
 
     //------ SIGNALING ------//
@@ -267,34 +266,40 @@ class Filter{
 
     async init(skop, heartZone){
         try{
-            /*
-            this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
-            this.audioSource = this.audioCtx.createMediaStreamSource(this.mediaStream);
-            */
 
-            this.biquadFilter.type = "lowshelf";
-            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime);
-            this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
+            // define variables
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
+            let audioSource = audioCtx.createMediaStreamSource(stream);
+            let audioDestination = audioCtx.createMediaStreamDestination();
+            //Create the biquad filter
+            let biquadFilter = audioCtx.createBiquadFilter();
+            this.biquadFilter = biquadFilter;
 
-            // If the zone is Pulmonary, we need to set the filter to a different frequency
-            if (heartZone === this.PULMONARY){
-                this.biquadFilter.type = "peaking";
-                this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
-                this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
+            biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+            biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
+            biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
+
+
+            if(heartZone === "Pulmonary"){ // les ondes entres 80 et 500 sont limitées
+                biquadFilter.type = "peaking";
+                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
+                biquadFilter.gain.setValueAtTime(-10, audioCtx.currentTime);
             }
 
             // connect the nodes together
-            this.audioSource.connect(this.biquadFilter);
-            this.biquadFilter.connect(this.audioDestination);
-            //this.biquadFilter.connect(this.audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
+            audioSource.connect(biquadFilter);
+            biquadFilter.connect(audioDestination);
 
+            // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
-            console.log(this.audioDestination.stream);
             // Sets the OT.publisher Audio Source to be the modified stream.
-            skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
+            skop.setAudioSource(audioDestination.stream.getAudioTracks()[0])
 
 
-        }catch (error){
+
+            console.log("SKOP : Audio input modified")
+        }catch(error){
             handleError(error);
         }
 
@@ -336,6 +341,7 @@ class Filter{
 
             //test : just avoiding the biquad filter might be better
             this.audioSource.connect(this.audioDestination)
+
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
         }catch (error){
             handleError(error);
