@@ -144,21 +144,8 @@ class Skop {
 
     async useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
-
-        if(!this.#filteringInitiated) {
-            this.#filteringInitiated = true;
-           await this.#filterClass.init(this, heartZone);
-
-
-
-        }
-        else {
-            await this.#filterClass.init(this, heartZone);
-
-        }
-
         this.setUsingSkop(true);
-
+        await this.#filterClass.init(this, heartZone);
     }
 
     async stopUsingSkop(){
@@ -259,7 +246,6 @@ class Filter{
 
     audioCtx;
     biquadFilter;
-    biquadFilterHighFreq;
     audioSource;
     audioDestination;
     initialised = false;
@@ -281,14 +267,9 @@ class Filter{
             this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             this.audioSource = this.audioCtx.createMediaStreamSource(this.mediaStream);
 
-            /*
-            //test attenuation
-            this.biquadFilterHighFreq.type = "highshelf";
-            this.biquadFilterHighFreq.frequency.value = 1000;
-            this.biquadFilterHighFreq.gain.value = -10;
-            */
-            this.biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
+
+            this.biquadFilter.type = "lowshelf";
+            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime);
             this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
 
             // If the zone is Pulmonary, we need to set the filter to a different frequency
@@ -306,7 +287,7 @@ class Filter{
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
 
-            this.initialised = true;
+
         }catch (error){
             handleError(error);
         }
