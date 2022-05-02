@@ -286,6 +286,7 @@ class Filter{
 
 
             console.log(this.audioDestination.stream);
+            this.audioDestination.stream.set
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
 
@@ -323,11 +324,15 @@ class Filter{
 
     defaultAudio(skop){
         try{
+            /*
             let defaultAudio = navigator.mediaDevices.getUserMedia({audio: true,video: false})
                 .then(stream => {
                     let defStreamTrack = stream.getAudioTracks()[0];
                     skop.setAudioSource(defStreamTrack);
-                })
+                })*/
+
+            //test : just avoiding the biquad filter might be better
+            this.audioSource.connect(this.audioDestination)
         }catch (error){
             handleError(error);
         }
