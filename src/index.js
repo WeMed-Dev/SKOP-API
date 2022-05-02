@@ -256,13 +256,21 @@ class Filter{
         this.biquadFilter = this.audioCtx.createBiquadFilter();
         this.biquadFilterHighFreq = this.audioCtx.createBiquadFilter();
         this.audioDestination = this.audioCtx.createMediaStreamDestination();
+        navigator.mediaDevices.getUserMedia({audio: true, video :false})
+            .then(stream => {
+                this.audioSource = this.audioCtx.createMediaStreamSource(stream);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     async init(skop, heartZone){
         try{
+            /*
             this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             this.audioSource = this.audioCtx.createMediaStreamSource(this.mediaStream);
-
+            */
 
             this.biquadFilter.type = "lowshelf";
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime);
@@ -328,6 +336,7 @@ class Filter{
 
             //test : just avoiding the biquad filter might be better
             this.audioSource.connect(this.audioDestination)
+            skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
         }catch (error){
             handleError(error);
         }
