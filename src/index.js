@@ -284,6 +284,8 @@ class Filter{
             this.biquadFilter.connect(this.audioDestination);
             //this.biquadFilter.connect(this.audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
+
+            console.log(this.audioDestination.stream);
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
 
