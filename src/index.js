@@ -283,11 +283,12 @@ class Filter{
             this.mediaStream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             this.audioSource = this.audioCtx.createMediaStreamSource(this.mediaStream);
 
+            /*
             //test attenuation
             this.biquadFilterHighFreq.type = "highshelf";
             this.biquadFilterHighFreq.frequency.value = 1000;
             this.biquadFilterHighFreq.gain.value = -10;
-
+            */
             this.biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
             this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
