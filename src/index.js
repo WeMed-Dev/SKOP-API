@@ -37,11 +37,7 @@ class Skop {
 
     #filterClass
 
-    #filteringInitiated = false;
-
     #recorder;
-
-
 
     DOCTOR_ROLE = "doctor"
     PATIENT_ROLE = "patient"
@@ -286,7 +282,6 @@ class Filter{
 
 
             console.log(this.audioDestination.stream);
-            this.audioDestination.stream.set
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
 
