@@ -37,8 +37,6 @@ class Skop {
 
     #filterClass
 
-    #recorder;
-
     DOCTOR_ROLE = "doctor"
     PATIENT_ROLE = "patient"
 
@@ -60,7 +58,6 @@ class Skop {
         this.#usingSkop = false;
         this.#role = role;
         this.#filterClass = new Filter();
-        this.#recorder = new Recorder();
 
         /**
          * @@type {OT.Session} The session object.
@@ -232,9 +229,6 @@ class Skop {
         this.#usingSkop = isUsingSkop;
     }
 
-    getRecorder(){
-        return this.#recorder;
-    }
 }
 
 class Filter{
