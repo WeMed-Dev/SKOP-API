@@ -326,7 +326,7 @@ class Filter{
     }
 
     setGain(gain){
-        this.biquadFilter.gain.setValueAtTime(gain, this.audioCtx.currentTime);
+        this.biquadFilter.gain.setValueAtTime(gain,new (window.AudioContext || window.webkitAudioContext) );
     }
 
     getAudioDestination(){
