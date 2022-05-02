@@ -155,7 +155,7 @@ class Skop {
         else {
             // to avoid error when the user is using the skop and then receives a new signal, the recording is stopped.
             //this.#recorder.stopRecording();
-            this.#filterClass.filtering(heartZone, this);
+            this.#filterClass.init(heartZone, this);
             //this.#recorder.startRecording();
         }
 
