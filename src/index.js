@@ -243,26 +243,11 @@ class Filter{
     biquadFilter;
     audioSource;
     audioDestination;
-    initialised = false;
     AORTIC = "Aortic";
     MITRAL = "Mitral";
     PULMONARY = "Pulmonary";
     TRICUSPID = "Tricuspid";
 
-
-    constructor(){
-        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        this.biquadFilter = this.audioCtx.createBiquadFilter();
-        this.biquadFilterHighFreq = this.audioCtx.createBiquadFilter();
-        this.audioDestination = this.audioCtx.createMediaStreamDestination();
-        navigator.mediaDevices.getUserMedia({audio: true, video :false})
-            .then(stream => {
-                this.audioSource = this.audioCtx.createMediaStreamSource(stream);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
 
     async init(skop, heartZone){
         try{
@@ -291,11 +276,9 @@ class Filter{
             audioSource.connect(biquadFilter);
             biquadFilter.connect(audioDestination);
 
-            // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
-
             // Sets the OT.publisher Audio Source to be the modified stream.
             skop.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-
+            console.log(audioDestination.stream.getAudioTracks()[0])
 
 
             console.log("SKOP : Audio input modified")
@@ -357,67 +340,5 @@ class Filter{
     }
 
 }
-
-/**
- * Records the audio from the Skop when used on the patient.
- */
-class Recorder{
-    audioCtx;
-    audioDestination;
-    mediaRecorder;
-    audioChunks;
-    audioBlob;
-    audioURL;
-    audio;
-
-    constructor() {
-        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        this.audioChunks = [];
-    }
-
-    init(filterAudio){
-        this.audioDestination = filterAudio;
-        this.mediaRecorder = new MediaRecorder(filterAudio);
-
-        this.mediaRecorder.addEventListener("dataavailable", event => {
-            this.audioChunks.push(event.data);
-        });
-
-        this.mediaRecorder.addEventListener("stop", () => {
-            this.audioBlob = new Blob(this.audioChunks, {type: "audio/wav"});
-            this.audioUrl = URL.createObjectURL(this.audioBlob);
-            this.audio = new Audio(this.audioUrl);
-            this.audioChunks = [];
-        });
-
-        console.log("Recorder initialised");
-    }
-
-    startRecording(){
-        if(this.mediaRecorder === undefined){
-            console.log("Recorder not initialised");
-            return;
-        }
-        this.mediaRecorder.start();
-    }
-
-    stopRecording(){
-        this.mediaRecorder.stop();
-        this.downloadAudio();
-    }
-
-    downloadAudio(){
-        let a = document.createElement("a");
-        a.href = this.audioUrl;
-        a.download = "audio.wav";
-        document.body.appendChild(a);
-        a.click();
-    }
-
-    getAudio(){
-        return this.audio;
-    }
-}
-
 
 module.exports = { Skop : Skop,};
