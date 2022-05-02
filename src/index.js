@@ -155,7 +155,7 @@ class Skop {
         else {
             // to avoid error when the user is using the skop and then receives a new signal, the recording is stopped.
             //this.#recorder.stopRecording();
-            this.#filterClass.filtering(heartZone);
+            this.#filterClass.filtering(heartZone, this);
             //this.#recorder.startRecording();
         }
 
@@ -317,18 +317,22 @@ class Filter{
 
     /**
      * Change the filter mode, type and frequency depending on the category.
-     * @param category The category of heart zones being listened to. { "cardiac", "respiratory" }
+     * @param heartZone The category of heart zones being listened to. { "cardiac", "respiratory" }
+     * @param skop The skop object that is being listened to.
      */
-    filtering(category){
-        if(category === this.AORTIC || category === this.MITRAL || category === this.TRICUSPID){
+    filtering(heartZone, skop){
+        console.log("Filtering");
+        if(heartZone === this.AORTIC || heartZone === this.MITRAL || heartZone === this.TRICUSPID){
             this.biquadFilter.type = "lowshelf";
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
             this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
-        }else if(category === this.PULMONARY){
+        }else if(heartZone === this.PULMONARY){
             this.biquadFilter.type = "peaking";
             this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
             this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
         }
+
+        skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
     }
 
     defaultAudio(skop){
