@@ -37,8 +37,8 @@ class Skop {
 
     #filterClass
 
-    DOCTOR_ROLE = "doctor"
-    PATIENT_ROLE = "patient"
+    static DOCTOR_ROLE = "doctor"
+    static PATIENT_ROLE = "patient"
 
 
 
@@ -236,6 +236,11 @@ class Filter{
     skop;
     filter;
 
+    static AORTIC = "Aortic";
+    static MITRAL = "Mitral";
+    static PULMONARY = "Pulmonary";
+    static TRICUSPID = "Tricuspid";
+
     constructor(skop){
         this.skop = skop;
     }
@@ -258,20 +263,38 @@ class Filter{
             let biquadFilter = audioCtx.createBiquadFilter();
             this.filter = biquadFilter;
 
-            biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
-            biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
-            biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
 
 
-            if(heartZone === "Pulmonary"){ // les ondes entres 80 et 500 sont limitées
+            if(heartZone === Filter.AORTIC || heartZone === Filter.MITRAL || heartZone === Filter.TRICUSPID){
+                let biquadFilter2 = audioCtx.createBiquadFilter();
+                biquadFilter2.type = "highshelf";
+                biquadFilter2.frequency.value = 1000;
+                biquadFilter2.gain.value = -20;
+
+
+
+                biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+                biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
+                biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
+
+
+                audioSource.connect(biquadFilter2);
+                biquadFilter2.connect(biquadFilter);
+                biquadFilter.connect(audioDestination);
+            }
+
+
+
+            if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
                 biquadFilter.type = "peaking";
                 biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
                 biquadFilter.gain.setValueAtTime(-10, audioCtx.currentTime);
+                // connect the nodes together
+                audioSource.connect(biquadFilter);
+                biquadFilter.connect(audioDestination);
             }
 
-            // connect the nodes together
-            audioSource.connect(biquadFilter);
-            biquadFilter.connect(audioDestination);
+
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 

@@ -75,31 +75,31 @@
             buttonPatient.remove();
             buttonMedecin.remove();
 
-            let test = new Skop.Skop(apiKey, token, sessionId, role);
+            let skop = new Skop.Skop(apiKey, token, sessionId, role);
 
-            if(test.getRole() === "doctor"){
+            if(skop.getRole() === Skop.DOCTOR_ROLE){
 
                 // Displaying the content that is for the doctor.
                 buttonConversation.style.display   = "block";
                 select.style.display              = "block";
                
                 buttonConversation.addEventListener('click', () => {
-                    test.skop();
+                    skop.skop();
                     divRange.style.display = "none"
                 })
                 select.addEventListener("change", (e) => {
-                    test.skop(e.target.value);
+                    skop.skop(e.target.value);
                     divRange.style.display = "flex"
                 });
 
 
                 gainRange.oninput = function() {
                     gainOutput.innerHTML = "Gain : " + this.value;
-                    test.signalGain(this.value);
+                    skop.signalGain(this.value);
                 }
 
 
-            }else if(test.getRole() === "patient"){
+            }else if(skop.getRole() === Skop.PATIENT_ROLE){
                
                 buttonConversation.remove();
                 select.remove();
@@ -107,7 +107,7 @@
             }
 
             // Display the role of the user
-            infos.innerHTML = "ROLE : " + test.getRole() + "<br>";
+            infos.innerHTML = "ROLE : " + skop.getRole() + "<br>";
         }            
     </script>
 </html>
