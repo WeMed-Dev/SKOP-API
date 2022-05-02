@@ -57,7 +57,7 @@ class Skop {
         const self = this;
         this.#usingSkop = false;
         this.#role = role;
-        this.#filterClass = new Filter();
+        this.#filterClass = new Filter(this);
 
         /**
          * @@type {OT.Session} The session object.
@@ -138,7 +138,7 @@ class Skop {
     async useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(true);
-        await this.#filterClass.init(this, heartZone);
+       this.#filterClass.ModifyAudio(heartZone);
     }
 
     async stopUsingSkop(){
@@ -233,17 +233,20 @@ class Skop {
 
 class Filter{
 
-    audioCtx;
-    biquadFilter;
-    audioSource;
-    audioDestination;
-    AORTIC = "Aortic";
-    MITRAL = "Mitral";
-    PULMONARY = "Pulmonary";
-    TRICUSPID = "Tricuspid";
+    skop;
+    filter;
 
+    constructor(skop){
+        this.skop = skop;
+    }
 
-    async init(skop, heartZone){
+    /**
+     * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone.
+     * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
+     * @param {*} heartZone
+     */
+    async ModifyAudio(heartZone) {
+
         try{
 
             // define variables
@@ -253,7 +256,7 @@ class Filter{
             let audioDestination = audioCtx.createMediaStreamDestination();
             //Create the biquad filter
             let biquadFilter = audioCtx.createBiquadFilter();
-            this.biquadFilter = biquadFilter;
+            this.filter = biquadFilter;
 
             biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
             biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
@@ -270,9 +273,11 @@ class Filter{
             audioSource.connect(biquadFilter);
             biquadFilter.connect(audioDestination);
 
+            // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
+
             // Sets the OT.publisher Audio Source to be the modified stream.
-            skop.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-            console.log(audioDestination.stream.getAudioTracks()[0])
+            this.skop.setAudioSource(audioDestination.stream.getAudioTracks()[0])
+
 
 
             console.log("SKOP : Audio input modified")
@@ -280,58 +285,37 @@ class Filter{
             handleError(error);
         }
 
+
+    }
+
+    async defaultAudio(){
+        try{
+            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+            let defStreamTrack = defaultAudio.getAudioTracks()[0];
+            this.skop.setAudioSource(defStreamTrack);
+            console.log("SKOP : Audio input set to default - No modifications")
+        }catch(err){
+            handleError(err)
+        }
     }
 
     /**
-     * Change the filter mode, type and frequency depending on the category.
-     * @param heartZone The category of heart zones being listened to. { "cardiac", "respiratory" }
-     * @param skop The skop object that is being listened to.
+     * Sets the current level of gain of the patient's Skop audio output.
      */
-    filtering(heartZone, skop){
-        try{
-            if(heartZone === this.AORTIC || heartZone === this.MITRAL || heartZone === this.TRICUSPID){
-                this.biquadFilter.type = "lowshelf";
-                this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
-                this.biquadFilter.gain.setValueAtTime(10, this.audioCtx.currentTime);
-            }else if(heartZone === this.PULMONARY){
-                this.biquadFilter.type = "peaking";
-                this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
-                this.biquadFilter.gain.setValueAtTime(-10, this.audioCtx.currentTime);
-            }
-
-            skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
-        }
-        catch (error){
-            handleError(error);
-        }
-
-    }
-
-    defaultAudio(skop){
-        try{
-            /*
-            let defaultAudio = navigator.mediaDevices.getUserMedia({audio: true,video: false})
-                .then(stream => {
-                    let defStreamTrack = stream.getAudioTracks()[0];
-                    skop.setAudioSource(defStreamTrack);
-                })*/
-
-            //test : just avoiding the biquad filter might be better
-            this.audioSource.connect(this.audioDestination)
-
-            skop.setAudioSource(this.audioDestination.stream.getAudioTracks()[0])
-        }catch (error){
-            handleError(error);
-        }
-    }
-
     setGain(gain){
-        this.biquadFilter.gain.setValueAtTime(gain,new (window.AudioContext || window.webkitAudioContext) );
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
     }
 
-    getAudioDestination(){
-        return this.audioDestination;
-    }
+
+
+
+
+
+
+
+
+
 
 }
 
