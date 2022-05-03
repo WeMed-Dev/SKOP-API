@@ -287,13 +287,17 @@ class Filter{
 
 
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
+                let biquadFilter2 = audioCtx.createBiquadFilter();
+                biquadFilter2.type = "highshelf";
+                biquadFilter2.frequency.value = 500;
+                biquadFilter2.gain.value =  this.gain;
 
-
-                biquadFilter.type = "lowpass";
-                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime); // center frequency between 80 and 500Hz
-                biquadFilter.gain.setValueAtTime(80, audioCtx.currentTime);
+                biquadFilter.type = "lowshelf";
+                biquadFilter.frequency.setValueAtTime(80, audioCtx.currentTime); // center frequency between 80 and 500Hz
+                biquadFilter.gain.setValueAtTime(this.gain, audioCtx.currentTime);
                 // connect the nodes together
-                audioSource.connect(biquadFilter);
+                audioSource.connect(biquadFilter2);
+                biquadFilter2.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
             }
 
