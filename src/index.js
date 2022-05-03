@@ -244,6 +244,7 @@ class Filter{
 
     constructor(skop){
         this.skop = skop;
+        this.gain = 10; //default gain
     }
 
     /**
