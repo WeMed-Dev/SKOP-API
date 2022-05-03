@@ -235,6 +235,7 @@ class Filter{
 
     skop;
     filter;
+    gain;
 
     static AORTIC = "Aortic";
     static MITRAL = "Mitral";
@@ -269,7 +270,7 @@ class Filter{
                 let biquadFilter2 = audioCtx.createBiquadFilter();
                 biquadFilter2.type = "highshelf";
                 biquadFilter2.frequency.value = 1000;
-                biquadFilter2.gain.value = -20;
+                biquadFilter2.gain.value = -50;
 
 
 
@@ -286,9 +287,11 @@ class Filter{
 
 
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
-                biquadFilter.type = "peaking";
-                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
-                biquadFilter.gain.setValueAtTime(-10, audioCtx.currentTime);
+
+
+                biquadFilter.type = "lowpass";
+                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime); // center frequency between 80 and 500Hz
+                biquadFilter.gain.setValueAtTime(80, audioCtx.currentTime);
                 // connect the nodes together
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
@@ -328,6 +331,7 @@ class Filter{
     setGain(gain){
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
+        this.gain = gain;
     }
 
 
