@@ -11,12 +11,18 @@
     <p id="res"> </p>
 </body>
 <script>
-    const server = 'localhost:3000';
-    fetch("localhost:3000/api/hello")
-        .then(response => response.json())
-        .catch(function(error){
-            console.log(error);
-        })
+
+    async function verif(){
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var stream = await navigator.mediaDevices.getUserMedia({audio: true});
+        var audioSource = audioContext.createMediaStreamSource(stream);
+        var analyser = audioContext.createAnalyser();
+
+        audioSource.connect(analyser);
+        analyser.fftSize = 2048;
+        var bufferLength = analyser.frequencyBinCount;
+
+    }
 
 </script>
 </html>
