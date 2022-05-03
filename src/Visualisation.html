@@ -5,9 +5,9 @@
 <body>
 <canvas id="oscilloscope"></canvas>
 </body>
-
+<script src="./init.js"></script>
 <script>
-
+/*
 
     var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
     var audioSource;
@@ -25,6 +25,9 @@
     var bufferLength = analyser.frequencyBinCount;
     var dataArray = new Uint8Array(bufferLength);
     analyser.getByteTimeDomainData(dataArray);
+   
+    analyser.getByteFrequencyData(dataArray);
+    console.log(analyser.getByteFrequencyData(dataArray));
 
     // Connect the source to be analysed
     navigator.mediaDevices.getUserMedia({audio: true}).then( function(stream) {
@@ -36,15 +39,19 @@
     // Get a canvas defined with ID "oscilloscope"
     var canvas = document.getElementById("oscilloscope");
     var canvasCtx = canvas.getContext("2d");
-
+    
     // draw an oscilloscope of the current audio source
+
+
+
+
 
 function draw() {
 
     requestAnimationFrame(draw);
 
     analyser.getByteTimeDomainData(dataArray);
-
+  
     canvasCtx.fillStyle = "rgb(200, 200, 200)";
     canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -56,17 +63,19 @@ function draw() {
     var sliceWidth = canvas.width * 1.0 / bufferLength;
     var x = 0;
 
-    for (var i = 0; i < bufferLength; i++) {
-
+    for (var i = 0; i < bufferLength; i++) {    
+       
         var v = dataArray[i] / 128.0;
         var y = v * canvas.height / 2;
-
+        
         if (i === 0) {
             canvasCtx.moveTo(x, y);
         } else {
             canvasCtx.lineTo(x, y);
         }
-
+        if(y > 100){
+            console.log(y);
+        }
         x += sliceWidth;
     }
 
@@ -74,6 +83,13 @@ function draw() {
     canvasCtx.stroke();
 }
 
+
+function test(){
+    alert("Tapoter 3 fois la membrane du SKOP")
+    detectTap();
+    
+}
+*/
 </script>
 
 </html>
