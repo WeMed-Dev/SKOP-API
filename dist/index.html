@@ -12,8 +12,7 @@
             <h1> API WEMED SAMPLE </h1>   
              <div class="buttons">
                 <button id="patient" class="button" onclick="call('patient')">Patient</button>
-                <button id="medecin" class="button" onclick="call('doctor')">Medecin</button>
-                <!-- <button id="skop">SKOP</button> -->
+                <button id="doctor" class="button" onclick="call('doctor')">Medecin</button>
                  <button id="conv">CONVERSATION</button>
                  <div id="div-select">
                     <select name="zones" id="zones">
@@ -53,7 +52,7 @@
         // --------------------------------------------------------- //
 
         let buttonPatient = document.getElementById("patient");
-        let buttonMedecin = document.getElementById("medecin");
+        let buttonMedecin = document.getElementById("doctor");
         let infos = document.getElementById("infos");
 
         let buttonConversation  = document.getElementById("conv");
@@ -77,7 +76,7 @@
 
             let skop = new Skop.Skop(apiKey, token, sessionId, role);
 
-            if(skop.getRole() === Skop.DOCTOR_ROLE){
+            if(skop.getRole() === "doctor"){
 
                 // Displaying the content that is for the doctor.
                 buttonConversation.style.display   = "block";
