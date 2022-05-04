@@ -3,28 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>API WEMED</title>
     <link rel="stylesheet" href="../style/global.css">
 </head>
 <body>
-    <p id="res"> </p>
+
 </body>
-<script>
 
-    async function verif(){
-        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        var stream = await navigator.mediaDevices.getUserMedia({audio: true});
-        var audioSource = audioContext.createMediaStreamSource(stream);
-        var analyser = audioContext.createAnalyser();
-
-        audioSource.connect(analyser);
-        analyser.fftSize = 2048;
-        var bufferLength = analyser.frequencyBinCount;
-
-    }
-
-</script>
 </html>
 
 
