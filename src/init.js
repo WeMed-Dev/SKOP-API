@@ -41,4 +41,4 @@ function detection(){
     detectTap();
 }
 
-
+module.exports = detection;
