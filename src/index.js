@@ -129,6 +129,7 @@ class Skop {
         // This function is called from the init.js file.
         // It give feedback to the user if he is using the skop.
         if(this.#role == this.PATIENT_ROLE){
+            console.log(this.PATIENT_ROLE);
             detection();
         }
        
