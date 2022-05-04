@@ -38,8 +38,8 @@ class Skop {
 
     #filterClass
 
-    static DOCTOR_ROLE = "doctor"
-    static PATIENT_ROLE = "patient"
+    DOCTOR_ROLE = "doctor"
+    PATIENT_ROLE = "patient"
 
 
 
