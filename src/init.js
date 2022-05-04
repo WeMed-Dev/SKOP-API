@@ -1,19 +1,18 @@
 var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-    var analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 2048;
+var analyser = audioCtx.createAnalyser();
+analyser.fftSize = 2048;
 
-    var bufferLength = analyser.frequencyBinCount;
-    var dataArray = new Uint8Array(bufferLength);
-    analyser.getByteTimeDomainData(dataArray);
+var bufferLength = analyser.frequencyBinCount;
+var dataArray = new Uint8Array(bufferLength);
+analyser.getByteTimeDomainData(dataArray);
+analyser.getByteFrequencyData(dataArray);
 
-    analyser.getByteFrequencyData(dataArray);
 
-
-    // Connect the source to be analysed
-    navigator.mediaDevices.getUserMedia({audio: true}).then( function(stream) {
-            let source = audioCtx.createMediaStreamSource(stream)
-            source.connect(analyser)
-    })
+// Connect the source to be analysed
+navigator.mediaDevices.getUserMedia({audio: true}).then( function(stream) {
+    let source = audioCtx.createMediaStreamSource(stream)
+    source.connect(analyser)
+})
 
 // find a way to wait an audio input to be ready
 function detectTap(){
@@ -32,15 +31,14 @@ function detectTap(){
         }
 
     }
-    if(!validate)requestAnimationFrame(detectTap);
+    if(!validate) setTimeout(detectTap, 100);
 }
 
-function detection(){
 
-    
+
+function detection(){
     alert("Gently tap the membrane while being quiet");
     detectTap();
 }
 
 
-module.exports = detection;
