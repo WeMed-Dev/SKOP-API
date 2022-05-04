@@ -124,9 +124,16 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
+        
+        //Detect if the user is using the skop
+        // This function is called from the init.js file.
+        // It give feedback to the user if he is using the skop.
+        detection(this.getAudioSource());
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
+
+
 
     skop(heartZone){
         if(heartZone === null || heartZone === undefined || heartZone === ""){
