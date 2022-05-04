@@ -36,7 +36,10 @@ class Skop {
      */
     #publisher;
 
-    #filterClass
+    /**
+     * @type {Filter} The filter object.
+     */
+    #filter
 
     DOCTOR_ROLE = "doctor"
     PATIENT_ROLE = "patient"
@@ -58,7 +61,7 @@ class Skop {
         const self = this;
         this.#usingSkop = false;
         this.#role = role;
-        this.#filterClass = new Filter(this);
+        this.#filter = new Filter(this);
 
         /**
          * @@type {OT.Session} The session object.
@@ -76,8 +79,6 @@ class Skop {
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         });
 
-
-        
         session.on('sessionDisconnected', function sessionDisconnected(event) {
             console.log('You were disconnected from the session.', event.reason);
         });
@@ -98,7 +99,6 @@ class Skop {
                 console.log("Error stopping using Skop" + e);
             });
         });
-
 
         // When a user receive a signal with a gain, it modifies the gain of the user.
         session.on("signal:gain", function(event) {
@@ -128,10 +128,7 @@ class Skop {
         //Detect if the user is using the skop
         // This function is called from the init.js file.
         // It give feedback to the user if he is using the skop.
-        console.log("patient")
-        console.log(this.PATIENT_ROLE)
         if(this.#role == this.PATIENT_ROLE){
-            console.log(this.PATIENT_ROLE);
             detection();
         }
        
@@ -150,13 +147,13 @@ class Skop {
     async useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(true);
-       this.#filterClass.ModifyAudio(heartZone);
+       this.#filter.ModifyAudio(heartZone);
     }
 
     async stopUsingSkop(){
         if(this.#role === this.DOCTOR_ROLE) return;
         this.setUsingSkop(false)
-        this.#filterClass.defaultAudio(this.#publisher);
+        this.#filter.defaultAudio(this.#publisher);
     }
 
     //------ SIGNALING ------//
@@ -200,7 +197,6 @@ class Skop {
         })
     }
 
-
     //----- GETTER & SETTER -----//
     /**
      * Returns the current role of the user.
@@ -234,7 +230,7 @@ class Skop {
         //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
 
-        this.#filterClass.setGain(gain);
+        this.#filter.setGain(gain);
     }
 
     setUsingSkop(isUsingSkop){
@@ -277,27 +273,20 @@ class Filter{
             let biquadFilter = audioCtx.createBiquadFilter();
             this.filter = biquadFilter;
 
-
-
             if(heartZone === Filter.AORTIC || heartZone === Filter.MITRAL || heartZone === Filter.TRICUSPID){
                 let biquadFilter2 = audioCtx.createBiquadFilter();
                 biquadFilter2.type = "highshelf";
                 biquadFilter2.frequency.value = 1000;
                 biquadFilter2.gain.value = -50;
 
-
-
                 biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
                 biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
                 biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
-
 
                 audioSource.connect(biquadFilter2);
                 biquadFilter2.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
             }
-
-
 
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
                 let biquadFilter2 = audioCtx.createBiquadFilter();
@@ -314,21 +303,14 @@ class Filter{
                 biquadFilter.connect(audioDestination);
             }
 
-
-
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
             // Sets the OT.publisher Audio Source to be the modified stream.
             this.skop.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-
-
-
             console.log("SKOP : Audio input modified")
         }catch(error){
             handleError(error);
         }
-
-
     }
 
     async defaultAudio(){
@@ -350,17 +332,6 @@ class Filter{
         this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
         this.gain = gain;
     }
-
-
-
-
-
-
-
-
-
-
-
 }
 
 module.exports = { Skop : Skop,};
