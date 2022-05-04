@@ -135,9 +135,6 @@ class Skop {
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
-
-
-
     skop(heartZone){
         if(heartZone === null || heartZone === undefined || heartZone === ""){
             this.signalStopUsingSkop();
