@@ -45,8 +45,6 @@ class Skop {
     PATIENT_ROLE = "patient"
 
 
-
- 
     /**
      * Creates the instance of the SKOP. 
      * Initializes the session and the publisher.
@@ -133,10 +131,9 @@ class Skop {
 
 
     init(){
-        OT.getUserMedia({audio:true}).then( res =>{
-            detection(res);
-            }
-        )
+        console.log(OT.getAudioOutputDevices());
+
+        OT.getUserMedia({audio:true}).then( res =>{detection(res);})
 
     }
 

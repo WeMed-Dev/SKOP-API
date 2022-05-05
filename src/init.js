@@ -1,7 +1,7 @@
 const Swal = require('sweetalert2');
 
 
-
+// variable declaration
 let audioCtx;
 let analyser;
 let bufferLength;
@@ -20,13 +20,6 @@ function detection(mediaStream) {
     dataArray = new Uint8Array(bufferLength);
     analyser.getByteTimeDomainData(dataArray);
     analyser.getByteFrequencyData(dataArray);
-
-    /*
-// Connect the source to be analysed
-    navigator.mediaDevices.getUserMedia({audio: true}).then( function(stream) {
-        let source = audioCtx.createMediaStreamSource(stream)
-        source.connect(analyser)
-    }) */
 
     let source = audioCtx.createMediaStreamSource(mediaStream);
     source.connect(analyser);
@@ -48,8 +41,8 @@ function detection(mediaStream) {
 
 // find a way to wait an audio input to be ready
 function detectTap(){
-    const id = setInterval(detect, 1000/60);
-
+    let id = setInterval(detect, 500);
+    let cpt = 0;
     function detect(){
         analyser.getByteTimeDomainData(dataArray);
         for (var i = 0; i < bufferLength; i++) {
@@ -66,6 +59,32 @@ function detectTap(){
                 });
                 return true;
             }
+        }
+        cpt++;
+        if (cpt > 20){
+            clearInterval(id);
+            Swal.fire({
+                title: 'The SKOP did not detect sound',
+                text: 'Sound is not detected',
+                icon: 'error',
+                confirmButtonText: 'Try again',
+            }).then((result)=>{
+                if(result.value){
+                    Swal.fire({
+                        titleText: "Gently tap the SKOP's membrane",
+                        text: "If sound is detected, this means that the SKOP is active",
+                        icon: "info",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        showConfirmButton: false,
+                    })
+                    detectTap()
+                    id = setInterval(detect, 500);
+                    cpt = 0;
+                }
+            })
+            return false;
         }
     }
 }
