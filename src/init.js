@@ -52,7 +52,7 @@ function detection(mediaStream) {
 // find a way to wait an audio input to be ready
 function detectTap(){
     let id = setInterval(detect, 500);
-    let cpt = 0;
+
     function detect(){
         analyser.getByteTimeDomainData(dataArray);
         for (var i = 0; i < bufferLength; i++) {
@@ -69,16 +69,6 @@ function detectTap(){
                 });
                 return true;
             }
-        }
-        cpt++;
-        if (cpt > 20){
-            clearInterval(id);
-            Swal.fire({
-                title: 'The SKOP did not detect sound',
-                text: 'Sound is not detected',
-                icon: 'error',
-                confirmButtonText: 'Try again',
-            });
         }
     }
 }
