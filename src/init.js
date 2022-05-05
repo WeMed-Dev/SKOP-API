@@ -2,15 +2,16 @@ const Swal = require('sweetalert2');
 
 
 
-var audioCtx;
-var analyser;
-var bufferLength;
-var dataArray;
+let audioCtx;
+let analyser;
+let bufferLength;
+let dataArray;
 
 
 
-function detection(){
-
+function detection(mediaStream) {
+    // make an array of tracks
+    console.log(mediaStream);
     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
@@ -19,14 +20,16 @@ function detection(){
     dataArray = new Uint8Array(bufferLength);
     analyser.getByteTimeDomainData(dataArray);
     analyser.getByteFrequencyData(dataArray);
-    console.log(analyser)
 
+    /*
 // Connect the source to be analysed
     navigator.mediaDevices.getUserMedia({audio: true}).then( function(stream) {
         let source = audioCtx.createMediaStreamSource(stream)
         source.connect(analyser)
-    })
+    }) */
 
+    let source = audioCtx.createMediaStreamSource(mediaStream);
+    source.connect(analyser);
 
     Swal.fire({
         titleText: "Gently tap the SKOP's membrane",
@@ -49,7 +52,6 @@ function detectTap(){
 
     function detect(){
         analyser.getByteTimeDomainData(dataArray);
-        console.log("test")
         for (var i = 0; i < bufferLength; i++) {
             var v = dataArray[i] / 128.0;
             var y = v * 1500 / 2;
@@ -62,7 +64,7 @@ function detectTap(){
                     icon: 'success',
                     confirmButtonText: 'OK',
                 });
-                return;
+                return true;
             }
         }
     }

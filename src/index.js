@@ -112,7 +112,7 @@ class Skop {
         width: '100%',
         height: '100%'
         };
-        var publisher = OT.initPublisher('publisher', publisherOptions, handleError); 
+        var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
         // Connect to the session
@@ -124,17 +124,22 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
-        
-        //Detect if the user is using the skop
-        // This function is called from the init.js file.
-        // It give feedback to the user if he is using the skop.
-        if(this.#role == this.PATIENT_ROLE){
-            detection();
-        }
-       
+
+
+
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
+
+
+    init(){
+        OT.getUserMedia({audio:true}).then( res =>{
+            detection(res);
+            }
+        )
+
+    }
+
     skop(heartZone){
         if(heartZone === null || heartZone === undefined || heartZone === ""){
             this.signalStopUsingSkop();
@@ -146,6 +151,7 @@ class Skop {
 
     async useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
+        this.init();
         this.setUsingSkop(true);
        this.#filter.ModifyAudio(heartZone);
     }
@@ -269,6 +275,9 @@ class Filter{
             let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
             let audioSource = audioCtx.createMediaStreamSource(stream);
             let audioDestination = audioCtx.createMediaStreamDestination();
+
+
+
             //Create the biquad filter
             let biquadFilter = audioCtx.createBiquadFilter();
             this.filter = biquadFilter;
