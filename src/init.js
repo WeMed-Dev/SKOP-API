@@ -1,3 +1,6 @@
+const Swal = require('sweetalert2');
+
+
 var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 var analyser = audioCtx.createAnalyser();
 analyser.fftSize = 2048;
@@ -36,7 +39,14 @@ function detectTap(){
 
 
 function detection(){
-    alert("Gently tap the membrane while being quiet");
+
+    Swal.fire({
+        text: 'Gently tap the membrane while being quiet',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: true,
+    })
     detectTap();
 }
 
