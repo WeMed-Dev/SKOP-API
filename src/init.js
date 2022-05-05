@@ -6,7 +6,17 @@ let audioCtx;
 let analyser;
 let bufferLength;
 let dataArray;
-
+const tapPopup = () => {
+    Swal.fire({
+        titleText: "Gently tap the SKOP's membrane",
+        text: "If sound is detected, this means that the SKOP is active",
+        icon: "info",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: false,
+    })
+}
 
 
 function detection(mediaStream) {
@@ -24,16 +34,11 @@ function detection(mediaStream) {
     let source = audioCtx.createMediaStreamSource(mediaStream);
     source.connect(analyser);
 
-    Swal.fire({
-        titleText: "Gently tap the SKOP's membrane",
-        text: "If sound is detected, this means that the SKOP is active",
-        icon: "info",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        showConfirmButton: false,
-    })
+    tapPopup();
     detectTap()
+
+
+
 
 }
 
@@ -68,23 +73,11 @@ function detectTap(){
                 text: 'Sound is not detected',
                 icon: 'error',
                 confirmButtonText: 'Try again',
-            }).then((result)=>{
-                if(result.value){
-                    Swal.fire({
-                        titleText: "Gently tap the SKOP's membrane",
-                        text: "If sound is detected, this means that the SKOP is active",
-                        icon: "info",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        allowEnterKey: false,
-                        showConfirmButton: false,
-                    })
-                    detectTap()
+            }).then((res) =>{
+                if (res.value){
                     id = setInterval(detect, 500);
-                    cpt = 0;
                 }
             })
-            return false;
         }
     }
 }
