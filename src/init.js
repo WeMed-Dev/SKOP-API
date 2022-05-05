@@ -17,7 +17,6 @@ navigator.mediaDevices.getUserMedia({audio: true}).then( function(stream) {
 // find a way to wait an audio input to be ready
 function detectTap(){
     let validate = false;
-    console.log("tap");
     analyser.getByteTimeDomainData(dataArray);
 
     for (var i = 0; i < bufferLength; i++) {    
@@ -31,7 +30,7 @@ function detectTap(){
         }
 
     }
-    if(!validate) setTimeout(detectTap, 100);
+    if(!validate) setTimeout(detectTap, 200);
 }
 
 
