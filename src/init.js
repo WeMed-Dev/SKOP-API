@@ -35,13 +35,10 @@ function detection(){
         allowOutsideClick: false,
         allowEscapeKey: false,
         allowEnterKey: false,
-        showConfirmButton: true,
-    }).then((result) =>{
-        if(result.isConfirmed){
+        showConfirmButton: false,
+    })
+    detectTap()
 
-            detectTap()
-        }
-    });
 }
 
 
