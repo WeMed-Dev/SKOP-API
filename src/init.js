@@ -51,7 +51,7 @@ function detection(mediaStream) {
 
 // find a way to wait an audio input to be ready
 function detectTap(){
-    let id = setInterval(detect, 300);
+    let id = setInterval(detect, 250);
 
     function detect(){
         analyser.getByteTimeDomainData(dataArray);
