@@ -34,11 +34,16 @@ function detection(mediaStream) {
     let source = audioCtx.createMediaStreamSource(mediaStream);
     source.connect(analyser);
 
-    tapPopup();
+    Swal.fire({
+        titleText: "Gently tap the SKOP's membrane",
+        text: "If sound is detected, this means that the SKOP is active",
+        icon: "info",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showConfirmButton: false,
+    })
     detectTap()
-
-
-
 
 }
 
@@ -73,11 +78,7 @@ function detectTap(){
                 text: 'Sound is not detected',
                 icon: 'error',
                 confirmButtonText: 'Try again',
-            }).then((res) =>{
-                if (res.value){
-                    id = setInterval(detect, 500);
-                }
-            })
+            });
         }
     }
 }
