@@ -39,7 +39,7 @@ the "doctor" has to choose a heart zone :
 - Tricuspid
 - Pulmonary
 
-Then call *Skop([chosen heart zone])
+Then call *Skop(**chosen heart zone**)*
 
 ``` javascript
 
