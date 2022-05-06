@@ -15,7 +15,7 @@ Simply add a *script* into your html file.
 
 ### Creating an instance of the Skop
 
-**Needed to connect the users together : **
+**Needed to connect the users together** :
 - an API_KEY :
 - a TOKEN  :
 - a SESSION_ID : 
