@@ -107,7 +107,7 @@ button:hover, a:hover{
 #div-wemed{
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     position: absolute;
     top: 0;
     left: 0;
