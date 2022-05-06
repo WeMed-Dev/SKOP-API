@@ -5,7 +5,7 @@ The SKOP API is a javascript API for one-to-one video calls between a patient an
 
 ## Import
 ```html
-<script src="Skop.js"></script>
+<script src="SkopAPI.js"></script>
 
 ```
 
@@ -27,7 +27,7 @@ Simply add a *script* into your html file.
 
 ```javascript
 
-let skop = new Skop.Skop(apiKey, token, sessionId, role);
+let skop = new SkopAPI.Skop(apiKey, token, sessionId, role);
 
 ```
 
