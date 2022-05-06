@@ -4,8 +4,8 @@ module.exports = {
   entry: './src/index.js',
   mode: 'development',
   output: {
-    filename: 'Skop.js',
+    filename: 'SkopAPI.js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'Skop',
+    library: 'SkopAPI',
   },
 };
