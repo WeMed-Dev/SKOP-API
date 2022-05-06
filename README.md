@@ -15,7 +15,7 @@ Simply add a *script* into your html file.
 
 ### Creating an instance of the Skop
 
-**Needed to connect the users together** :
+**Needed to connect the users together**: 
 - an API_KEY :
 - a TOKEN  :
 - a SESSION_ID : 
@@ -28,6 +28,31 @@ Simply add a *script* into your html file.
 ```javascript
 
 let skop = new Skop.Skop(apiKey, token, sessionId, role);
+
+```
+
+### Listening the heart
+
+the "doctor" has to choose a heart zone : 
+- Aortic
+- Mitral
+- Tricuspid
+- Pulmonary
+
+Then call *Skop([chosen heart zone])
+
+``` javascript
+
+skop.skop("Aortic");
+
+```
+
+### Talking normally
+To stop using the heart listening mode, you call the *Skop* method without any arguments. It will reset the patient's audio input and they will be able to communicate normally.
+
+``` javascript
+
+skop.skop();
 
 ```
 
