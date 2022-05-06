@@ -285,7 +285,7 @@ class Filter{
                 biquadFilter2.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
             }
-    /*
+
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
                 let biquadFilter2 = audioCtx.createBiquadFilter();
                 biquadFilter2.type = "highshelf";
@@ -293,29 +293,14 @@ class Filter{
                 biquadFilter2.gain.value =  this.gain;
 
                 biquadFilter.type = "lowshelf";
-                biquadFilter.frequency.setValueAtTime(10, audioCtx.currentTime);
+                biquadFilter.frequency.setValueAtTime(80, audioCtx.currentTime);
                 biquadFilter.gain.setValueAtTime(this.gain, audioCtx.currentTime);
                 // connect the nodes together
                 audioSource.connect(biquadFilter2);
                 biquadFilter2.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
-            }*/
-
-            if(heartZone === Filter.PULMONARY){
-                let biquadFilter2 = audioCtx.createBiquadFilter();
-                biquadFilter2.type = "lowshelf";
-                biquadFilter2.frequency.value = 80;
-                biquadFilter2.gain.value =  this.gain;
-
-
-                biquadFilter.type = "peaking";
-                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
-                biquadFilter.Q.setValueAtTime(100, audioCtx.currentTime);
-                // connect the nodes together
-                audioSource.connect(biquadFilter2);
-                biquadFilter2.connect(biquadFilter);
-                biquadFilter.connect(audioDestination);
             }
+
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
