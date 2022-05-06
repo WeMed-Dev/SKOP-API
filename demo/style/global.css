@@ -148,7 +148,9 @@ button:hover, a:hover{
 
     }
 
-
+    #div-wemed{
+        display: none;
+    }
     #wemed{
         border: black 2px solid;
         border-radius: 20px;
