@@ -1,7 +1,8 @@
 # SKOP API
 
-The SKOP API is a javascript API for one-to-one video calls between a patient and a doctor, using a medical device : the Skop.
+The SKOP API is a javascript API for one-to-one video calls between a patient and a doctor, using a medical device : the Skop made by [WeMed](https://en.wemed.fr/nos-produits).
 
+[Demo here](https://bengregory23.github.io/SKOP-API/dist)
 
 ## Import
 ```html
