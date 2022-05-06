@@ -2,7 +2,7 @@
 
 The SKOP API is a javascript API for one-to-one video calls between a patient and a doctor, using a medical device : the Skop made by [WeMed](https://en.wemed.fr/nos-produits).
 
-[Demo here](https://bengregory23.github.io/SKOP-API/dist)
+[Demo here](https://bengregory23.github.io/SKOP-API/demo/)
 
 ## Import
 ```html
@@ -21,13 +21,13 @@ Simply add a *script* into your html file.
 - a TOKEN  :
 - a SESSION_ID : 
 
-**Depending on the user you can either set the ROLE as :**
+**Depending on the user you can either set its ROLE as :**
 - "doctor" : He will be the one listening to the patient's heart through the Skop.
 - "patient" : He will be the one using the Skop device.
 
 
 ```javascript
-
+// SkopAPI is the name of the library.
 let skop = new SkopAPI.Skop(apiKey, token, sessionId, role);
 
 ```
@@ -63,3 +63,5 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 
 ## License
+
+NOT YET
