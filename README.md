@@ -27,7 +27,7 @@ Simply add a *script* into your html file.
 
 
 ```javascript
-
+// SkopAPI is the name of the library.
 let skop = new SkopAPI.Skop(apiKey, token, sessionId, role);
 
 ```
