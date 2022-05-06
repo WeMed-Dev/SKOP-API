@@ -34,7 +34,7 @@
         </div>
     </body>
 
-    <script src="Skop.js"></script>
+    <script src="SkopAPI.js"></script>
     <script>
 
         // ------------Récupération de données de session------------ //
@@ -72,7 +72,7 @@
             buttonPatient.remove();
             buttonMedecin.remove();
 
-            let skop = new Skop.Skop(apiKey, token, sessionId, role);
+            let skop = new SkopAPI.Skop(apiKey, token, sessionId, role);
 
             if(skop.getRole() === "doctor"){
 
