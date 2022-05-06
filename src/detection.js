@@ -41,13 +41,15 @@ function detection(mediaStream) {
         allowEnterKey: false,
         showConfirmButton: false,
     })
-    detectTap()
+    return detectTap()
 }
 
 function detectTap(){
     let id = setInterval(detect, 70);
-
+    let count = 0;
     function detect(){
+
+
         analyser.getByteTimeDomainData(dataArray);
         for (var i = 0; i < bufferLength; i++) {
             var v = dataArray[i] / 128.0;
@@ -63,6 +65,26 @@ function detectTap(){
                 });
                 return true;
             }
+        }
+
+        count++;
+        if (count > 100) {
+            clearInterval(id);
+            Swal.fire({
+                titleText: "SKOP is not active",
+                text: "Please try again",
+                icon: "error",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                confirmButtonText: "Try again",
+            }).then((res)=>{
+                if (res.value){
+                    id = setInterval(detect, 70);
+                    tapPopup();
+                    count = 0;
+                }
+            })
         }
     }
 }
