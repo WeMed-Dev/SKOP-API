@@ -293,7 +293,7 @@ class Filter{
                 biquadFilter2.gain.value =  this.gain;
 
                 biquadFilter.type = "lowshelf";
-                biquadFilter.frequency.setValueAtTime(80, audioCtx.currentTime); // center frequency between 80 and 500Hz
+                biquadFilter.frequency.setValueAtTime(80, audioCtx.currentTime);
                 biquadFilter.gain.setValueAtTime(this.gain, audioCtx.currentTime);
                 // connect the nodes together
                 audioSource.connect(biquadFilter2);

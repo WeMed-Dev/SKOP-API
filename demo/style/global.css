@@ -68,7 +68,7 @@ button:hover, a:hover{
     justify-content:center;
     align-items:center;
     flex-direction:column;
-  
+    border: none;
     font-size: medium;
 }
 
@@ -111,19 +111,21 @@ button:hover, a:hover{
     position: absolute;
     top: 0;
     left: 0;
+
 }
 
 #wemed{
-    color: black;
+    color:white;
     padding: 5px;
-
+    background-color: black;
+    border: none;
     text-decoration: none;
-    border: black 2px dashed;
 }
 
 #wemed:hover{
     color: white;
     background-color: black;
+    text-decoration: underline;
 }
 
 @media only screen and (max-width: 600px) {
