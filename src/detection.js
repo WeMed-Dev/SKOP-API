@@ -20,8 +20,6 @@ const tapPopup = () => {
 
 
 function detection(mediaStream) {
-    // make an array of tracks
-    console.log(mediaStream);
     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
@@ -44,12 +42,8 @@ function detection(mediaStream) {
         showConfirmButton: false,
     })
     detectTap()
-
 }
 
-
-
-// find a way to wait an audio input to be ready
 function detectTap(){
     let id = setInterval(detect, 70);
 
