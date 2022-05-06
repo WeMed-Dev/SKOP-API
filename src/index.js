@@ -1,5 +1,5 @@
 const OT = require('@opentok/client');
-const detection = require('./init');
+const detection = require('./detection');
 
 
 /**
@@ -122,19 +122,11 @@ class Skop {
           session.publish(publisher , handleError);
         }
         });
-
-
-
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
-
-
     init(){
-        console.log(OT.getAudioOutputDevices());
-
-        OT.getUserMedia({audio:true}).then( res =>{detection(res);})
-
+        OT.getUserMedia({audio:true}).then( res =>{detection(res);});
     }
 
     skop(heartZone){
