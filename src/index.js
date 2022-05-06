@@ -41,6 +41,8 @@ class Skop {
      */
     #filter
 
+    #skopDetected = false;
+
     DOCTOR_ROLE = "doctor"
     PATIENT_ROLE = "patient"
 
@@ -140,7 +142,11 @@ class Skop {
 
     async useSkop(heartZone){
         if(this.#role === this.DOCTOR_ROLE) return;
-        this.init();
+        if(!this.#skopDetected){
+            this.init();
+            this.#skopDetected = true;
+        }
+
         this.setUsingSkop(true);
        this.#filter.ModifyAudio(heartZone);
     }
