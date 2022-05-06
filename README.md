@@ -2,7 +2,7 @@
 
 The SKOP API is a javascript API for one-to-one video calls between a patient and a doctor, using a medical device : the Skop.
 
-Demo here : Bengregory23.github.io/SKOP-API/dist/
+[Demo here](Bengregory23.github.io/SKOP-API/dist/)
 
 ## Import
 ```html
