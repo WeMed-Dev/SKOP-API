@@ -104,6 +104,28 @@ button:hover, a:hover{
 }
 
 
+#div-wemed{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#wemed{
+    color: black;
+    padding: 5px;
+
+    text-decoration: none;
+    border: black 2px dashed;
+}
+
+#wemed:hover{
+    color: white;
+    background-color: black;
+}
+
 @media only screen and (max-width: 600px) {
 
     h1{
@@ -125,6 +147,10 @@ button:hover, a:hover{
     }
 
 
+    #wemed{
+        border: black 2px solid;
+        border-radius: 20px;
+    }
 
 }
 

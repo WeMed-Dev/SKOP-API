@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <title>API Wemed</title>
-        <link rel="stylesheet" href="../style/global.css">
+        <link rel="stylesheet" href="./style/global.css">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
     </head>
  
@@ -31,18 +31,24 @@
             </div>
         
             <div id="infos"> </div>
+            <div id="div-wemed">
+                <a href="https://en.wemed.fr/" target="_blank" id="wemed">Check out WeMed ! </a>
+            </div>
+
         </div>
     </body>
 
-    <script src="SkopAPI.js"></script>
+    <script src="../dist/SkopAPI.js"></script>
     <script>
 
+
         // ------------Récupération de données de session------------ //
+        let room = 0 // rooms are used to do one-to-one conversations, the room is the id of the conversation
         var apiKey
         var sessionId
         var token
     
-        fetch("https://test-wemed.herokuapp.com/session")
+        fetch("https://test-wemed.herokuapp.com/room/" + room)
         .then(data => data.json())
         .then(data => {
             apiKey = data.apiKey
