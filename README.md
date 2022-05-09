@@ -22,11 +22,8 @@ Simply add a *script* into your html file.
 - a SESSION_ID : 
 
 **Depending on the user you can either set its ROLE as :** <br>
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |                               |
-
+"doctor" : He will be the one listening to the patient’s heart through the Skop.
+"patient" :  He will be the one using the Skop device.		
 
 ```javascript
 // SkopAPI is the name of the library.
