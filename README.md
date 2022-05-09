@@ -26,7 +26,6 @@ Simply add a *script* into your html file.
 |-----------|-----------------------------------------------------------------------|
 | "doctor"  | He will be the one listening to the patient’s heart through the Skop. |
 | "patient" | He will be the one using the Skop device.                             |
-|           |                                                                       |						|
 
 
 ```javascript
