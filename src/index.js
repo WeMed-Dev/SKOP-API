@@ -278,14 +278,12 @@ class Filter{
             this.filter = biquadFilter;
 
             if(heartZone === Filter.AORTIC || heartZone === Filter.MITRAL || heartZone === Filter.TRICUSPID){
-
-
-                biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+                /*
+                biquadFilter.type = "lowshelf"; // low shelf filter
                 biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
                 biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
-
+                */
                 audioSource.connect(biquadFilter);
-
                 biquadFilter.connect(audioDestination);
             }
 
