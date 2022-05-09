@@ -278,45 +278,28 @@ class Filter{
             this.filter = biquadFilter;
 
             if(heartZone === Filter.AORTIC || heartZone === Filter.MITRAL || heartZone === Filter.TRICUSPID){
-                /*
                 biquadFilter.type = "lowshelf"; // low shelf filter
                 biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
                 biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
-                */
+
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
             }
-            //testing
-            var AudioContext = window.AudioContext // Default
-                || window.webkitAudioContext // Safari and old versions of Chrome
-                || false;
-
-            if (AudioContext) {
-                // Do whatever you want using the Web Audio API
-                var ctx = new AudioContext;
-                // ...
-            } else {
-                // Web Audio API is not supported
-                // Alert the user
-                alert("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox");
-            }
 
 
-            /*
+
+
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
-                let biquadFilter2 = audioCtx.createBiquadFilter();
-                biquadFilter2.type = "highshelf";
-                biquadFilter2.frequency.value = 500;
-                biquadFilter2.gain.value =  this.gain;
 
-                biquadFilter.type = "lowshelf";
-                biquadFilter.frequency.setValueAtTime(80, audioCtx.currentTime);
-                biquadFilter.gain.setValueAtTime(this.gain, audioCtx.currentTime);
+
+                biquadFilter.type = "peaking";
+                biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
+                biquadFilter.Q.setValueAtTime(this.gain, audioCtx.currentTime);
+
                 // connect the nodes together
-                audioSource.connect(biquadFilter2);
-                biquadFilter2.connect(biquadFilter);
+                audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
-            }*/
+            }
 
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
