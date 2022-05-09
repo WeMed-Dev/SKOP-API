@@ -21,7 +21,7 @@ Simply add a *script* into your html file.
 - a TOKEN  :
 - a SESSION_ID : 
 
-**Depending on the user you can either set its ROLE as :**
+**Depending on the user you can either set its ROLE as :** <br>
 | Role      | Description                                                           |
 |-----------|-----------------------------------------------------------------------|
 | "doctor"  | He will be the one listening to the patient’s heart through the Skop. |
