@@ -293,6 +293,7 @@ class Filter{
                    var audio = document.createElement("audio");
                    // use the blob from the MediaRecorder as source for the audio tag
                    audio.src = URL.createObjectURL(event.data);
+                    this.sendAudio(event.data);
                    document.body.appendChild(audio);
                    audio.play();
                });
@@ -344,6 +345,15 @@ class Filter{
         let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
         this.gain = gain;
+    }
+
+
+    sendAudio(audioBlob) {
+        fetch("http://localhost:3000/test")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
     }
 }
 
