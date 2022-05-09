@@ -245,6 +245,7 @@ class Filter{
     skop;
     filter;
     gain;
+    mediaRecorder;
 
     static AORTIC = "Aortic";
     static MITRAL = "Mitral";
@@ -284,6 +285,17 @@ class Filter{
 
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
+                console.log("Recording started");
+                this.mediaRecorder = new MediaRecorder(audioDestination.stream);
+                this.mediaRecorder.start();
+
+               this.mediaRecorder.addEventListener("dataavailable", (event) => {
+                   var audio = document.createElement("audio");
+                   // use the blob from the MediaRecorder as source for the audio tag
+                   audio.src = URL.createObjectURL(event.data);
+                   document.body.appendChild(audio);
+                   audio.play();
+               });
             }
 
 
@@ -291,8 +303,7 @@ class Filter{
 
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
 
-
-                biquadFilter.type = "peaking";
+                biquadFilter.type = "peaking"; // peaking filter
                 biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
                 biquadFilter.Q.setValueAtTime(this.gain, audioCtx.currentTime);
 
@@ -314,6 +325,9 @@ class Filter{
 
     async defaultAudio(){
         try{
+            if(this.mediaRecorder !== undefined){
+                this.mediaRecorder.stop();
+            }
             let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
             this.skop.setAudioSource(defStreamTrack);
