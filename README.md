@@ -22,8 +22,8 @@ Simply add a *script* into your html file.
 - a SESSION_ID : 
 
 **Depending on the user you can either set its ROLE as :** <br>
-"doctor" : He will be the one listening to the patient’s heart through the Skop.
-"patient" :  He will be the one using the Skop device.		
+- "doctor" : He will be the one listening to the patient’s heart through the Skop.
+- "patient" :  He will be the one using the Skop device.		
 
 ```javascript
 // SkopAPI is the name of the library.
