@@ -22,10 +22,11 @@ Simply add a *script* into your html file.
 - a SESSION_ID : 
 
 **Depending on the user you can either set its ROLE as :**
-| Role     |  Description  															|
-|----------|:----------------------------------------------------------------------:|
-| "doctor" |  He will be the one listening to the patient’s heart through the Skop. |
-| "patient"|  He will be the one using the Skop device.								|
+| Role      | Description                                                           |
+|-----------|-----------------------------------------------------------------------|
+| "doctor"  | He will be the one listening to the patient’s heart through the Skop. |
+| "patient" | He will be the one using the Skop device.                             |
+|           |                                                                       |						|
 
 
 ```javascript
