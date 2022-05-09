@@ -278,20 +278,19 @@ class Filter{
             this.filter = biquadFilter;
 
             if(heartZone === Filter.AORTIC || heartZone === Filter.MITRAL || heartZone === Filter.TRICUSPID){
-                let biquadFilter2 = audioCtx.createBiquadFilter();
-                biquadFilter2.type = "highshelf";
-                biquadFilter2.frequency.value = 1000;
-                biquadFilter2.gain.value = -50;
+
 
                 biquadFilter.type = "lowshelf"; // choisir le param : https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
                 biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
                 biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
 
-                audioSource.connect(biquadFilter2);
-                biquadFilter2.connect(biquadFilter);
+                audioSource.connect(biquadFilter);
+
                 biquadFilter.connect(audioDestination);
             }
 
+
+            /*
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
                 let biquadFilter2 = audioCtx.createBiquadFilter();
                 biquadFilter2.type = "highshelf";
@@ -305,7 +304,7 @@ class Filter{
                 audioSource.connect(biquadFilter2);
                 biquadFilter2.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
-            }
+            }*/
 
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
