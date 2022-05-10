@@ -1,5 +1,6 @@
 const OT = require('@opentok/client');
 const detection = require('./detection');
+const axios = require("axios");
 
 
 /**
@@ -349,11 +350,29 @@ class Filter{
 
 
     sendAudio(audioBlob) {
-        fetch("http://localhost:3000/test")
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
+        console.log(audioBlob)
+        let formData = new FormData();
+        formData.append("file", audioBlob);
+        axios.post('http://localhost:3000/blob', formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        })
+            .then(response => {
+                console.log(response);
             })
+            .catch(function (error) {
+                if (error.response) { // get response with a status code not in range 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) { // no response
+                    console.log(error.request);
+                } else { // Something wrong in setting up the request
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+            });
     }
 }
 
