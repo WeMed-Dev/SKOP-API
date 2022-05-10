@@ -301,8 +301,6 @@ class Filter{
             }
 
 
-
-
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
 
                 biquadFilter.type = "peaking"; // peaking filter
