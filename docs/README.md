@@ -1,23 +1,19 @@
 
-# Getting started
+# Introduction
 
-## Quick start
+## Skop API
 
-You can start using the Skop API by simply adding our script directly to your html file.
-
-```html
-<script src="SkopAPI.js"></script>
-
-```
+The SKOP API is a javascript API for one-to-one video calls between a patient and a doctor, using a medical device : the Skop. <br>
 
 
+> Both the API and the documentation are currently under development.
 
-[Download here]() 
+[Demo here](https://bengregory23.github.io/SKOP-API/demo/)
 
 
 
-> Future updates will add an npm package that will allow you to use the Skop API directly from your project.
+## What's the Skop ?
 
+The Skop is a stethoscope made for telemedicine by [WeMed](https://en.wemed.fr/nos-produits). Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
 
-
-
+> If you want to know more about Skop, please visit [WeMed's website](https://en.wemed.fr)
