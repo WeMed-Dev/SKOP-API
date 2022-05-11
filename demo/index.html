@@ -83,13 +83,14 @@
                 patient();
             }
             // Display the role of the user
-            infos.innerHTML = "ROLE : " + role + "<br>";
+            infos.innerHTML = "ROLE : " +  role + "<br>";
         }
 
 
         function patient(){
             buttonConversation.remove();
             select.remove();
+
             let patient = new SkopAPI.Patient(apiKey, token, sessionId);
         }
 

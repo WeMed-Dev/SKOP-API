@@ -348,16 +348,20 @@ class Doctor {
     //---- USING SKOP -------//
     skop(heartZone){
         if(heartZone === null || heartZone === undefined || heartZone === ""){
-            this.signalStopUsingSkop();
+            this.#signalStopUsingSkop();
         }
         else{
-            this.signalHeartZone(heartZone);
+            this.#signalHeartZone(heartZone);
         }
+    }
+
+    changeGainLevel(gain){
+        this.#signalGain(gain);
     }
 
     //------ SIGNALING ------//
 
-    signalHeartZone(signal) {
+    #signalHeartZone(signal) {
         this.#session.signal({
             type: 'heartZone',
             data: signal
@@ -370,7 +374,7 @@ class Doctor {
         })
     }
 
-    signalStopUsingSkop() {
+    #signalStopUsingSkop() {
         this.#session.signal({
             type: 'stop',
             data: 'stop'
@@ -383,7 +387,7 @@ class Doctor {
         })
     }
 
-    signalGain(gain){
+    #signalGain(gain){
         this.#session.signal({
             type: 'gain',
             data: gain
