@@ -299,29 +299,13 @@ class Patient {
 class Doctor {
 
     /**
-     * @type {boolean} Indicates the current mode between conversation and gain.
-     */
-    #usingSkop;
-
-    /**
      * @type {OT.Session} The session object.
      */
     #session
 
     #publisher;
 
-    /**
-     * @type {Filter} The filter object.
-     */
-    #filter
-
-    #skopDetected = false;
-
     constructor(apiKey, token, sessionId) {
-        // Used to access objects in functions.
-        this.#usingSkop = false;
-
-        this.#filter = new Filter(this);
 
         /**
          * @@type {OT.Session} The session object.
