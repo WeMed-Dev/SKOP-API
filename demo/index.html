@@ -10,19 +10,19 @@
 
     <body>
         <div id="main">
-            <h1> API WEMED SAMPLE </h1>   
+            <h1> API WEMED SAMPLE </h1>
              <div class="buttons">
                 <button id="patient" class="button" onclick="call('patient')">Patient</button>
                 <button id="doctor" class="button" onclick="call('doctor')">Medecin</button>
                  <button id="conv">CONVERSATION</button>
                  <div id="div-select">
                     <select name="zones" id="zones">
-                      <option class="zones-value" value="...">Heart Zones</option>  
+                      <option class="zones-value" value="...">Heart Zones</option>
                       <option class="zones-value" value="Aortic">Aortique</option>
                       <option class="zones-value" value="Mitral">Mitrale</option>
                       <option class="zones-value" value="Pulmonary">Pulmonaire</option>
                       <option class="zones-value" value="Tricuspid">Tricuspide</option>
-                    </select> 
+                    </select>
                  </div>
 
              </div>
@@ -30,7 +30,7 @@
                  <h4 id="gain-output">Gain : ... </h4>
                 <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
             </div>
-        
+
             <div id="infos"> </div>
             <div id="div-wemed">
                 <a href="https://en.wemed.fr/" target="_blank" id="wemed">Check out WeMed! </a>
@@ -78,37 +78,44 @@
             buttonPatient.remove();
             buttonMedecin.remove();
 
-            let skop = new SkopAPI.Skop(apiKey, token, sessionId, role);
+            if(role === "doctor"){
+                doctor();
 
-            if(skop.getRole() === "doctor"){
-
-                // Displaying the content that is for the doctor.
-                buttonConversation.style.display   = "block";
-                select.style.display              = "block";
-               
-                buttonConversation.addEventListener('click', () => {
-                    skop.skop();
-                    divRange.style.display = "none"
-                })
-                select.addEventListener("change", (e) => {
-                    skop.skop(e.target.value);
-                    divRange.style.display = "flex"
-                });
-
-
-                gainRange.oninput = function() {
-                    gainOutput.innerHTML = "Gain : " + this.value;
-                    skop.signalGain(this.value);
-                }
-
-
-            }else if(skop.getRole() === "patient"){       
-                buttonConversation.remove();
-                select.remove();          
+            }else if(role === "patient"){
+                patient();
             }
-
             // Display the role of the user
-            infos.innerHTML = "ROLE : " + skop.getRole() + "<br>";
-        }            
+            infos.innerHTML = "ROLE : " + role + "<br>";
+        }
+
+
+        function patient(){
+            buttonConversation.remove();
+            select.remove();
+            let patient = new SkopAPI.Patient(apiKey, token, sessionId);
+        }
+
+
+        function doctor(){
+            let doctor = new SkopAPI.Doctor(apiKey, token, sessionId);
+            // Displaying the content that is for the doctor.
+            buttonConversation.style.display   = "block";
+            select.style.display              = "block";
+
+            buttonConversation.addEventListener('click', () => {
+                doctor.skop();
+                divRange.style.display = "none"
+            })
+            select.addEventListener("change", (e) => {
+                doctor.skop(e.target.value);
+                divRange.style.display = "flex"
+            });
+
+
+            gainRange.oninput = function() {
+                gainOutput.innerHTML = "Gain : " + this.value;
+                doctor.signalGain(this.value);
+            }
+        }
     </script>
 </html>

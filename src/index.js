@@ -11,235 +11,6 @@ function handleError(error) {
     if (error) console.error(error);
 }
 
-/**
- * Name : Skop
- * Description : It represents an instance of a session using the SKOP.
- **/
-class Skop {
-
-    /**
-    * @type {boolean} Indicates the current mode between conversation and gain.
-    */
-    #usingSkop;
-
-    /**
-     * @type {string} Indicates the role of the user. [Patient, Doctor]
-     */
-    #role
-
-    /**
-     * @type {OT.Session} The session object.
-     */
-    #session
-
-    /**
-     * @type {OT.session.publisher}  The publisher object.
-     */
-    #publisher;
-
-    /**
-     * @type {Filter} The filter object.
-     */
-    #filter
-
-    #skopDetected = false;
-
-    DOCTOR_ROLE = "doctor"
-    PATIENT_ROLE = "patient"
-
-
-    /**
-     * Creates the instance of the SKOP. 
-     * Initializes the session and the publisher.
-     * If there is a subscriber, it subscribes to the session.
-     * @param {*} apiKey  The API key of the session.
-     * @param {*} token  The token of the session.
-     * @param {*} sessionId  The session id of the session.
-     * @param {string} role  The role of the user. [Patient, Doctor]
-     */
-    constructor(apiKey, token, sessionId, role) {
-        // Used to access objects in functions.
-        const self = this;
-        this.#usingSkop = false;
-        this.#role = role;
-        this.#filter = new Filter(this);
-
-        /**
-         * @@type {OT.Session} The session object.
-         */
-        const session = OT.initSession(apiKey, sessionId);
-        this.#session = session;
-
-        //subscribe to a new stream in the session
-        session.on('streamCreated', function streamCreated(event) {
-            var subscriberOptions = {
-              insertMode: 'append',
-              width: '100%',
-              height: '100%'
-            };
-            session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
-        });
-
-        session.on('sessionDisconnected', function sessionDisconnected(event) {
-            console.log('You were disconnected from the session.', event.reason);
-        });
-
-        // When a user receive a signal with a heartZone, it modifies the audio input of the user.
-        session.on("signal:heartZone", function(event) {
-            if(self.#role === self.DOCTOR_ROLE) return;
-            self.useSkop(event.data)
-            console.log("Using Skop - " + event.data);
-        });
-
-        //When a patient receives a signal:stop it stops the filtering.
-        session.on("signal:stop", function(event) {
-            if(self.#role === self.DOCTOR_ROLE) return;
-            self.stopUsingSkop().then(
-                console.log("Stopped using Skop")
-            ).catch(e => {
-                console.log("Error stopping using Skop" + e);
-            });
-        });
-
-        // When a user receive a signal with a gain, it modifies the gain of the user.
-        session.on("signal:gain", function(event) {
-            //console.log("Signal data: " + event.data);
-            self.setGain(event.data)
-        });
-
-        // initialize the publisher
-        var publisherOptions = {
-        insertMode: 'append',
-        width: '100%',
-        height: '100%'
-        };
-        var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
-        this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
-
-        // Connect to the session
-        session.connect(token, function callback(error) {
-        if (error) {
-          handleError(error);
-        } else {
-          // If the connection is successful, publish the publisher to the session
-          session.publish(publisher , handleError);
-        }
-        });
-    }
-
-    //--------- SKOP MANIPULATION METHODS ---------//
-    init(){
-        OT.getUserMedia({audio:true}).then( res =>{detection(res);});
-    }
-
-    skop(heartZone){
-        if(heartZone === null || heartZone === undefined || heartZone === ""){
-            this.signalStopUsingSkop();
-        }
-        else{
-            this.signalHeartZone(heartZone);
-        }
-    }
-
-    async useSkop(heartZone){
-        if(this.#role === this.DOCTOR_ROLE) return;
-        if(!this.#skopDetected){
-            this.init();
-            this.#skopDetected = true;
-        }
-
-        this.setUsingSkop(true);
-       this.#filter.ModifyAudio(heartZone);
-    }
-
-    async stopUsingSkop(){
-        if(this.#role === this.DOCTOR_ROLE) return;
-        this.setUsingSkop(false)
-        this.#filter.defaultAudio(this.#publisher);
-    }
-
-    //------ SIGNALING ------//
-
-    signalHeartZone(signal) {
-        this.#session.signal({
-            type: 'heartZone',
-            data: signal
-        }, function(error) {
-            if (error) {
-                console.log('Error sending signal:' + error.message);
-            } else {
-                console.log('Signal sent.');
-            }
-        })
-    }
-
-    signalStopUsingSkop() {
-        this.#session.signal({
-            type: 'stop',
-            data: 'stop'
-        }, function(error) {
-            if (error) {
-                console.log('Error sending signal:' + error.message);
-            } else {
-                console.log('Signal sent.');
-            }
-        })
-    }
-
-    signalGain(gain){
-        this.#session.signal({
-            type: 'gain',
-            data: gain
-        }, function(error) {
-            if (error) {
-                console.log('Error sending signal:' + error.message);
-            } else {
-                console.log('Signal sent.');
-            }
-        })
-    }
-
-    //----- GETTER & SETTER -----//
-    /**
-     * Returns the current role of the user.
-     * @returns {string} The role of the user.
-     */
-    getRole(){
-        return this.#role;
-    }
-
-    /**
-     *  Returns the audio source of the user, if it is available.
-     * @returns The current MediaStreamTrack of the user.
-     */
-    getAudioSource() {
-        return this.#publisher.getAudioSource();
-    }
-
-    /**
-     * Sets the users current's Audio source.
-     * @param {MediaStreamTrack} audioSource
-     */
-    setAudioSource(audioSource) {
-        this.#publisher.setAudioSource(audioSource);
-    }
-
-    /**
-     * Sets the current level of gain of the patient's Skop audio output.
-     */
-    setGain(gain){
-        if(this.#role === this.DOCTOR_ROLE) return;
-        //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
-
-        this.#filter.setGain(gain);
-    }
-
-    setUsingSkop(isUsingSkop){
-        this.#usingSkop = isUsingSkop;
-    }
-
-}
 
 class Filter{
 
@@ -374,4 +145,279 @@ class Filter{
     }
 }
 
-module.exports = { Skop : Skop,};
+
+
+class Patient {
+
+    /**
+     * @type {boolean} Indicates the current mode between conversation and gain.
+     */
+    #usingSkop;
+
+    /**
+     * @type {OT.Session} The session object.
+     */
+    #session
+
+    #publisher;
+
+    /**
+     * @type {Filter} The filter object.
+     */
+    #filter
+
+    #skopDetected = false;
+
+
+    constructor(apiKey, token, sessionId) {
+        // Used to access objects in functions.
+        const self = this;
+        this.#usingSkop = false;
+
+        this.#filter = new Filter(this);
+
+        /**
+         * @@type {OT.Session} The session object.
+         */
+        const session = OT.initSession(apiKey, sessionId);
+        this.#session = session;
+
+        //subscribe to a new stream in the session
+        session.on('streamCreated', function streamCreated(event) {
+            var subscriberOptions = {
+                insertMode: 'append',
+                width: '100%',
+                height: '100%'
+            };
+            session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+        });
+
+        session.on('sessionDisconnected', function sessionDisconnected(event) {
+            console.log('You were disconnected from the session.', event.reason);
+        });
+
+        // When a user receive a signal with a heartZone, it modifies the audio input of the user.
+        session.on("signal:heartZone", function(event) {
+
+            self.useSkop(event.data)
+            console.log("Using Skop - " + event.data);
+        });
+
+        //When a patient receives a signal:stop it stops the filtering.
+        session.on("signal:stop", function(event) {
+            self.stopUsingSkop().then(
+                console.log("Stopped using Skop")
+            ).catch(e => {
+                console.log("Error stopping using Skop" + e);
+            });
+        });
+
+        // When a user receive a signal with a gain, it modifies the gain of the user.
+        session.on("signal:gain", function(event) {
+            //console.log("Signal data: " + event.data);
+            self.setGain(event.data)
+        });
+
+        // initialize the publisher
+        var publisherOptions = {
+            insertMode: 'append',
+            width: '100%',
+            height: '100%'
+        };
+        var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
+        this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
+
+        // Connect to the session
+        session.connect(token, function callback(error) {
+            if (error) {
+                handleError(error);
+            } else {
+                // If the connection is successful, publish the publisher to the session
+                session.publish(publisher , handleError);
+            }
+        });
+    }
+
+
+    //--------- SKOP MANIPULATION METHODS ---------//
+    init(){
+        OT.getUserMedia({audio:true}).then( res =>{detection(res);});
+    }
+
+
+
+    async useSkop(heartZone){
+        if(!this.#skopDetected){
+            this.init();
+            this.#skopDetected = true;
+        }
+
+        this.setUsingSkop(true);
+        this.#filter.ModifyAudio(heartZone);
+    }
+
+    async stopUsingSkop(){
+        this.setUsingSkop(false)
+        this.#filter.defaultAudio(this.#publisher);
+    }
+
+
+    //--------- GETTER AND SETTER  ---------//
+
+
+    /**
+     *  Returns the audio source of the user, if it is available.
+     * @returns The current MediaStreamTrack of the user.
+     */
+    getAudioSource() {
+        return this.#publisher.getAudioSource();
+    }
+
+    /**
+     * Sets the users current's Audio source.
+     * @param {MediaStreamTrack} audioSource
+     */
+    setAudioSource(audioSource) {
+        this.#publisher.setAudioSource(audioSource);
+    }
+
+    /**
+     * Sets the current level of gain of the patient's Skop audio output.
+     */
+    setGain(gain){
+        //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
+
+        this.#filter.setGain(gain);
+    }
+
+    setUsingSkop(isUsingSkop){
+        this.#usingSkop = isUsingSkop;
+    }
+}
+
+class Doctor {
+
+    /**
+     * @type {boolean} Indicates the current mode between conversation and gain.
+     */
+    #usingSkop;
+
+    /**
+     * @type {OT.Session} The session object.
+     */
+    #session
+
+    #publisher;
+
+    /**
+     * @type {Filter} The filter object.
+     */
+    #filter
+
+    #skopDetected = false;
+
+    constructor(apiKey, token, sessionId) {
+        // Used to access objects in functions.
+        this.#usingSkop = false;
+
+        this.#filter = new Filter(this);
+
+        /**
+         * @@type {OT.Session} The session object.
+         */
+        const session = OT.initSession(apiKey, sessionId);
+        this.#session = session;
+
+        //subscribe to a new stream in the session
+        session.on('streamCreated', function streamCreated(event) {
+            var subscriberOptions = {
+                insertMode: 'append',
+                width: '100%',
+                height: '100%'
+            };
+            session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+        });
+
+        session.on('sessionDisconnected', function sessionDisconnected(event) {
+            console.log('You were disconnected from the session.', event.reason);
+        });
+
+        // initialize the publisher
+        var publisherOptions = {
+            insertMode: 'append',
+            width: '100%',
+            height: '100%'
+        };
+        var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
+        this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
+
+        // Connect to the session
+        session.connect(token, function callback(error) {
+            if (error) {
+                handleError(error);
+            } else {
+                // If the connection is successful, publish the publisher to the session
+                session.publish(publisher , handleError);
+            }
+        });
+    }
+
+    //---- USING SKOP -------//
+    skop(heartZone){
+        if(heartZone === null || heartZone === undefined || heartZone === ""){
+            this.signalStopUsingSkop();
+        }
+        else{
+            this.signalHeartZone(heartZone);
+        }
+    }
+
+    //------ SIGNALING ------//
+
+    signalHeartZone(signal) {
+        this.#session.signal({
+            type: 'heartZone',
+            data: signal
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
+
+    signalStopUsingSkop() {
+        this.#session.signal({
+            type: 'stop',
+            data: 'stop'
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
+
+    signalGain(gain){
+        this.#session.signal({
+            type: 'gain',
+            data: gain
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
+}
+
+
+
+module.exports = {
+    Patient: Patient,
+    Doctor: Doctor
+}
