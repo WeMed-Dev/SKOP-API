@@ -14,7 +14,7 @@ function handleError(error) {
 
 class Filter{
 
-    skop;
+    patient;
     filter;
     gain;
     mediaRecorder;
@@ -24,8 +24,8 @@ class Filter{
     static PULMONARY = "Pulmonary";
     static TRICUSPID = "Tricuspid";
 
-    constructor(skop){
-        this.skop = skop;
+    constructor(patient){
+        this.patient = patient;
         this.gain = 10; //default gain
     }
 
@@ -87,7 +87,7 @@ class Filter{
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
             // Sets the OT.publisher Audio Source to be the modified stream.
-            this.skop.setAudioSource(audioDestination.stream.getAudioTracks()[0])
+            this.patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
             console.log("SKOP : Audio input modified")
         }catch(error){
             handleError(error);
@@ -101,7 +101,7 @@ class Filter{
             }
             let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
-            this.skop.setAudioSource(defStreamTrack);
+            this.patient.setAudioSource(defStreamTrack);
             console.log("SKOP : Audio input set to default - No modifications")
         }catch(err){
             handleError(err)
@@ -273,7 +273,7 @@ class Patient {
      * Sets the users current's Audio source.
      * @param {MediaStreamTrack} audioSource
      */
-    #setAudioSource(audioSource) {
+    setAudioSource(audioSource) {
         this.#publisher.setAudioSource(audioSource);
     }
 
