@@ -302,7 +302,9 @@ class Doctor {
      * @type {OT.Session} The session object.
      */
     #session
-
+    /**
+     * @type {OT.Publisher} The publisher object.
+     */
     #publisher;
 
     constructor(apiKey, token, sessionId) {
