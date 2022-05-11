@@ -199,13 +199,13 @@ class Patient {
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:heartZone", function(event) {
 
-            self.useSkop(event.data)
+            self.#useSkop(event.data)
             console.log("Using Skop - " + event.data);
         });
 
         //When a patient receives a signal:stop it stops the filtering.
         session.on("signal:stop", function(event) {
-            self.stopUsingSkop().then(
+            self.#stopUsingSkop().then(
                 console.log("Stopped using Skop")
             ).catch(e => {
                 console.log("Error stopping using Skop" + e);
@@ -215,7 +215,7 @@ class Patient {
         // When a user receive a signal with a gain, it modifies the gain of the user.
         session.on("signal:gain", function(event) {
             //console.log("Signal data: " + event.data);
-            self.setGain(event.data)
+            self.#setGain(event.data)
         });
 
         // initialize the publisher
@@ -240,30 +240,26 @@ class Patient {
 
 
     //--------- SKOP MANIPULATION METHODS ---------//
-    init(){
+    #init(){
         OT.getUserMedia({audio:true}).then( res =>{detection(res);});
     }
 
-
-
-    async useSkop(heartZone){
+    async #useSkop(heartZone){
         if(!this.#skopDetected){
-            this.init();
+            this.#init();
             this.#skopDetected = true;
         }
 
-        this.setUsingSkop(true);
+        this.#setUsingSkop(true);
         this.#filter.ModifyAudio(heartZone);
     }
 
-    async stopUsingSkop(){
-        this.setUsingSkop(false)
+    async #stopUsingSkop(){
+        this.#setUsingSkop(false)
         this.#filter.defaultAudio(this.#publisher);
     }
 
-
     //--------- GETTER AND SETTER  ---------//
-
 
     /**
      *  Returns the audio source of the user, if it is available.
@@ -277,21 +273,21 @@ class Patient {
      * Sets the users current's Audio source.
      * @param {MediaStreamTrack} audioSource
      */
-    setAudioSource(audioSource) {
+    #setAudioSource(audioSource) {
         this.#publisher.setAudioSource(audioSource);
     }
 
     /**
      * Sets the current level of gain of the patient's Skop audio output.
      */
-    setGain(gain){
+    #setGain(gain){
         //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
 
         this.#filter.setGain(gain);
     }
 
-    setUsingSkop(isUsingSkop){
+    #setUsingSkop(isUsingSkop){
         this.#usingSkop = isUsingSkop;
     }
 }
