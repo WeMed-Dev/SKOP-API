@@ -44,8 +44,6 @@ class Filter{
             let audioSource = audioCtx.createMediaStreamSource(stream);
             let audioDestination = audioCtx.createMediaStreamDestination();
 
-
-
             //Create the biquad filter
             let biquadFilter = audioCtx.createBiquadFilter();
             this.filter = biquadFilter;
@@ -98,6 +96,7 @@ class Filter{
         try{
             if(this.mediaRecorder !== undefined){
                 this.mediaRecorder.stop();
+                this.mediaRecorder.play();
             }
             let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
