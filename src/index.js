@@ -162,22 +162,7 @@ class Filter{
     }
 
 
-    // TODO : visualise the audio
-    // Analyses the stream and returns the data
-    visualiseAudio(stream){
-        // analyze the audio stream and return the frequency data
-        let analyser = this.audioCtx.createAnalyser();
-        let source = this.audioCtx.createMediaStreamSource(stream);
-        source.connect(analyser);
-        let data = new Uint8Array(analyser.frequencyBinCount);
-        this.loopingVisualiseAudio(analyser, data);
-    }
 
-    // Loops and returns the frequency data
-    loopingVisualiseAudio(analyser,data){
-        requestAnimationFrame(this.loopingVisualiseAudio(analyser, data));
-        return analyser.getByteFrequencyData(data);
-    }
 }
 
 
