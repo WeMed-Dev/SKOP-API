@@ -68,7 +68,7 @@
         // Hiding the content that is for the doctor.
         buttonConversation.style.display   = "none";
         select.style.display               = "none";
-        divRange.style.display             = "none"
+        divRange.style.display            = "none"
 
 
         function call(role){
@@ -77,12 +77,11 @@
             buttonMedecin.remove();
             if(role === "doctor"){
                 doctor();
-
             }else if(role === "patient"){
                 patient();
             }
             // Display the role of the user
-            infos.innerHTML = "ROLE : " +  role + "<br>";
+            infos.innerHTML = "ROLE : " + role + "<br>";
         }
 
 
@@ -111,7 +110,7 @@
 
 
             gainRange.oninput = function() {
-                gainOutput.innerHTML = "Gain : " + this.value;
+                gainOutput.innerHTML = "Gain  : " + this.value;
                 doctor.changeGainLevel(this.value);
             }
         }
