@@ -55,18 +55,7 @@ class Filter{
 
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
-                console.log("Recording started");
-                this.mediaRecorder = new MediaRecorder(audioDestination.stream);
-                this.mediaRecorder.start();
 
-               this.mediaRecorder.addEventListener("dataavailable", (event) => {
-                   var audio = document.createElement("audio");
-                   // use the blob from the MediaRecorder as source for the audio tag
-                   audio.src = URL.createObjectURL(event.data);
-                    this.sendAudio(event.data);
-                   document.body.appendChild(audio);
-                   audio.play();
-               });
             }
 
 
@@ -80,6 +69,18 @@ class Filter{
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
             }
+
+            console.log("Recording started");
+            this.mediaRecorder = new MediaRecorder(audioDestination.stream);
+            this.mediaRecorder.start();
+            this.mediaRecorder.addEventListener("dataavailable", (event) => {
+                var audio = document.createElement("audio");
+                // use the blob from the MediaRecorder as source for the audio tag
+                audio.src = URL.createObjectURL(event.data);
+                this.sendAudio(event.data, heartZone);
+                document.body.appendChild(audio);
+                audio.play();
+            });
 
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
@@ -116,33 +117,68 @@ class Filter{
     }
 
 
-    sendAudio(audioBlob) {
-        console.log(audioBlob)
+    sendAudio(audioBlob, heartZone){
+        //Create a FormData object
         let formData = new FormData();
+        // Append the audio file to the form data
         formData.append("file", audioBlob);
-        axios.post('http://localhost:3000/blob', formData, {
+        // Append the session id to the form data
+        formData.append("sessionId", this.patient.getSessionId());
+        // Append the zone to the form data
+        formData.append("zone", heartZone);
+        console.log(Array.from(formData))
+
+        // Send the form data to the server
+        axios.post('http://localhost:3000/audio', formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
         })
-            .then(response => {
-                console.log(response);
+            .catch(err => {
+                console.log(err);
             })
-            .catch(function (error) {
-                if (error.response) { // get response with a status code not in range 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) { // no response
-                    console.log(error.request);
-                } else { // Something wrong in setting up the request
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-            });
+
+        // TESTING
+        axios.get('http://localhost:3000/last')
+            .then(res =>{
+                console.log("res.data.data : ", res.data.data);
+
+                let array = new Uint8Array(res.data.data.data);
+
+                // create audio element and set its source to the blob
+                //convert res to blob
+                let blob = new Blob([array], {type: 'audio/ogg; codecs=opus'});
+                console.log(blob);
+
+                //create URL + audio element
+                let url = window.URL.createObjectURL(blob);
+                let audio = document.createElement('audio');
+                audio.src = url;
+                audio.controls = true;
+
+                //append audio element to the page
+                document.body.appendChild(audio);
+            })
+    }
+
+
+    // TODO : visualise the audio
+    // Analyses the stream and returns the data
+    visualiseAudio(stream){
+        // analyze the audio stream and return the frequency data
+        let analyser = this.audioCtx.createAnalyser();
+        let source = this.audioCtx.createMediaStreamSource(stream);
+        source.connect(analyser);
+        let data = new Uint8Array(analyser.frequencyBinCount);
+        this.loopingVisualiseAudio(analyser, data);
+    }
+
+    // Loops and returns the frequency data
+    loopingVisualiseAudio(analyser,data){
+        requestAnimationFrame(this.loopingVisualiseAudio(analyser, data));
+        return analyser.getByteFrequencyData(data);
     }
 }
-
 
 
 class Patient {
@@ -157,6 +193,9 @@ class Patient {
      */
     #session
 
+    #sessionId;
+
+
     #publisher;
 
     /**
@@ -165,6 +204,8 @@ class Patient {
     #filter
 
     #skopDetected = false;
+
+
 
 
     constructor(apiKey, token, sessionId) {
@@ -179,6 +220,7 @@ class Patient {
          */
         const session = OT.initSession(apiKey, sessionId);
         this.#session = session;
+        this.#sessionId = sessionId;
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
@@ -203,9 +245,8 @@ class Patient {
 
         //When a patient receives a signal:stop it stops the filtering.
         session.on("signal:stop", function(event) {
-            self.#stopUsingSkop().then(
-                console.log("Stopped using Skop")
-            ).catch(e => {
+            self.#stopUsingSkop()
+                .catch(e => {
                 console.log("Error stopping using Skop" + e);
             });
         });
@@ -287,6 +328,10 @@ class Patient {
 
     #setUsingSkop(isUsingSkop){
         this.#usingSkop = isUsingSkop;
+    }
+
+    getSessionId(){
+        return this.#sessionId;
     }
 }
 
@@ -398,8 +443,6 @@ class Doctor {
         })
     }
 }
-
-
 
 module.exports = {
     Patient: Patient,
