@@ -1,13 +1,12 @@
 
 const WIDTH = 800;
 const HEIGHT = 400;
-
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = WIDTH;
-canvas.height = HEIGHT;
+let ctx;
 let analyzer;
 let bufferLength;
+
+
+//const canvas = document.getElementById('canvas');
 
 
 function handleError(err) {
@@ -16,10 +15,17 @@ function handleError(err) {
 
 
 
-async function getAudio() {
+async function visualize(stream, canvas) {
+
+    ctx = canvas.getContext('2d');
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+
+    /*
     const stream = await navigator.mediaDevices
         .getUserMedia({ audio: true })
         .catch(handleError);
+     */
 
     const audioCtx = new AudioContext();
     analyzer = audioCtx.createAnalyser();
@@ -70,5 +76,6 @@ function drawTimeData(timeData) {
     requestAnimationFrame(() => drawTimeData(timeData));
 }
 
-getAudio();
+//visualize(navigator.mediaDevices.getUserMedia({ audio: true }), canvas);
 
+module.exports = visualize;

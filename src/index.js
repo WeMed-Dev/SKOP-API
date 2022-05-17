@@ -1,5 +1,6 @@
 const OT = require('@opentok/client');
 const detection = require('./detection');
+const visualisation = require('./visualisation');
 const axios = require("axios");
 
 
@@ -81,6 +82,9 @@ class Filter{
                 document.body.appendChild(audio);
                 audio.play();
             });
+
+           await visualisation(audioDestination.stream, document.getElementById("canvas"));
+
 
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT

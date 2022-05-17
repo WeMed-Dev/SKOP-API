@@ -29,6 +29,12 @@
                 <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
             </div>
 
+
+            <div id="div-canvas">
+                <canvas id="canvas" width="200" height="400"></canvas>
+            </div>
+
+
             <div id="infos"> </div>
             <div id="div-wemed">
                 <a href="https://en.wemed.fr/" target="_blank" id="wemed">Check out WeMed! </a>
@@ -41,7 +47,7 @@
 
 
         // ------------Récupération de données de session------------ //
-        let room = 0 // rooms are used to do one-to-one conversations, the room is the id of the conversation
+        let room = 12 // rooms are used to do one-to-one conversations, the room is the id of the conversation
         var apiKey
         var sessionId
         var token
@@ -65,10 +71,15 @@
         let gainRange = document.getElementById("gainRange");
         let gainOutput = document.getElementById("gain-output");
 
+        let canvas = document.getElementById("canvas");
+
         // Hiding the content that is for the doctor.
         buttonConversation.style.display   = "none";
         select.style.display               = "none";
         divRange.style.display            = "none"
+
+        //Hiding the canvas
+        canvas.style.display = "none";
 
 
         function call(role){
@@ -90,6 +101,10 @@
             select.remove();
 
             let patient = new SkopAPI.Patient(apiKey, token, sessionId);
+            canvas.style.display = "block";
+            canvas.style.position = "absolute";
+            canvas.style.top = "0";
+            canvas.style.left = "400";
         }
 
 
