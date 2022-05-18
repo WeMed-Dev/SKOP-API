@@ -40,7 +40,10 @@ class Filter{
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
-            let audioSource = audioCtx.createMediaStreamSource(stream);
+            console.log(stream);
+            let streamWithoutNav = await  OT.getUserMedia({audio:true});
+            console.log(streamWithoutNav);
+            let audioSource = audioCtx.createMediaStreamSource(streamWithoutNav);
             let audioDestination = audioCtx.createMediaStreamDestination();
 
             //Create the biquad filter
