@@ -114,8 +114,6 @@
                 doctor.skop(e.target.value);
                 divRange.style.display = "flex"
             });
-
-
             gainRange.oninput = function() {
                 gainOutput.innerHTML = "Gain  : " + this.value;
                 doctor.changeGainLevel(this.value);
