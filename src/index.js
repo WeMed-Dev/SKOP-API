@@ -56,6 +56,8 @@ class Doctor {
         var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
+
+
         // Connect to the session
         session.connect(token, function callback(error) {
             if (error) {
@@ -66,12 +68,6 @@ class Doctor {
             }
         });
 
-        OT.getUserMedia({audio:true}).then(stream => {
-            this.#stream = stream;
-            alert(stream);
-        }).catch(e => {
-            console.log("Error getting user media: " + e);
-        });
     }
 
     //---- USING SKOP -------//
@@ -224,6 +220,13 @@ class Patient {
         var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
+        OT.getUserMedia({audio:true}).then(stream => {
+            this.#stream = stream;
+            alert(stream);
+        }).catch(e => {
+            console.log("Error getting user media: " + e);
+        });
+
         // Connect to the session
         session.connect(token, function callback(error) {
             if (error) {
@@ -234,12 +237,7 @@ class Patient {
             }
         });
 
-        OT.getUserMedia({audio:true}).then(stream => {
-            this.#stream = stream;
-            alert(stream);
-        }).catch(e => {
-            console.log("Error getting user media: " + e);
-        });
+
     }
 
 
