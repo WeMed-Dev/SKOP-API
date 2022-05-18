@@ -1,73 +1,46 @@
-
-const WIDTH =   800;
-const HEIGHT = 500;
-
-
-
-
-//const canvas = document.getElementById('canvas');
-
-
-function handleError(err) {
-    console.log('You must give access to your mic in order to proceed');
-}
-
-
-
-async function visualize(stream, canvas) {
-
-    let ctx = canvas.getContext('2d');
-    let analyzer;
+/**
+ * Initializes the visualisation.
+ * Calls getVisualisationData()
+ * @param stream The stream to be visualised
+ */
+function visualize(stream) {
     let bufferLength;
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
-
     const audioCtx = new AudioContext();
-    analyzer = audioCtx.createAnalyser();
+    let analyzer = audioCtx.createAnalyser();
     const source = audioCtx.createMediaStreamSource(stream);
+
     source.connect(analyzer);
 
     // How much data should we collect
-    analyzer.fftSize = 16384;
+    analyzer.fftSize = 2048;
     // pull the data off the audio
     bufferLength = analyzer.frequencyBinCount;
     // how many pieces of data are there?!?
     bufferLength = analyzer.frequencyBinCount;
     const timeData = new Uint8Array(bufferLength);
-    drawTimeData(timeData, ctx, analyzer, bufferLength)
+    return getVisualisationData(timeData, analyzer, bufferLength)
 }
 
-
-function drawTimeData(timeData, ctx, analyzer, bufferLength) {
-    // inject the time data into our timeData array
+/**
+ * Returns the visualisation data in a JSON format
+ * @param timeData An array filled with the audio data
+ * @param bufferLength The length of the timeData array
+ * @param analyzer The Audio Node Analyzer used to collect the data
+ *
+ * @returns {{timeData, analyzer, fftSize: number, bufferLength}}
+ */
+function getVisualisationData(timeData, analyzer, bufferLength) {
     analyzer.getByteTimeDomainData(timeData);
-    // now that we have the data, lets turn it into something visual
-    // 1. Clear the canvas TODO
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    // 2. setup some canvas drawing
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "#ffc600";
-    ctx.beginPath();
-    const sliceWidth = WIDTH / bufferLength  ;
-
-    console.log(sliceWidth);
-    let x = 0;
-    timeData.forEach((data, i) => {
-        const v = data / 128;
-        const y = (v * HEIGHT) / 2;
-        // draw our lines
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-        x += sliceWidth;
-    });
-
-    ctx.stroke();
-
-
-    requestAnimationFrame(() => drawTimeData(timeData, ctx, analyzer, bufferLength));
+    return {
+        timeData : timeData,
+        analyzer : analyzer,
+        bufferLength : bufferLength,
+        fftSize : 2048
+    }
 }
+
+
+
+
 
 module.exports = visualize;
