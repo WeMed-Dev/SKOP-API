@@ -26,6 +26,11 @@ class Filter{
 
     constructor(){
         this.gain = 10; //default gain
+        let streamWithoutNav;
+        OT.getUserMedia({audio:true}).then(stream => {
+            streamWithoutNav = stream;
+        }).catch(handleError);
+        console.log(streamWithoutNav);
     }
 
     /**
@@ -41,9 +46,8 @@ class Filter{
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
             console.log(stream);
-            let streamWithoutNav = await  OT.getUserMedia({audio:true});
-            console.log(streamWithoutNav);
-            let audioSource = audioCtx.createMediaStreamSource(streamWithoutNav);
+
+            let audioSource = audioCtx.createMediaStreamSource(stream);
             let audioDestination = audioCtx.createMediaStreamDestination();
 
             //Create the biquad filter
