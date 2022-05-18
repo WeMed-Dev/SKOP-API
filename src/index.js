@@ -226,9 +226,16 @@ class Patient {
 
     #skopDetected = false;
 
+    #stream
+
 
     //TODO : constructor(API_KEY_WEMED, ROOM_ID)
     constructor(apiKey, token, sessionId) {
+        OT.getUserMedia({audio:true}).then(stream => {
+            this.#stream = stream;
+        })
+
+        console.log(this.#stream)
 
         if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
             Swal.fire({
