@@ -1,9 +1,8 @@
 
-const WIDTH = 800;
-const HEIGHT = 400;
-let ctx;
-let analyzer;
-let bufferLength;
+const WIDTH =   800;
+const HEIGHT = 500;
+
+
 
 
 //const canvas = document.getElementById('canvas');
@@ -17,15 +16,11 @@ function handleError(err) {
 
 async function visualize(stream, canvas) {
 
-    ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d');
+    let analyzer;
+    let bufferLength;
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
-
-    /*
-    const stream = await navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .catch(handleError);
-     */
 
     const audioCtx = new AudioContext();
     analyzer = audioCtx.createAnalyser();
@@ -33,20 +28,17 @@ async function visualize(stream, canvas) {
     source.connect(analyzer);
 
     // How much data should we collect
-    analyzer.fftSize = 2 ** 10;
+    analyzer.fftSize = 16384;
     // pull the data off the audio
     bufferLength = analyzer.frequencyBinCount;
     // how many pieces of data are there?!?
     bufferLength = analyzer.frequencyBinCount;
     const timeData = new Uint8Array(bufferLength);
-    const frequencyData = new Uint8Array(bufferLength);
-    drawTimeData(timeData);
-    //drawFrequency(frequencyData);
+    drawTimeData(timeData, ctx, analyzer, bufferLength)
 }
 
 
-
-function drawTimeData(timeData) {
+function drawTimeData(timeData, ctx, analyzer, bufferLength) {
     // inject the time data into our timeData array
     analyzer.getByteTimeDomainData(timeData);
     // now that we have the data, lets turn it into something visual
@@ -56,7 +48,9 @@ function drawTimeData(timeData) {
     ctx.lineWidth = 2;
     ctx.strokeStyle = "#ffc600";
     ctx.beginPath();
-    const sliceWidth = WIDTH / bufferLength;
+    const sliceWidth = WIDTH / bufferLength  ;
+
+    console.log(sliceWidth);
     let x = 0;
     timeData.forEach((data, i) => {
         const v = data / 128;
@@ -72,10 +66,8 @@ function drawTimeData(timeData) {
 
     ctx.stroke();
 
-    // call itself as soon as possible
-    requestAnimationFrame(() => drawTimeData(timeData));
-}
 
-//visualize(navigator.mediaDevices.getUserMedia({ audio: true }), canvas);
+    requestAnimationFrame(() => drawTimeData(timeData, ctx, analyzer, bufferLength));
+}
 
 module.exports = visualize;
