@@ -160,8 +160,6 @@ class Patient {
 
     //TODO : constructor(API_KEY_WEMED, ROOM_ID)
     constructor(apiKey, token, sessionId) {
-
-        /*
         if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
             Swal.fire({
                 title: 'Warning',
@@ -170,9 +168,6 @@ class Patient {
                 confirmButtonText: 'OK'
             });
         }
-         */
-
-
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
