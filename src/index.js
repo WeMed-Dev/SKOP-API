@@ -2,6 +2,7 @@ const OT = require('@opentok/client');
 const detection = require('./detection');
 const visualisation = require('./visualisation');
 const axios = require("axios");
+const Swal = require('sweetalert2');
 
 
 /**
@@ -14,8 +15,6 @@ function handleError(error) {
 
 
 class Filter{
-
-    patient;
     filter;
     gain;
     mediaRecorder;
@@ -25,8 +24,7 @@ class Filter{
     static PULMONARY = "Pulmonary";
     static TRICUSPID = "Tricuspid";
 
-    constructor(patient){
-        this.patient = patient;
+    constructor(){
         this.gain = 10; //default gain
     }
 
@@ -35,7 +33,7 @@ class Filter{
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone
      */
-    async ModifyAudio(heartZone) {
+    async ModifyAudio(heartZone, patient) {
 
         try{
 
@@ -78,33 +76,33 @@ class Filter{
                 var audio = document.createElement("audio");
                 // use the blob from the MediaRecorder as source for the audio tag
                 audio.src = URL.createObjectURL(event.data);
-                this.sendAudio(event.data, heartZone);
+                this.sendAudio(event.data, heartZone, patient);
                 document.body.appendChild(audio);
                 audio.play();
             });
 
-           await visualisation(audioDestination.stream, document.getElementById("canvas"));
+           visualisation(audioDestination.stream, document.getElementById("canvas"));
 
 
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
             // Sets the OT.publisher Audio Source to be the modified stream.
-            this.patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
+            patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
             console.log("SKOP : Audio input modified")
         }catch(error){
             handleError(error);
         }
     }
 
-    async defaultAudio(){
+    async defaultAudio(patient){
         try{
             if(this.mediaRecorder !== undefined){
                 this.mediaRecorder.stop();
             }
             let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
-            this.patient.setAudioSource(defStreamTrack);
+            patient.setAudioSource(defStreamTrack);
             console.log("SKOP : Audio input set to default - No modifications")
         }catch(err){
             handleError(err)
@@ -121,13 +119,14 @@ class Filter{
     }
 
 
-    sendAudio(audioBlob, heartZone){
+    sendAudio(audioBlob, heartZone, patient) {
+        /*
         //Create a FormData object
         let formData = new FormData();
         // Append the audio file to the form data
         formData.append("file", audioBlob);
         // Append the session id to the form data
-        formData.append("sessionId", this.patient.getSessionId());
+        formData.append("sessionId", patient.getSessionId());
         // Append the zone to the form data
         formData.append("zone", heartZone);
         console.log(Array.from(formData))
@@ -141,6 +140,8 @@ class Filter{
             .catch(err => {
                 console.log(err);
             })
+
+
 
         // TESTING
         axios.get('http://localhost:3000/last')
@@ -164,9 +165,34 @@ class Filter{
                 document.body.appendChild(audio);
             })
     }
+    */
 
 
-
+        var reader = new FileReader();
+        reader.onload = function() {
+           console.log(reader.result);
+            axios.post("http://localhost:3000/audioJson", {
+                sessionId: patient.getSessionId(),
+                zone: heartZone,
+                //TODO : change to base64
+                binary: reader.result
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .catch(err => {
+                    console.log(err);
+                })
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+        reader.readAsArrayBuffer(audioBlob);
+    }
 }
 
 
@@ -184,7 +210,6 @@ class Patient {
 
     #sessionId;
 
-
     #publisher;
 
     /**
@@ -195,14 +220,22 @@ class Patient {
     #skopDetected = false;
 
 
-
-
+    //TODO : constructor(API_KEY_WEMED, ROOM_ID)
     constructor(apiKey, token, sessionId) {
+
+        if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+            Swal.fire({
+                title: 'Warning',
+                text: 'This app is not compatible with iOS devices. Please use an Android device or a computer.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+        }
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
 
-        this.#filter = new Filter(this);
+        this.#filter = new Filter();
 
         /**
          * @@type {OT.Session} The session object.
@@ -227,7 +260,6 @@ class Patient {
 
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:heartZone", function(event) {
-
             self.#useSkop(event.data)
             console.log("Using Skop - " + event.data);
         });
@@ -277,14 +309,28 @@ class Patient {
             this.#init();
             this.#skopDetected = true;
         }
-
         this.#setUsingSkop(true);
-        this.#filter.ModifyAudio(heartZone);
+        this.#filter.ModifyAudio(heartZone, this);
     }
 
     async #stopUsingSkop(){
         this.#setUsingSkop(false)
-        this.#filter.defaultAudio(this.#publisher);
+        this.#filter.defaultAudio(this.#publisher, this);
+    }
+
+    //--------- SIGNALING ---------//
+
+    #signalVisualisationData(visualisationData){
+        this.#session.signal({
+            type: 'visualisationData',
+            data: visualisationData
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
     }
 
     //--------- GETTER AND SETTER  ---------//
@@ -325,7 +371,6 @@ class Patient {
 }
 
 class Doctor {
-
     /**
      * @type {OT.Session} The session object.
      */
@@ -431,6 +476,8 @@ class Doctor {
             }
         })
     }
+
+
 }
 
 module.exports = {
