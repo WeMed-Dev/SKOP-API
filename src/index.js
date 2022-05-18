@@ -26,11 +26,6 @@ class Filter{
 
     constructor(){
         this.gain = 10; //default gain
-        let streamWithoutNav;
-        OT.getUserMedia({audio:true}).then(stream => {
-            streamWithoutNav = stream;
-        }).catch(handleError);
-
     }
 
     /**
