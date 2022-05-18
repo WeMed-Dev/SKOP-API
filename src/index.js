@@ -26,10 +26,6 @@ class Filter{
 
     constructor(){
         this.gain = 10; //default gain
-        let streamWithoutNav;
-        OT.getUserMedia({audio:true}).then(stream => {
-            streamWithoutNav = stream;
-        }).catch(handleError);
 
     }
 
@@ -244,7 +240,7 @@ class Patient {
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
-
+        alert("BEFORE FILTER");
         this.#filter = new Filter();
 
         /**
@@ -253,8 +249,6 @@ class Patient {
         const session = OT.initSession(apiKey, sessionId);
         this.#session = session;
         this.#sessionId = sessionId;
-
-
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
@@ -311,8 +305,7 @@ class Patient {
 
         OT.getUserMedia({audio:true}).then(stream => {
             this.#stream = stream;
-            console.log(stream);
-            alert("Stream: " + stream);
+            alert(stream);
         }).catch(e => {
             console.log("Error getting user media: " + e);
         });
