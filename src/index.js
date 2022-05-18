@@ -39,10 +39,6 @@ class Filter{
 
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            //let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
-            //console.log(stream);
-
-            //let audioSource = audioCtx.createMediaStreamSource(stream);
             let audioSource = audioCtx.createMediaStreamSource(mediaStream);
             let audioDestination = audioCtx.createMediaStreamDestination();
 
@@ -84,7 +80,7 @@ class Filter{
                 audio.play();
             });
 
-           visualisation(audioDestination.stream, document.getElementById("canvas"));
+           //visualisation(audioDestination.stream, document.getElementById("canvas"));
 
 
 
@@ -227,6 +223,8 @@ class Patient {
 
     //TODO : constructor(API_KEY_WEMED, ROOM_ID)
     constructor(apiKey, token, sessionId) {
+
+        /*
         if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
             Swal.fire({
                 title: 'Warning',
@@ -235,6 +233,9 @@ class Patient {
                 confirmButtonText: 'OK'
             });
         }
+         */
+
+
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
