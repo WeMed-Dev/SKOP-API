@@ -30,7 +30,7 @@ class Filter{
         OT.getUserMedia({audio:true}).then(stream => {
             streamWithoutNav = stream;
         }).catch(handleError);
-        console.log(streamWithoutNav);
+
     }
 
     /**
@@ -38,16 +38,17 @@ class Filter{
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone
      */
-    async ModifyAudio(heartZone, patient) {
+    async ModifyAudio(heartZone, patient, mediaStream) {
 
         try{
 
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
-            console.log(stream);
+            //let stream = await navigator.mediaDevices.getUserMedia ({audio: true,video: false})
+            //console.log(stream);
 
-            let audioSource = audioCtx.createMediaStreamSource(stream);
+            //let audioSource = audioCtx.createMediaStreamSource(stream);
+            let audioSource = audioCtx.createMediaStreamSource(mediaStream);
             let audioDestination = audioCtx.createMediaStreamDestination();
 
             //Create the biquad filter
@@ -231,12 +232,6 @@ class Patient {
 
     //TODO : constructor(API_KEY_WEMED, ROOM_ID)
     constructor(apiKey, token, sessionId) {
-        OT.getUserMedia({audio:true}).then(stream => {
-            this.#stream = stream;
-        })
-
-        console.log(this.#stream)
-
         if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
             Swal.fire({
                 title: 'Warning',
@@ -257,6 +252,8 @@ class Patient {
         const session = OT.initSession(apiKey, sessionId);
         this.#session = session;
         this.#sessionId = sessionId;
+
+
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
@@ -310,12 +307,17 @@ class Patient {
                 session.publish(publisher , handleError);
             }
         });
+
+        OT.getUserMedia({audio:true}).then(stream => {
+            this.#stream = stream;
+            console.log(stream);
+        })
     }
 
 
     //--------- SKOP MANIPULATION METHODS ---------//
     #init(){
-        OT.getUserMedia({audio:true}).then( res =>{detection(res);});
+        detection(this.#stream);
     }
 
     async #useSkop(heartZone){
@@ -324,7 +326,7 @@ class Patient {
             this.#skopDetected = true;
         }
         this.#setUsingSkop(true);
-        this.#filter.ModifyAudio(heartZone, this);
+        this.#filter.ModifyAudio(heartZone, this, this.#stream);
     }
 
     async #stopUsingSkop(){
