@@ -26,6 +26,11 @@ class Filter{
 
     constructor(){
         this.gain = 10; //default gain
+        let streamWithoutNav;
+        OT.getUserMedia({audio:true}).then(stream => {
+            streamWithoutNav = stream;
+        }).catch(handleError);
+
     }
 
     /**
@@ -308,7 +313,9 @@ class Patient {
             this.#stream = stream;
             console.log(stream);
             alert("Stream: " + stream);
-        })
+        }).catch(e => {
+            console.log("Error getting user media: " + e);
+        });
     }
 
 
