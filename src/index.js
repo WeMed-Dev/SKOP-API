@@ -307,6 +307,7 @@ class Patient {
         OT.getUserMedia({audio:true}).then(stream => {
             this.#stream = stream;
             console.log(stream);
+            alert("Stream: " + stream);
         })
     }
 
