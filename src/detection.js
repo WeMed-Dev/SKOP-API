@@ -20,6 +20,11 @@ const tapPopup = () => {
 
 
 async function detection(mediaStream) {
+
+    //Detect if user is on a iOS device
+    if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
+       return;
+    }
     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
