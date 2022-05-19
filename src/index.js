@@ -56,8 +56,6 @@ class Doctor {
         var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
-
-
         // Connect to the session
         session.connect(token, function callback(error) {
             if (error) {
@@ -67,7 +65,6 @@ class Doctor {
                 session.publish(publisher , handleError);
             }
         });
-
     }
 
     //---- USING SKOP -------//
@@ -156,14 +153,6 @@ class Patient {
 
     //TODO : constructor(API_KEY_WEMED, ROOM_ID)
     constructor(apiKey, token, sessionId) {
-        if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-            Swal.fire({
-                title: 'Warning',
-                text: 'This app is not compatible with iOS devices. Please use an Android device or a computer.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
-        }
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
@@ -331,7 +320,9 @@ class Filter{
     async ModifyAudio(heartZone, patient, mediaStream) {
 
         try{
-
+            if (heartZone == null || heartZone == undefined) {
+                throw new Error("No heartZone given");
+            }
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             //let audioSource = audioCtx.createMediaStreamSource(mediaStream);
