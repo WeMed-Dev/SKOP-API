@@ -36,7 +36,7 @@ class Doctor {
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
-                insertMode: 'append',
+               targetElementId: 'subscriber',
                 width: '100%',
                 height: '100%'
             };
@@ -49,7 +49,7 @@ class Doctor {
 
         // initialize the publisher
         var publisherOptions = {
-            insertMode: 'append',
+            targetElementId: 'publisher',
             width: '100%',
             height: '100%'
         };
@@ -167,7 +167,6 @@ class Patient {
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
-        alert("BEFORE FILTER");
         this.#filter = new Filter();
 
         /**
@@ -180,7 +179,7 @@ class Patient {
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
-                insertMode: 'append',
+                targetElementId: 'subscriber',
                 width: '100%',
                 height: '100%'
             };
@@ -210,22 +209,31 @@ class Patient {
             //console.log("Signal data: " + event.data);
             self.#setGain(event.data)
         });
+        // TODO voir si je peux régler ça pour iOS
+        OT.getUserMedia({audio:true}).then(stream => {
+            this.#stream = stream;
+            console.log(stream);
+        }).catch(e => {
+            console.log("Error getting user media: " + e);
+        });
 
         // initialize the publisher
         var publisherOptions = {
-            insertMode: 'append',
+            insertMode: 'replace',
+            targetElementId: 'publisher',
             width: '100%',
             height: '100%'
         };
         var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
-        OT.getUserMedia({audio:true}).then(stream => {
-            this.#stream = stream;
-            alert(stream);
-        }).catch(e => {
-            console.log("Error getting user media: " + e);
-        });
+
+
+
+
+
+        let mediaStreamTrack =  publisher.getAudioSource()
+        console.log(mediaStreamTrack)
 
         // Connect to the session
         session.connect(token, function callback(error) {
