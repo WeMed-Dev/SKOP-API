@@ -29,7 +29,7 @@ async function detection(mediaStream) {
             allowOutsideClick: false,
             allowEscapeKey: false,
             allowEnterKey: false,
-            showConfirmButton: false,
+            showConfirmButton: true,
         })
        return;
     }
