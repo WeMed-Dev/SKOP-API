@@ -230,18 +230,16 @@ class Patient {
             }
         });
 
-
+        navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream =>{
+            this.#stream = stream;
+            console.log(this.#stream);
+        })
     }
 
 
     //--------- SKOP MANIPULATION METHODS ---------//
     #init(){
-        navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream => {
-            detection(stream);
-        }).catch(e => {
-            console.log("Error getting user media: " + e);
-        });
-
+            detection(this.#stream);
     }
 
     async #useSkop(heartZone){
@@ -250,7 +248,7 @@ class Patient {
             this.#skopDetected = true;
         }
         this.#setUsingSkop(true);
-        this.#filter.ModifyAudio(heartZone, this);
+        this.#filter.ModifyAudio(heartZone, this, this.#stream);
     }
 
     async #stopUsingSkop(){
@@ -330,16 +328,19 @@ class Filter{
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone
      */
-    async ModifyAudio(heartZone, patient) {
+    async ModifyAudio(heartZone, patient, mediaStream) {
 
         try{
-            let stream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+
 
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            //let audioSource = audioCtx.createMediaStreamSource(mediaStream);
+            let audioSource = audioCtx.createMediaStreamSource(mediaStream);
+
             //Retrying with getUserMedia()
-            let audioSource = audioCtx.createMediaStreamSource(stream);
+            //let stream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+            //let audioSource = audioCtx.createMediaStreamSource(stream);
+
             let audioDestination = audioCtx.createMediaStreamDestination();
 
             //Create the biquad filter
