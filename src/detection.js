@@ -23,6 +23,14 @@ async function detection(mediaStream) {
 
     //Detect if user is on a iOS device
     if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i)) {
+        Swal.fire({
+            titleText: "Make sure that the Skop is plugged in",
+            icon: "info",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            showConfirmButton: false,
+        })
        return;
     }
     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
