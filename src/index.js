@@ -209,13 +209,6 @@ class Patient {
             //console.log("Signal data: " + event.data);
             self.#setGain(event.data)
         });
-        // TODO voir si je peux régler ça pour iOS
-        OT.getUserMedia({audio:true}).then(stream => {
-            this.#stream = stream;
-            console.log(stream);
-        }).catch(e => {
-            console.log("Error getting user media: " + e);
-        });
 
         // initialize the publisher
         var publisherOptions = {
