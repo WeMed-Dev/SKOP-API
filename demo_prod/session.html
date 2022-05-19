@@ -1,0 +1,111 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skop API Demo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+
+    <link rel="stylesheet" href="css/session.css">
+
+    <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+<header>
+    <h1>Skop API Demo</h1></h1>
+</header>
+
+<main>
+    <div id="subscriber"></div>
+
+    <div id="right">
+        <div id="publisher"></div>
+
+        <div id="buttons">
+            <button id="conv">Conversation</button>
+            <div id="div-select">
+                <select name="zones" id="zones">
+                    <option class="zones-value" value="...">Heart Zones</option>
+                    <option class="zones-value" value="Aortic">Aortique</option>
+                    <option class="zones-value" value="Mitral">Mitrale</option>
+                    <option class="zones-value" value="Pulmonary">Pulmonaire</option>
+                    <option class="zones-value" value="Tricuspid">Tricuspide</option>
+                </select>
+            </div>
+            <div id="div-range" >
+                <h4 id="gain-output">Gain : ... </h4>
+                <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+
+
+
+</body>
+<script src="../dist/SkopAPI.js"></script>
+<script>
+
+
+    let infos = document.getElementById("infos");
+
+    let buttonConversation  = document.getElementById("conv");
+    let select = document.getElementById("zones");
+    let divRange = document.getElementById("div-range")
+    let gainRange = document.getElementById("gainRange");
+    let gainOutput = document.getElementById("gain-output");
+
+
+    //hide all that should be hidden
+    divRange.style.display = "none";
+
+
+    if(localStorage.getItem("role") == "doctor"){
+        doctor();
+    }
+    else{
+        patient();
+    }
+
+
+
+    function doctor(){
+        let doctor = new SkopAPI.Doctor(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+
+        buttonConversation.addEventListener('click', () => {
+            doctor.skop();
+            divRange.style.display = "none"
+        });
+
+        select.addEventListener("change", (e) =>{
+            doctor.skop(e.target.value);
+            divRange.style.display = "flex"
+        });
+        gainRange.oninput = function() {
+            gainOutput.innerHTML = "Gain : " + this.value;
+            doctor.changeGainLevel(this.value);
+        };
+    }
+
+    function patient(){
+        let patient = new SkopAPI.Patient(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+
+        let buttons = document.getElementById("buttons");
+        buttons.style.display = "none";
+    }
+
+</script>
+
+</html>

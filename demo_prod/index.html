@@ -1,0 +1,76 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>Skop API Demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+
+  <link rel="stylesheet" href="css/index.css">
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+<header>
+  <h1>Skop API Demo</h1>
+</header>
+
+<main>
+
+  <button onclick="sessionAsPatient()" >Patient</button>
+  <button onclick="sessionAsDoctor()">Médecin</button>
+
+
+</main>
+
+
+
+
+</body>
+<script>
+  //empty local storage
+  localStorage.clear();
+
+  let room = 12 // rooms are used to do one-to-one conversations, the room is the id of the conversation
+  //TODO : récupérer les données de session depuis l'API si la clé d'API WEMED est valide
+  var apiKey
+  var sessionId
+  var token
+
+  fetch("https://test-wemed.herokuapp.com/room/" + room)
+          .then(data => data.json())
+          .then(data => {
+            apiKey = data.apiKey
+            sessionId = data.sessionId
+            token = data.token
+            //set the variables in local storage
+            localStorage.setItem("apiKey", apiKey)
+            localStorage.setItem("sessionId", sessionId)
+            localStorage.setItem("token", token)
+            localStorage.setItem("room", room)
+          })
+
+
+
+  function sessionAsPatient(){
+    localStorage.setItem("role", "patient");
+    window.location.href = "session.html";
+  }
+
+  function sessionAsDoctor(){
+    localStorage.setItem("role", "doctor");
+    window.location.href = "session.html";
+  }
+
+</script>
+
+</html>
