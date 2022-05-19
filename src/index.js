@@ -228,13 +228,6 @@ class Patient {
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
 
-
-
-
-
-        let mediaStreamTrack =  publisher.getAudioSource()
-        console.log(mediaStreamTrack)
-
         // Connect to the session
         session.connect(token, function callback(error) {
             if (error) {
@@ -343,7 +336,8 @@ class Filter{
     async ModifyAudio(heartZone, patient, mediaStream) {
 
         try{
-
+            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+            alert(defaultAudio)
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let audioSource = audioCtx.createMediaStreamSource(mediaStream);
