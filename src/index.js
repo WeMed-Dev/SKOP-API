@@ -36,7 +36,7 @@ class Doctor {
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
-               targetElementId: 'subscriber',
+                insertMode: 'append',
                 width: '100%',
                 height: '100%'
             };
@@ -49,7 +49,7 @@ class Doctor {
 
         // initialize the publisher
         var publisherOptions = {
-            targetElementId: 'publisher',
+            insertMode: 'append',
             width: '100%',
             height: '100%'
         };
@@ -179,7 +179,7 @@ class Patient {
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
-                targetElementId: 'subscriber',
+                insertMode: 'append',
                 width: '100%',
                 height: '100%'
             };
@@ -219,8 +219,7 @@ class Patient {
 
         // initialize the publisher
         var publisherOptions = {
-            insertMode: 'replace',
-            targetElementId: 'publisher',
+            insertMode: 'append',
             width: '100%',
             height: '100%'
         };
@@ -244,7 +243,12 @@ class Patient {
 
     //--------- SKOP MANIPULATION METHODS ---------//
     #init(){
-        detection(this.#stream);
+        navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream => {
+            detection(stream);
+        }).catch(e => {
+            console.log("Error getting user media: " + e);
+        });
+
     }
 
     async #useSkop(heartZone){
@@ -253,7 +257,7 @@ class Patient {
             this.#skopDetected = true;
         }
         this.#setUsingSkop(true);
-        this.#filter.ModifyAudio(heartZone, this, this.#stream);
+        this.#filter.ModifyAudio(heartZone, this);
     }
 
     async #stopUsingSkop(){
@@ -333,7 +337,7 @@ class Filter{
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone
      */
-    async ModifyAudio(heartZone, patient, mediaStream) {
+    async ModifyAudio(heartZone, patient) {
 
         try{
             let stream = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
