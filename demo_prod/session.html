@@ -14,6 +14,7 @@
 
 
     <link rel="stylesheet" href="css/session.css">
+    <link rel="stylesheet" href="css/global.css">
 
     <meta name="theme-color" content="#fafafa">
 </head>
@@ -25,10 +26,12 @@
 </header>
 
 <main>
-    <div id="subscriber"></div>
+    <div id="subscriber"> Waiting for your correspondent to join... </div>
 
     <div id="right">
         <div id="publisher"></div>
+
+        <h2 id="role"> Rôle : <span id="role-span"></span></h2>
 
         <div id="buttons">
             <button id="conv">Conversation</button>
@@ -48,6 +51,8 @@
         </div>
     </div>
 
+    <button id="endCall">END CALL</button>
+
 
 </main>
 
@@ -59,14 +64,18 @@
 <script>
 
 
-    let infos = document.getElementById("infos");
-
+    let role = document.getElementById("role-span");
     let buttonConversation  = document.getElementById("conv");
     let select = document.getElementById("zones");
     let divRange = document.getElementById("div-range")
     let gainRange = document.getElementById("gainRange");
     let gainOutput = document.getElementById("gain-output");
+    let endCall = document.getElementById("endCall");
 
+    endCall.addEventListener("click", () => {
+        //go to another page
+        window.location.href = "callEnd.html";
+    });
 
     //hide all that should be hidden
     divRange.style.display = "none";
@@ -97,6 +106,8 @@
             gainOutput.innerHTML = "Gain : " + this.value;
             doctor.changeGainLevel(this.value);
         };
+
+        role.innerText = "Médecin"
     }
 
     function patient(){
@@ -104,6 +115,7 @@
 
         let buttons = document.getElementById("buttons");
         buttons.style.display = "none";
+        role.innerText = "Patient"
     }
 
 </script>
