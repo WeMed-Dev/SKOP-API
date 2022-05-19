@@ -19,7 +19,7 @@ const tapPopup = () => {
 }
 
 
-function detection(mediaStream) {
+async function detection(mediaStream) {
     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
