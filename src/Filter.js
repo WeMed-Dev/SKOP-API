@@ -1,4 +1,5 @@
 const axios = require("axios");
+const visualisation = require('./functions/visualisation');
 
 class Filter{
     filter;
@@ -74,7 +75,8 @@ class Filter{
                 audio.play();
             });
 
-            //visualisation(audioDestination.stream, document.getElementById("canvas"));
+
+
 
 
 
