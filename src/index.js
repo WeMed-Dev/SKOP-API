@@ -77,7 +77,7 @@ class Doctor {
         }
     }
 
-    changeGainLevel(gain){
+    setGain(gain){
         this.#signalGain(gain);
     }
 
