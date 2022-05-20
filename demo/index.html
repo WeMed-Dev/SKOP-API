@@ -112,7 +112,7 @@
             });
             gainRange.oninput = function() {
                 gainOutput.innerHTML = "Gain  : " + this.value;
-                doctor.changeGainLevel(this.value);
+                doctor.setGain(this.value);
             }
         }
     </script>
