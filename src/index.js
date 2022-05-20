@@ -151,8 +151,18 @@ class Patient {
     #stream
 
 
-    //TODO : constructor(API_KEY_WEMED, ROOM_ID)
+
+
+
     constructor(apiKey, token, sessionId) {
+        //TODO : constructor(API_KEY_WEMED, ROOM_ID)
+        //TODO faire un fetch dans la BDD WeMed afin de vérifier que la clé API_WEMED
+        // Si la clé est valide alors on fait un fetch pour récupérer les infos de la session
+        // Sinon on affiche un message d'erreur
+
+        // Ensuite on fait le traitement normal du constructeur
+
+
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
@@ -224,7 +234,6 @@ class Patient {
             console.log(this.#stream);
         })
     }
-
 
     //--------- SKOP MANIPULATION METHODS ---------//
     async #init(){

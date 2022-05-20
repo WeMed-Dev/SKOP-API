@@ -19,6 +19,10 @@ header{
 
 }
 
+#img-header{
+    max-height: 150px;
+}
+
 button, a{
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     color: #6a00ff;
