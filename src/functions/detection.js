@@ -91,6 +91,7 @@ function detectTap(){
                 allowEscapeKey: false,
                 allowEnterKey: false,
                 confirmButtonText: "Try again",
+                showCloseButton: true,
             }).then((res)=>{
                 if (res.value){
                     id = setInterval(detect, 70);
