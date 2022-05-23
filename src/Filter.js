@@ -44,7 +44,7 @@ class Filter{
             if(heartZone === Filter.AORTIC || heartZone === Filter.MITRAL || heartZone === Filter.TRICUSPID){
                 biquadFilter.type = "lowshelf"; // low shelf filter
                 biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
-                biquadFilter.gain.setValueAtTime(10, audioCtx.currentTime);
+                biquadFilter.gain.setValueAtTime(this.gain, audioCtx.currentTime);
 
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
