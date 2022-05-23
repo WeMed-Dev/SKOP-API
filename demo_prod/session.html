@@ -34,7 +34,7 @@
         <h2 id="role"> Rôle : <span id="role-span"></span></h2>
 
         <div id="buttons">
-            <button id="conv">Conversation</button>
+            <button id="conv" class="button">Conversation</button>
             <div id="div-select">
                 <select name="zones" id="zones">
                     <option class="zones-value" value="...">Heart Zones</option>
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <button id="endCall">END CALL</button>
+    <button class="button" id="endCall">END CALL</button>
 
 
 </main>
@@ -92,6 +92,8 @@
 
     function doctor(){
         let doctor = new SkopAPI.Doctor(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+        let zone;
+        let isSpaceDown = false;
 
         buttonConversation.addEventListener('click', () => {
             doctor.skop();
@@ -99,12 +101,32 @@
         });
 
         select.addEventListener("change", (e) =>{
-            doctor.skop(e.target.value);
+            zone = e.target.value;
+            //doctor.skop(e.target.value);
             divRange.style.display = "flex"
         });
         gainRange.oninput = function() {
             gainOutput.innerHTML = "Gain : " + this.value;
             doctor.setGain(this.value);
+        };
+
+
+        document.onkeydown = function (e) {
+            if(e.keyCode === 32 && !isSpaceDown){
+                isSpaceDown = true;
+                doctor.skop(zone);
+                console.log(zone);
+            }
+
+        };
+
+        document.onkeyup = function (e) {
+         if(e.keyCode === 32 && isSpaceDown){
+             isSpaceDown = false;
+             console.log("space up");
+             doctor.skop();
+         }
+
         };
 
         role.innerText = "Médecin"
