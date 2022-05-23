@@ -1,6 +1,7 @@
 const Filter = require("./Filter");
 const OT = require("@opentok/client");
 const detection = require("./functions/detection");
+const Swal = require('sweetalert2');
 
 /**
  * Displays any error messages.
@@ -35,6 +36,8 @@ class Patient {
 
     #stream
 
+    #hasSkop
+
     constructor(apiKey, token, sessionId) {
         //TODO : constructor(API_KEY_WEMED, ROOM_ID)
         //TODO faire un fetch dans la BDD WeMed afin de vérifier que la clé API_WEMED
@@ -48,6 +51,27 @@ class Patient {
         const self = this;
         this.#usingSkop = false;
         this.#filter = new Filter();
+
+
+        Swal.fire({
+            title: 'Welcome!',
+            text: "Do you have a Skop ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, I do.',
+            cancelButtonText: "No, I don't.",
+        }).then(result => {
+            if(result.value){
+                this.#hasSkop = true;
+            }
+            else{
+                this.#hasSkop = false;
+            }
+            console.log(this.#hasSkop);
+        })
+
 
         /**
          * @@type {OT.Session} The session object.
