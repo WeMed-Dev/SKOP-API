@@ -34,7 +34,6 @@
         <h2 id="role"> Rôle : <span id="role-span"></span></h2>
 
         <div id="buttons">
-            <button id="conv" class="button">Conversation</button>
             <div id="div-select">
                 <select name="zones" id="zones">
                     <option class="zones-value" value="...">Heart Zones</option>
@@ -65,7 +64,6 @@
 
 
     let role = document.getElementById("role-span");
-    let buttonConversation  = document.getElementById("conv");
     let select = document.getElementById("zones");
     let divRange = document.getElementById("div-range")
     let gainRange = document.getElementById("gainRange");
@@ -95,14 +93,10 @@
         let zone;
         let isSpaceDown = false;
 
-        buttonConversation.addEventListener('click', () => {
-            doctor.skop();
-            divRange.style.display = "none"
-        });
+
 
         select.addEventListener("change", (e) =>{
             zone = e.target.value;
-            //doctor.skop(e.target.value);
             divRange.style.display = "flex"
         });
         gainRange.oninput = function() {
@@ -112,21 +106,20 @@
 
 
         document.onkeydown = function (e) {
-            if(e.keyCode === 32 && !isSpaceDown){
+            if(e.keyCode === 32 && !isSpaceDown && zone != null){
                 isSpaceDown = true;
                 doctor.skop(zone);
-                console.log(zone);
+                console.log("Listening to " + zone);
             }
 
         };
 
         document.onkeyup = function (e) {
          if(e.keyCode === 32 && isSpaceDown){
-             isSpaceDown = false;
-             console.log("space up");
              doctor.skop();
+             isSpaceDown = false;
+             console.log("Stop Listening");
          }
-
         };
 
         role.innerText = "Médecin"
