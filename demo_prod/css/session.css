@@ -62,8 +62,6 @@ main{
 
 
 #div-select{
-
-  color: #6a00ff;
   font-weight:600;
   display:flex;
   justify-content:center;
@@ -71,6 +69,8 @@ main{
   flex-direction:column;
   border: none;
   font-size: medium;
+  text-align: center;
+  padding: 10px;
 }
 
 #div-select select{
@@ -92,6 +92,10 @@ main{
   color:white;
 }
 
+#space{
+  text-decoration: underline;
+}
+
 
 #div-range {
   display: flex;
@@ -100,6 +104,9 @@ main{
   flex-direction: column;
   border: none;
   font-size: medium;
+  margin:  10px 0;
+  text-align: center;
+  padding: 10px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -127,8 +134,8 @@ main{
   background-color: #b11631;
   color: white;
   border-radius: 5px;
-  padding: 7px 0;
-  width: 100px;
+  padding: 7px 10px;
+
   position: absolute;
   top: 90vh;
   right: 0;

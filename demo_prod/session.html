@@ -34,9 +34,11 @@
         <h2 id="role"> Rôle : <span id="role-span"></span></h2>
 
         <div id="buttons">
+
             <div id="div-select">
+                <h3>Choisissez une zone puis maintenez <span id="space">ESPACE</span> pour passer en mode écoute.</h3>
                 <select name="zones" id="zones">
-                    <option class="zones-value" value="...">Heart Zones</option>
+                    <option class="zones-value" value="...">Zone</option>
                     <option class="zones-value" value="Aortic">Aortique</option>
                     <option class="zones-value" value="Mitral">Mitrale</option>
                     <option class="zones-value" value="Pulmonary">Pulmonaire</option>
@@ -44,13 +46,16 @@
                 </select>
             </div>
             <div id="div-range" >
-                <h4 id="gain-output">Gain : ... </h4>
+                <!--
+                <h4 id="gain-output">Gain : ... </h4> -->
+
+                <h3>Utilisez ce slider pour modifier le gain pendant une écoute.</h3>
                 <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
             </div>
         </div>
     </div>
 
-    <button class="button" id="endCall">END CALL</button>
+    <button class="button" id="endCall">QUITTER</button>
 
 
 </main>
@@ -61,23 +66,17 @@
 </body>
 <script src="../dist/SkopAPI.js"></script>
 <script>
-
-
     let role = document.getElementById("role-span");
     let select = document.getElementById("zones");
     let divRange = document.getElementById("div-range")
     let gainRange = document.getElementById("gainRange");
-    let gainOutput = document.getElementById("gain-output");
+    //let gainOutput = document.getElementById("gain-output");
     let endCall = document.getElementById("endCall");
 
     endCall.addEventListener("click", () => {
         //go to another page
         window.location.href = "callEnd.html";
     });
-
-    //hide all that should be hidden
-    divRange.style.display = "none";
-
 
     if(localStorage.getItem("role") == "doctor"){
         doctor();
@@ -93,27 +92,25 @@
         let zone;
         let isSpaceDown = false;
 
-
-
         select.addEventListener("change", (e) =>{
             zone = e.target.value;
             divRange.style.display = "flex"
         });
         gainRange.oninput = function() {
-            gainOutput.innerHTML = "Gain : " + this.value;
+            //gainOutput.innerHTML = "Gain : ";// + this.value;
             doctor.setGain(this.value);
         };
 
-
+        //When the doctor press the space bar it start the session.
         document.onkeydown = function (e) {
             if(e.keyCode === 32 && !isSpaceDown && zone != null){
                 isSpaceDown = true;
                 doctor.skop(zone);
                 console.log("Listening to " + zone);
             }
-
         };
 
+        // When the doctor release the space bar it stop the session.
         document.onkeyup = function (e) {
          if(e.keyCode === 32 && isSpaceDown){
              doctor.skop();
@@ -121,17 +118,18 @@
              console.log("Stop Listening");
          }
         };
-
         role.innerText = "Médecin"
     }
 
     function patient(){
         let patient = new SkopAPI.Patient(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
-
         let buttons = document.getElementById("buttons");
         buttons.style.display = "none";
         role.innerText = "Patient"
     }
+
+
+
 
 </script>
 
