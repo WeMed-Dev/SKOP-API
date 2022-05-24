@@ -25,7 +25,7 @@ class Filter{
 
         try{
             if (heartZone == null || heartZone == undefined) {
-                throw new Error("No heartZone given");
+                throw new Error("No heartZone given - cannot modify audio");
             }
             // define variables
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
