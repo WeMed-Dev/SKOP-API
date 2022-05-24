@@ -151,7 +151,7 @@ class Patient {
             this.#skopDetected = true;
         }
         this.#setUsingSkop(true);
-        await this.#filter.ModifyAudio(heartZone, this, this.#stream);
+        await this.#filter.ModifyAudio(heartZone, this);
     }
 
     async #stopUsingSkop(){
