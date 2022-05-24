@@ -183,7 +183,6 @@ class Patient {
     #setGain(gain){
         //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
-
         this.#filter.setGain(gain);
     }
 
