@@ -70,6 +70,12 @@ class Doctor {
     }
 
     setGain(gain){
+        if (gain === null || gain === undefined || gain === "") {
+            throw new TypeError("Gain cannot be null or undefined");
+        }
+        else if (isNaN(gain)) {
+            throw new TypeError("Gain must be a number");
+        }
         this.#signalGain(gain);
     }
 
