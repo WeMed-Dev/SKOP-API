@@ -21,7 +21,7 @@ class Filter{
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone
      */
-    async ModifyAudio(heartZone, patient, mediaStream) {
+    async ModifyAudio(heartZone, patient) {
 
         try{
             if (heartZone == null || heartZone == undefined) {
