@@ -59,7 +59,7 @@
 
 
 </main>
-
+<div id="listening">Ecoute en cours</div>
 
 
 
@@ -70,8 +70,10 @@
     let select = document.getElementById("zones");
     let divRange = document.getElementById("div-range")
     let gainRange = document.getElementById("gainRange");
-    //let gainOutput = document.getElementById("gain-output");
     let endCall = document.getElementById("endCall");
+    let listening = document.getElementById("listening");
+
+    listening.style.display = "none";
 
     endCall.addEventListener("click", () => {
         //go to another page
@@ -97,7 +99,6 @@
             divRange.style.display = "flex"
         });
         gainRange.oninput = function() {
-            //gainOutput.innerHTML = "Gain : ";// + this.value;
             doctor.setGain(this.value);
         };
 
@@ -107,6 +108,7 @@
                 isSpaceDown = true;
                 doctor.skop(zone);
                 console.log("Listening to " + zone);
+                listening.style.display = "block";
             }
         };
 
@@ -116,6 +118,7 @@
              doctor.skop();
              isSpaceDown = false;
              console.log("Stop Listening");
+             listening.style.display = "none";
          }
         };
         role.innerText = "Médecin"

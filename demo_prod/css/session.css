@@ -96,6 +96,13 @@ main{
   text-decoration: underline;
 }
 
+#listening{
+  margin-top: 4px;
+  text-align: center;
+  font-size: 2em;
+  font-weight: lighter;
+}
+
 
 #div-range {
   display: flex;
