@@ -13,7 +13,6 @@ class Filter{
 
     constructor(){
         this.gain = 10; //default gain
-
     }
 
     /**
@@ -56,7 +55,7 @@ class Filter{
 
                 biquadFilter.type = "peaking"; // peaking filter
                 biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
-                biquadFilter.Q.setValueAtTime(this.gain, audioCtx.currentTime);
+                biquadFilter.Q.setValueAtTime(10, audioCtx.currentTime);
 
                 // connect the nodes together
                 audioSource.connect(biquadFilter);
@@ -72,7 +71,7 @@ class Filter{
                 audio.src = URL.createObjectURL(event.data);
                 this.sendAudio(event.data, heartZone, patient);
                 document.body.appendChild(audio);
-                audio.play();
+                //audio.play();
             });
 
 

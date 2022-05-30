@@ -1,0 +1,56 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skop API Demo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+
+    <link rel="stylesheet" href="css/session.css">
+    <link rel="stylesheet" href="css/patient.css">
+    <link rel="stylesheet" href="css/global.css">
+
+    <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+<header>
+    <img id="img-header" src="img/demo_prod.png">
+</header>
+
+<main>
+    <div id="subscriber"></div>
+
+    <div id="right">
+        <div id="publisher"></div>
+        <h2 id="role"> Rôle : <span id="role-span"></span></h2>
+    </div>
+    <a class="button" id="endCall" href="callEnd.html">QUITTER</a>
+</main>
+
+
+
+
+</body>
+<script src="../dist/SkopAPI.js"></script>
+<script>
+    let role = document.getElementById("role-span");
+
+    function patient(){
+        let patient = new SkopAPI.Patient(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+        role.innerText = "Patient"
+    }
+    patient();
+
+
+</script>
+
+</html>
