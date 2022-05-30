@@ -161,14 +161,16 @@ class Filter{
     }
     */
 
+        // TODO: décommenter pour continuer à transmettre les données
 
+        /*
         var reader = new FileReader();
         reader.onload = function() {
             console.log(reader.result);
             axios.post("http://localhost:3000/audioJson", {
                 sessionId: patient.getSessionId(),
                 zone: heartZone,
-                //TODO : change to base64
+                // TODO : change to base64
                 binary: reader.result
             }, {
                 headers: {
@@ -186,6 +188,7 @@ class Filter{
                 });
         }
         reader.readAsArrayBuffer(audioBlob);
+         */
     }
 }
 
