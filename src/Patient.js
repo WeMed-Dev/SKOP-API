@@ -116,6 +116,11 @@ class Patient {
             self.#setGain(event.data)
         });
 
+        // When a user receive a signal to use AR
+        session.on("signal:useAR", function(event) {
+            self.#trackEyes(event.data)
+        });
+
         // initialize the publisher
         var publisherOptions = {
             insertMode: 'append',
@@ -138,7 +143,6 @@ class Patient {
 
         navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream =>{
             this.#stream = stream;
-            console.log(this.#stream);
         })
     }
 
@@ -163,24 +167,24 @@ class Patient {
 
     //--------- AUGMENTED REALITY ---------//
 
-    async trackEyes(){
+    async #trackEyes(boolean){
 
         //wait for tf to be ready
         await tf.ready();
         let video = document.createElement('video');
         let model;
 
-        let canvas = document.getElementById("canvas");
-        let ctx = canvas.getContext("2d");
-
         const setupCamera = () => {
             navigator.mediaDevices
                 .getUserMedia({
-                    video: { width: 600, height: 400 },
+                    video: true,
                     audio: false,
                 })
                 .then((stream) => {
                     video.srcObject = stream;
+                    video.width = 640;
+                    video.height = 480;
+                    video.play();
                 });
         };
 
@@ -190,10 +194,10 @@ class Patient {
             console.log(prediction);
 
             // draw the video first
-            ctx.drawImage(video, 0, 0, 600, 400);
+            //ctx.drawImage(video, 0, 0, 640, 480);
 
             prediction.forEach((pred) => {
-
+                /*
                 // draw the rectangle enclosing the face
                 ctx.beginPath();
                 ctx.lineWidth = "4";
@@ -214,15 +218,16 @@ class Patient {
                 pred.landmarks.forEach((landmark) => {
                     ctx.fillRect(landmark[0], landmark[1], 5, 5);
                 });
-
+            */
             });
         };
 
         setupCamera();
-        video.addEventListener("loadeddata", async () => {
+        video.addEventListener("play", async () => {
             model = await blazeface.load();
-            // call detect faces every 100 milliseconds or 10 times every second
-            setInterval(detectFaces, 100);
+            if(boolean){
+                setInterval(detectFaces, 100);
+            }
         });
 
 
