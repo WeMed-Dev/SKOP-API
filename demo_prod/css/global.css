@@ -46,6 +46,13 @@ button:hover, a:hover{
     color: #ffffff;
 }
 
+.label{
+
+    font-weight: 600;
+    font-size: 1.2em;
+    margin: 10px;
+}
+
 
 @font-face {
     font-family: "Satoshi Variable";
