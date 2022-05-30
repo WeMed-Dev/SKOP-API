@@ -1,0 +1,51 @@
+
+
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px 0;
+    align-items: center;
+
+}
+
+#subscriber, #publisher{
+    width: 90%;
+    min-height: 200px;
+    background-color: black;
+    margin: 5px 0;
+}
+
+
+#role{
+    font-weight: normal;
+}
+
+#role-span {
+
+    font-weight: bold;
+    color: #6a00ff;
+}
+
+
+header{
+    height: 4em;
+}
+
+
+#endCall{
+    background-color: #b11631;
+    color: white;
+    border-radius: 5px;
+    padding: 7px 10px;
+    position: center;
+
+    border: none;
+    min-width: 110px;
+    font-size: 1.2em;
+}
+
+#endCall:hover{
+    background-color: black;
+    color: white;
+}
