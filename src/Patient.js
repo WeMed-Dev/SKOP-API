@@ -4,6 +4,7 @@ const detection = require("./functions/detection");
 const Swal = require('sweetalert2');
 const blazeface = require('@tensorflow-models/blazeface');
 const tf = require('@tensorflow/tfjs');
+const foyer = require('./functions/foyer');
 
 /**
  * Displays any error messages.
@@ -40,6 +41,8 @@ class Patient {
 
     #hasSkop
 
+    #cameraDimensions
+
     constructor(apiKey, token, sessionId) {
         //TODO : constructor(API_KEY_WEMED, ROOM_ID)
         //TODO faire un fetch dans la BDD WeMed afin de vérifier que la clé API_WEMED
@@ -71,7 +74,6 @@ class Patient {
             else{
                 this.#hasSkop = false;
             }
-            console.log(this.#hasSkop);
         })
 
 
@@ -118,7 +120,8 @@ class Patient {
 
         // When a user receive a signal to use AR
         session.on("signal:useAR", function(event) {
-            self.#trackEyes(event.data)
+            //self.#trackEyes(event.data)
+            self.trackEyes(event.data);
         });
 
         // initialize the publisher
@@ -138,12 +141,21 @@ class Patient {
             } else {
                 // If the connection is successful, publish the publisher to the session
                 session.publish(publisher , handleError);
+                self.#cameraDimensions = {
+                    width: publisher.videoWidth(),
+                    height: publisher.videoHeight()
+                };
             }
         });
 
         navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream =>{
             this.#stream = stream;
         })
+
+
+
+
+
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -167,81 +179,17 @@ class Patient {
 
     //--------- AUGMENTED REALITY ---------//
 
-    async #trackEyes(boolean){
-
-        //wait for tf to be ready
-        await tf.ready();
-        let video = document.createElement('video');
-        let model;
-
-        const setupCamera = () => {
-            navigator.mediaDevices
-                .getUserMedia({
-                    video: true,
-                    audio: false,
-                })
-                .then((stream) => {
-                    video.srcObject = stream;
-                    video.width = 640;
-                    video.height = 480;
-                    video.play();
-                });
-        };
-
-        const detectFaces = async () => {
-            const prediction = await model.estimateFaces(video, false);
-
-            console.log(prediction);
-
-            // draw the video first
-            //ctx.drawImage(video, 0, 0, 640, 480);
-
-            prediction.forEach((pred) => {
-                /*
-                // draw the rectangle enclosing the face
-                ctx.beginPath();
-                ctx.lineWidth = "4";
-                ctx.strokeStyle = "blue";
-                // the last two arguments are width and height
-                // since blazeface returned only the coordinates,
-                // we can find the width and height by subtracting them.
-                ctx.rect(
-                    pred.topLeft[0],
-                    pred.topLeft[1],
-                    pred.bottomRight[0] - pred.topLeft[0],
-                    pred.bottomRight[1] - pred.topLeft[1]
-                );
-                ctx.stroke();
-
-                // drawing small rectangles for the face landmarks
-                ctx.fillStyle = "red";
-                pred.landmarks.forEach((landmark) => {
-                    ctx.fillRect(landmark[0], landmark[1], 5, 5);
-                });
-            */
+    async trackEyes(boolean){
+        if(boolean){
+            foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height).then(() => {
+                foyer.start();
             });
-        };
-
-        setupCamera();
-        video.addEventListener("play", async () => {
-            model = await blazeface.load();
-            if(boolean){
-                setInterval(detectFaces, 100);
-            }
-        });
-
-
-        /*
-              [295.13, 177.64], // right eye
-              [382.32, 175.56], // left eye
-              [345.12, 250.61], // mouth
-              [252.76, 211.37], // right ear
-              [431.20, 204.93] // left ear
-              [341.18, 205.03], // nose
-    */
-
-
+        }
+        else {
+            foyer.stop();
+        }
     }
+
     //--------- GETTER AND SETTER  ---------//
 
     /**
