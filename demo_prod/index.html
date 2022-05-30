@@ -60,7 +60,15 @@
 
   function sessionAsPatient(){
     localStorage.setItem("role", "patient");
-    window.location.href = "patient.html";
+    //check if user is on mobile
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      //mobile
+      window.location.href = "./patientMobile.html";
+    } else {
+      //desktop
+      window.location.href = "./patient.html";
+    }
+
   }
 
   function sessionAsDoctor(){
