@@ -14,6 +14,7 @@
 
 
     <link rel="stylesheet" href="css/session.css">
+    <link rel="stylesheet" href="css/doctor.css">
     <link rel="stylesheet" href="css/global.css">
 
     <meta name="theme-color" content="#fafafa">
@@ -52,10 +53,16 @@
                 <h3>Utilisez ce slider pour modifier le gain pendant une écoute.</h3>
                 <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
             </div>
+
+            <div>
+                <label class="checkBox">Réalité Augmentée</label>
+                <input type="checkbox" id="AR" >
+            </div>
         </div>
     </div>
 
-    <button class="button" id="endCall">QUITTER</button>
+    <button  class="button" id="endCall">QUITTER</button>
+
 
 
 </main>
@@ -72,6 +79,7 @@
     let gainRange = document.getElementById("gainRange");
     let endCall = document.getElementById("endCall");
     let listening = document.getElementById("listening");
+    let AR = document.getElementById("AR");
 
     listening.style.display = "none";
 
@@ -80,19 +88,13 @@
         window.location.href = "callEnd.html";
     });
 
-    if(localStorage.getItem("role") == "doctor"){
-        doctor();
-    }
-    else{
-        patient();
-    }
-
 
 
     function doctor(){
         let doctor = new SkopAPI.Doctor(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
         let zone;
         let isSpaceDown = false;
+        let useAR = false;
 
         select.addEventListener("change", (e) =>{
             zone = e.target.value;
@@ -101,6 +103,16 @@
         gainRange.oninput = function() {
             doctor.setGain(this.value);
         };
+
+        AR.addEventListener("change", (e) =>{
+            useAR = e.target.checked;
+            if (useAR) {
+                doctor.useAugmentedReality(useAR)
+                console.log(useAR)
+            } else {
+                doctor.useAugmentedReality(useAR)
+            }
+        })
 
         //When the doctor press the space bar it start the session.
         document.onkeydown = function (e) {
@@ -114,25 +126,17 @@
 
         // When the doctor release the space bar it stop the session.
         document.onkeyup = function (e) {
-         if(e.keyCode === 32 && isSpaceDown){
-             doctor.skop();
-             isSpaceDown = false;
-             console.log("Stop Listening");
-             listening.style.display = "none";
-         }
+            if(e.keyCode === 32 && isSpaceDown){
+                doctor.skop();
+                isSpaceDown = false;
+                console.log("Stop Listening");
+                listening.style.display = "none";
+            }
         };
         role.innerText = "Médecin"
     }
 
-    function patient(){
-        let patient = new SkopAPI.Patient(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
-        let buttons = document.getElementById("buttons");
-        buttons.style.display = "none";
-        role.innerText = "Patient"
-        patient.trackEyes();
-    }
-
-
+    doctor();
 
 
 </script>
