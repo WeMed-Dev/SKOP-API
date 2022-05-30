@@ -28,7 +28,7 @@ class Doctor {
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
             var subscriberOptions = {
-                insertMode: 'append',
+                insertMode: 'replace',
                 width: '100%',
                 height: '100%'
             };
@@ -41,7 +41,7 @@ class Doctor {
 
         // initialize the publisher
         var publisherOptions = {
-            insertMode: 'append',
+            insertMode: 'replace',
             width: '100%',
             height: '100%'
         };
