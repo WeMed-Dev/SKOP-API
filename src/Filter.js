@@ -71,7 +71,7 @@ class Filter{
                 audio.src = URL.createObjectURL(event.data);
                 this.sendAudio(event.data, heartZone, patient);
                 document.body.appendChild(audio);
-                audio.play();
+                //audio.play();
             });
 
 
