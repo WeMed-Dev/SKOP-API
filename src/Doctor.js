@@ -79,6 +79,16 @@ class Doctor {
         this.#signalGain(gain);
     }
 
+    useAugmentedReality(useAR){
+        if (useAR === null || useAR === undefined || useAR === "") {
+            throw new TypeError("Use AR cannot be null or undefined");
+        }
+        else if (typeof useAR !== "boolean") {
+            throw new TypeError("Use AR must be a boolean");
+        }
+        this.#signalUseAugmentedReality(useAR);
+    }
+
     //------ SIGNALING ------//
 
     #signalHeartZone(signal) {
@@ -111,6 +121,19 @@ class Doctor {
         this.#session.signal({
             type: 'gain',
             data: gain
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
+
+    #signalUseAugmentedReality(useAR){
+        this.#session.signal({
+            type: 'useAR',
+            data: useAR
         }, function(error) {
             if (error) {
                 console.log('Error sending signal:' + error.message);
