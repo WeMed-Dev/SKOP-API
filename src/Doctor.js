@@ -30,7 +30,8 @@ class Doctor {
             var subscriberOptions = {
                 insertMode: 'append',
                 width: '100%',
-                height: '100%'
+                height: '100%',
+                resolution: '1280x720',
             };
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         });
@@ -43,7 +44,8 @@ class Doctor {
         var publisherOptions = {
             insertMode: 'append',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            resolution: '1280x720',
         };
         var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
@@ -84,7 +86,7 @@ class Doctor {
             throw new TypeError("Use AR cannot be null or undefined");
         }
         else if (typeof useAR !== "boolean") {
-            throw new TypeError("Use AR must be a boolean");
+            throw new TypeError("Argument must be a boolean");
         }
         this.#signalUseAugmentedReality(useAR);
     }

@@ -89,7 +89,8 @@ class Patient {
             var subscriberOptions = {
                 insertMode: 'append',
                 width: '100%',
-                height: '100%'
+                height: '100%',
+                resolution: '1280x720',
             };
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         });
@@ -120,15 +121,15 @@ class Patient {
 
         // When a user receive a signal to use AR
         session.on("signal:useAR", function(event) {
-            //self.#trackEyes(event.data)
-            self.trackEyes(event.data);
+            self.augmentedReality(event.data);
         });
 
         // initialize the publisher
         var publisherOptions = {
             insertMode: 'append',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            resolution: '1280x720',
         };
         var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
@@ -179,11 +180,14 @@ class Patient {
 
     //--------- AUGMENTED REALITY ---------//
 
-    async trackEyes(boolean){
+    setupAugmentedReality(canvas){
+        foyer.setupAR(canvas);
+    }
+
+    async augmentedReality(boolean){
         if(boolean){
-            foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height).then(() => {
-                foyer.start();
-            });
+            await foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height)
+            foyer.start()
         }
         else {
             foyer.stop();
