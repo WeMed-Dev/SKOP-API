@@ -13,13 +13,11 @@
     <meta property="og:image" content="">
 
 
-    <link rel="stylesheet" href="css/session.css">
     <link rel="stylesheet" href="css/patient.css">
     <link rel="stylesheet" href="css/global.css">
 
     <meta name="theme-color" content="#fafafa">
 </head>
-
 <body>
 
 <header>
@@ -27,12 +25,23 @@
 </header>
 
 <main>
-    <div id="subscriber"></div>
+    <h2 id="role"> Rôle : <span id="role-span"></span></h2>
+    <div id="videoContainer">
+        <div class="elementAndlabel">
+            <div class="video" id="subscriber"></div>
+            <h3>Médecin</h3>
+        </div>
 
-    <div id="right">
-        <div id="publisher"></div>
-        <h2 id="role"> Rôle : <span id="role-span"></span></h2>
+        <div class="elementAndlabel" >
+            <div class="video" id="publisher"></div>
+            <canvas id="canvas"></canvas>
+            <h3>Moi</h3>
+        </div>
     </div>
+
+
+
+
 
 </main>
 <a class="button" id="endCall" href="callEnd.html">QUITTER</a>
@@ -41,11 +50,14 @@
 
 </body>
 <script src="../dist/SkopAPI.js"></script>
-<script>
+<script defer>
     let role = document.getElementById("role-span");
+    let canvas = document.getElementById("canvas");
+    canvas.style.display = "none";
 
     function patient(){
         let patient = new SkopAPI.Patient(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+        patient.setupAugmentedReality(canvas)
         role.innerText = "Patient"
     }
     patient();

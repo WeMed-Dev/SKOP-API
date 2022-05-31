@@ -13,7 +13,6 @@
     <meta property="og:image" content="">
 
 
-    <link rel="stylesheet" href="css/session.css">
     <link rel="stylesheet" href="css/doctor.css">
     <link rel="stylesheet" href="css/global.css">
 
@@ -21,23 +20,31 @@
 </head>
 
 <body>
-
 <header>
     <img id="img-header" src="img/demo_prod.png">
 </header>
 
 <main>
-    <div id="subscriber"></div>
+    <h2 id="role"> Rôle : <span id="role-span"></span></h2>
+    <div id="videoContainer">
+        <div class="elementAndlabel">
+            <div class="video" id="subscriber"></div>
+            <h3>Médecin</h3>
+        </div>
 
-    <div id="right">
-        <div id="publisher"></div>
-
-        <h2 id="role"> Rôle : <span id="role-span"></span></h2>
+        <div class="elementAndlabel" >
+            <div class="video" id="publisher"></div>
+            <h3>Moi</h3>
+        </div>
+    </div>
 
         <div id="buttons">
 
             <div id="div-select">
-                <h3>Choisissez une zone puis maintenez <span id="space">ESPACE</span> pour passer en mode écoute.</h3>
+                <!--
+                <h3><span id="space">ESPACE</span> pour passer en mode écoute.</h3>
+                -->
+
                 <select name="zones" id="zones">
                     <option class="zones-value" value="...">Zone</option>
                     <option class="zones-value" value="Aortic">Aortique</option>
@@ -45,29 +52,28 @@
                     <option class="zones-value" value="Pulmonary">Pulmonaire</option>
                     <option class="zones-value" value="Tricuspid">Tricuspide</option>
                 </select>
-            </div>
-            <div id="div-range" >
-                <!--
-                <h4 id="gain-output">Gain : ... </h4> -->
+                <div id="div-range" >
+                    <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
+                </div>
 
-                <h3>Utilisez ce slider pour modifier le gain pendant une écoute.</h3>
-                <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
+
+                <div id="div-ar">
+                    <input type="checkbox" id="AR" >
+                     <p> Réalité augmentée </p>
+                </div>
+
             </div>
 
-            <div>
-                <label class="label">Réalité Augmentée</label>
-                <input type="checkbox" id="AR" >
-            </div>
         </div>
-    </div>
 
-    <button  class="button" id="endCall">QUITTER</button>
+
 
 
 
 </main>
 <div id="listening">Ecoute en cours</div>
 
+<button  class="button" id="endCall">QUITTER</button>
 
 
 </body>
