@@ -21,13 +21,31 @@ class Patient {
      */
     #usingSkop;
 
+    #usingAR;
+
+    /**
+     * @type {boolean} Indicates if the user has a Skop.
+     */
+    #hasSkop
+
+    /**
+     *  @type {boolean} Indicates if the skop has been detected.
+     */
+    #skopDetected = false;
+
     /**
      * @type {OT.Session} The session object.
      */
     #session
 
+    /**
+     * @param {string} Current sessionId, this can be seen as the room id.
+     */
     #sessionId;
 
+    /**
+     * Vonage element that represents the user's audio/video input.
+     */
     #publisher;
 
     /**
@@ -35,14 +53,16 @@ class Patient {
      */
     #filter
 
-    #skopDetected = false;
-
     #stream
 
-    #hasSkop
-
+    /**
+     * The dimensions of the current stream.
+     */
     #cameraDimensions
 
+    /**
+     * Current foyer behind listened
+     */
     foyer;
 
     constructor(apiKey, token, sessionId) {
@@ -157,18 +177,20 @@ class Patient {
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
-    async #init(){
+    async #detectSkop(){
         await detection(this.#stream);
     }
 
     async #useSkop(heartZone){
-        if(!this.#skopDetected){
-            await this.#init()
+        if(!this.#skopDetected && this.#hasSkop){
+            await this.#detectSkop()
             this.#skopDetected = true;
-            this.setFoyer(heartZone);
         }
+        this.setFoyer(heartZone);
         this.#setUsingSkop(true);
         await this.#filter.ModifyAudio(heartZone, this);
+        if(this.#usingAR) await foyer.start(this.getFoyer());
+
     }
 
     async #stopUsingSkop(){
@@ -185,7 +207,12 @@ class Patient {
     async augmentedReality(boolean){
         if(boolean){
             await foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height);
-            await foyer.start(this.getFoyer());
+
+            // test
+            this.#usingAR = boolean;
+
+            //await foyer.start(this.getFoyer());
+            console.log(this.getFoyer());
         }
         else {
             foyer.stop();
