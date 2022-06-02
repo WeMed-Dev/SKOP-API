@@ -6,6 +6,7 @@ let audioCtx;
 let analyser;
 let bufferLength;
 let dataArray;
+
 const tapPopup = () => {
     Swal.fire({
         titleText: "Gently tap the SKOP's membrane",
@@ -17,7 +18,6 @@ const tapPopup = () => {
         showConfirmButton: false,
     })
 }
-
 
 async function detection(mediaStream) {
     if(mediaStream == null || mediaStream == undefined) {
