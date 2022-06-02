@@ -56,13 +56,14 @@ async function init(resWidth, resHeight){
 
     navigator.mediaDevices
         .getUserMedia({
-            video: true,
+            video: {width: 640, height: 480},
             audio: false,
         })
         .then((stream) => {
             video.srcObject = stream;
-            //video.width = 640;
-            //video.height = 480;
+            video.width = 640;
+            video.height = 480;
+            console.log(video.width);
             video.play();
         });
 
@@ -79,9 +80,9 @@ const detectFaces = async () => {
             if(prediction.length > 0) {
                 //flip the video
                 ctx.save();
-                ctx.translate(width, 0);
+                ctx.translate(640, 0);
                 ctx.scale(-1, 1);
-                ctx.drawImage(video, 0, 0, width, height);
+                ctx.drawImage(video, 0, 0, 640, 480);
                 // draw eyes
                 ctx.beginPath(); //right eye
                 ctx.arc(prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], 3, 0, 2 * Math.PI);
@@ -137,17 +138,6 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
 
     drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
 
-
-
-    /*
-    //aortic
-    drawPoint(width - 369, 272);
-    //tricuspid
-    drawPoint(width - 320, 333);
-    //mitral
-    drawPoint(width - 283, 348);
-
-     */
 }
 
 function drawPoint(x, y){
