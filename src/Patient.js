@@ -43,6 +43,8 @@ class Patient {
 
     #cameraDimensions
 
+    foyer;
+
     constructor(apiKey, token, sessionId) {
         //TODO : constructor(API_KEY_WEMED, ROOM_ID)
         //TODO faire un fetch dans la BDD WeMed afin de vérifier que la clé API_WEMED
@@ -120,8 +122,8 @@ class Patient {
         });
 
         // When a user receive a signal to use AR
-        session.on("signal:useAR", function(event) {
-            self.augmentedReality(event.data);
+        session.on("signal:useAR", async function(event) {
+            await self.augmentedReality(event.data);
         });
 
         // initialize the publisher
@@ -152,11 +154,6 @@ class Patient {
         navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream =>{
             this.#stream = stream;
         })
-
-
-
-
-
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -168,6 +165,7 @@ class Patient {
         if(!this.#skopDetected){
             await this.#init()
             this.#skopDetected = true;
+            this.setFoyer(heartZone);
         }
         this.#setUsingSkop(true);
         await this.#filter.ModifyAudio(heartZone, this);
@@ -186,8 +184,8 @@ class Patient {
 
     async augmentedReality(boolean){
         if(boolean){
-            await foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height)
-            foyer.start()
+            await foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height);
+            await foyer.start(this.getFoyer());
         }
         else {
             foyer.stop();
@@ -227,6 +225,14 @@ class Patient {
 
     getSessionId(){
         return this.#sessionId;
+    }
+
+    getFoyer(){
+        return this.foyer;
+    }
+
+    setFoyer(foyer){
+        this.foyer = foyer;
     }
 }
 
