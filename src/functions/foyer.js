@@ -61,8 +61,8 @@ async function init(resWidth, resHeight){
         })
         .then((stream) => {
             video.srcObject = stream;
-            video.width = 640;
-            video.height = 480;
+            //video.width = 640;
+            //video.height = 480;
             video.play();
         });
 
@@ -159,7 +159,6 @@ function drawPoint(x, y){
     ctx.stroke();
 }
 
-
 async function start(foyer){
     /*
     if(foyer === undefined || foyer === null){
@@ -180,4 +179,5 @@ function stop(){
     videoVonage.style.display = "block";
     clearInterval(intervalId);
 }
+
 export {setupAR ,init, start, stop};
