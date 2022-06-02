@@ -1,9 +1,5 @@
-import Swal from "sweetalert2";
-
 const tf = require("@tensorflow/tfjs");
 const blazeface = require("@tensorflow-models/blazeface");
-
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let model;
 let video;
@@ -13,11 +9,10 @@ let width;
 let height;
 let canvas;
 let ctx;
-
 let currentFoyer;
 
-function setupAR(userCanvas){
 
+function setupAR(userCanvas){
     if(userCanvas === undefined || userCanvas === null){
         throw new Error("Canvas is undefined or null");
     }
@@ -32,14 +27,9 @@ function setupAR(userCanvas){
     else {
         throw new Error("Canvas is not a string nor a canvas");
     }
-
-
 }
 
 async function init(resWidth, resHeight){
-    width = resWidth;
-    height = resHeight;
-
     //show canvas
     canvas.style.display = "block";
     ctx = canvas.getContext('2d');
@@ -52,8 +42,8 @@ async function init(resWidth, resHeight){
     const videoVonage = document.getElementById("publisher");
     videoVonage.style.display = "none";
 
+    //Getting video stream
     video = document.createElement('video');
-
     navigator.mediaDevices
         .getUserMedia({
             video: {width: 640, height: 480},
@@ -67,9 +57,9 @@ async function init(resWidth, resHeight){
             video.play();
         });
 
+    // When the video stream is ready, load the model
     video.addEventListener("play", async () => {
         model = await blazeface.load();
-        console.log("model loaded");
     })
 }
 
@@ -83,6 +73,8 @@ const detectFaces = async () => {
                 ctx.translate(640, 0);
                 ctx.scale(-1, 1);
                 ctx.drawImage(video, 0, 0, 640, 480);
+
+                // TODO enlever le dessin des yeux
                 // draw eyes
                 ctx.beginPath(); //right eye
                 ctx.arc(prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], 3, 0, 2 * Math.PI);
@@ -106,18 +98,13 @@ const detectFaces = async () => {
                 drawFocuses(distance, centerX, centerY, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0], prediction[0].landmarks[1][1]);
                 ctx.restore();
             }else{
+                // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
                 ctx.fillText("No face detected", width/3, height/2);
             }
 
         })
-
-        //console.log("Oeil droit : " + prediction[0].landmarks[0]);
-        //console.log("Oeil gauche : " + prediction[0].landmarks[1]);
-
-
-
     }catch (e) {
         console.log(e);
     }
@@ -130,31 +117,49 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
     let yMultiplier = 3.5;
 
     switch (currentFoyer) {
-        case "pulmonaire", "pulmonary":
+        case "Pulmonary":
             xMultiplier = 1.5;
             yMultiplier = 3.5;
-
+            //pulmonaire
+            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
+            break;
+        case "Mitral":
+            //mitral
+            xMultiplier = 2.1;
+            yMultiplier = 4;
+            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
+            break;
+        case "Aortic":
+            xMultiplier = 0.6;
+            yMultiplier = 2.48;
+            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
+            break;
+        case "Tricuspid":
+            xMultiplier = 0.9;
+            yMultiplier = 4.5;
+            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
+            break;
+        default:
+            break;
     }
 
-    drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
+
+
+
 
 }
 
-function drawPoint(x, y){
+function drawPoint(x, y, color = "#a2d2ff"){
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, 2 * Math.PI);
-    ctx.fillStyle = "#a2d2ff";
+    ctx.fillStyle = color;
     ctx.fill();
-    ctx.strokeStyle = "#a2d2ff";
+    ctx.strokeStyle = color;
     ctx.stroke();
 }
 
 async function start(foyer){
-    /*
-    if(foyer === undefined || foyer === null){
-        throw new Error("The zone is undefined or null");
-    }*/
-
+    currentFoyer = foyer;
     //canvas.style.width = width + "px";
     //canvas.style.height = height + "px";
     canvas.style.width = 640 + "px";
