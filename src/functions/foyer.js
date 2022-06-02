@@ -62,8 +62,8 @@ async function init(resWidth, resHeight){
         })
         .then((stream) => {
             video.srcObject = stream;
-            video.width = width;
-            video.height = height;
+            video.width = 640;
+            video.height = 480;
             video.play();
         });
 
@@ -167,8 +167,10 @@ async function start(foyer){
         throw new Error("The zone is undefined or null");
     }*/
 
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
+    //canvas.style.width = width + "px";
+    //canvas.style.height = height + "px";
+    canvas.style.width = 640 + "px";
+    canvas.style.height = 480 + "px";
     intervalId = setInterval( detectFaces, 100)
     return prediction;
 }
