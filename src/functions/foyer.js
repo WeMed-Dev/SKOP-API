@@ -39,13 +39,12 @@ function setupAR(userCanvas){
 async function init(resWidth, resHeight){
     width = resWidth;
     height = resHeight;
-    //canvas = document.getElementById("canvas");
 
     //show canvas
     canvas.style.display = "block";
     ctx = canvas.getContext('2d');
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = 640;
+    canvas.height = 480;
     await tf.ready();
 
     // TODO peut etre enlever ce morceau de l'api pour laisser le choix au dev de cacher la camera ou non
