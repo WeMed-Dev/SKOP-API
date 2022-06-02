@@ -46,11 +46,7 @@ button:hover, a:hover{
     color: #ffffff;
 }
 
-.label{
-    font-weight: 700;
-    font-size: 1.2em;
-    margin: 10px;
-}
+
 
 .hidden{
     display: none;

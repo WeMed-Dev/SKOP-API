@@ -53,15 +53,19 @@
                     <option class="zones-value" value="Tricuspid">Tricuspide</option>
                 </select>
                 <div id="div-range" >
-                    <input type="range" min="0" max="100" value="10" class="slider" id="gainRange">
+                    <input type="range" min="0" max="100" value="10"  id="gainRange">
                 </div>
 
 
-                <div id="div-ar">
+
+
+            </div>
+            <div id="div-ar">
+                <label class="switch">
                     <input type="checkbox" id="AR" >
-                     <p> Réalité augmentée </p>
-                </div>
-
+                    <span class="slider round"></span>
+                </label>
+                <p> Réalité augmentée </p>
             </div>
 
         </div>
@@ -71,9 +75,8 @@
 
 
 </main>
-<div id="listening">Ecoute en cours</div>
 
-<button  class="button" id="endCall">QUITTER</button>
+<button class="button" id="endCall">QUITTER</button>
 
 
 </body>
@@ -84,10 +87,8 @@
     let divRange = document.getElementById("div-range")
     let gainRange = document.getElementById("gainRange");
     let endCall = document.getElementById("endCall");
-    let listening = document.getElementById("listening");
     let AR = document.getElementById("AR");
 
-    listening.style.display = "none";
 
     endCall.addEventListener("click", () => {
         //go to another page
@@ -126,7 +127,6 @@
                 isSpaceDown = true;
                 doctor.skop(zone);
                 console.log("Listening to " + zone);
-                listening.style.display = "block";
             }
         };
 
@@ -136,7 +136,6 @@
                 doctor.skop();
                 isSpaceDown = false;
                 console.log("Stop Listening");
-                listening.style.display = "none";
             }
         };
         role.innerText = "Médecin"
