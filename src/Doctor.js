@@ -81,7 +81,7 @@ class Doctor {
         this.#signalGain(gain);
     }
 
-    useAugmentedReality(useAR){
+    useAR(useAR){
         if (useAR === null || useAR === undefined || useAR === "") {
             throw new TypeError("Use AR cannot be null or undefined");
         }
@@ -144,7 +144,6 @@ class Doctor {
             }
         })
     }
-
 
 }
 
