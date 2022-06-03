@@ -119,20 +119,20 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
 
     switch (currentFoyer) {
         case "Pulmonary":
-            xMultiplier = 1.5;
-            yMultiplier = 3.5;
+            xMultiplier = 1.4;
+            yMultiplier = 3.2;
             //pulmonaire
             drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
             break;
         case "Mitral":
             //mitral
-            xMultiplier = 2.1;
+            xMultiplier = 2;
             yMultiplier = 4;
             drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
         case "Aortic":
-            xMultiplier = 0.6;
-            yMultiplier = 2.48;
+            xMultiplier = -0.5;
+            yMultiplier = 3;
             drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
         case "Tricuspid":
