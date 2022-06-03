@@ -75,6 +75,7 @@ const detectFaces = async () => {
                 ctx.drawImage(video, 0, 0, 640, 480);
 
                 // TODO enlever le dessin des yeux
+                /*
                 // draw eyes
                 ctx.beginPath(); //right eye
                 ctx.arc(prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], 3, 0, 2 * Math.PI);
@@ -87,7 +88,7 @@ const detectFaces = async () => {
                 ctx.fillStyle = 'red';
                 ctx.fill();
                 ctx.stroke();
-
+                */
                 //get center between eyes
                 let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
                 let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
@@ -142,11 +143,6 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
         default:
             break;
     }
-
-
-
-
-
 }
 
 function drawPoint(x, y, color = "#a2d2ff"){
