@@ -1,4 +1,5 @@
 const OT = require("@opentok/client");
+const {checkAPIKEY, fetchVonage} = require("./functions/request");
 
 /**
  * Displays any error messages.
@@ -13,21 +14,39 @@ class Doctor {
      * @type {OT.Session} The session object.
      */
     #session
+
+    #apiKeyVonage
+
+    #token
+
+    #apiKeyWemed
+
+    /**
+     * @param {string} Current sessionId, this can be seen as the room id.
+     */
+    #sessionId;
+
     /**
      * @type {OT.Publisher} The publisher object.
      */
     #publisher;
 
-    #stream;
+    constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED) {
+        const self = this;
+        this.#apiKeyVonage = APIKEY;
+        this.#token = TOKEN;
+        this.#sessionId = SESSIONID;
 
-    constructor(apiKey, token, sessionId) {
+        this.#apiKeyWemed = APIKEY_WEMED;
+
         // Initialize the session
-        const session = OT.initSession(apiKey, sessionId);
+        const session = OT.initSession(self.#apiKeyVonage, self.#sessionId);
         this.#session = session;
+
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
-            var subscriberOptions = {
+            let subscriberOptions = {
                 insertMode: 'append',
                 width: '100%',
                 height: '100%',
@@ -41,17 +60,17 @@ class Doctor {
         })
 
         // initialize the publisher
-        var publisherOptions = {
+        let publisherOptions = {
             insertMode: 'append',
             width: '100%',
             height: '100%',
             resolution: '1280x720',
         };
-        var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
+        let publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
         // Connect to the session
-        session.connect(token, function callback(error) {
+        session.connect(self.#token, function callback(error) {
             if (error) {
                 handleError(error);
             } else {
@@ -59,6 +78,18 @@ class Doctor {
                 session.publish(publisher , handleError);
             }
         });
+    }
+
+    static async init(API_KEY_WEMED, ROOM_ID){
+        return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            console.log(res)
+            if(res === true){
+                return fetchVonage(ROOM_ID).then(res=> {
+                    console.log(res)
+                    return new Doctor(res.apiKey, res.token, res.sessionId)
+                })
+            }
+        })
     }
 
     //---- USING SKOP -------//
@@ -144,7 +175,6 @@ class Doctor {
             }
         })
     }
-
 }
 
 module.exports = Doctor;

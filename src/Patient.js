@@ -1,10 +1,11 @@
 const Filter = require("./Filter");
 const OT = require("@opentok/client");
 const detection = require("./functions/detection");
-const Swal = require('sweetalert2');
-const blazeface = require('@tensorflow-models/blazeface');
-const tf = require('@tensorflow/tfjs');
+const Swal = require("sweetalert2");
 const foyer = require('./functions/foyer');
+const {fetchVonage, checkAPIKEY} = require("./functions/request");
+
+
 
 /**
  * Displays any error messages.
@@ -38,6 +39,13 @@ class Patient {
      */
     #session
 
+
+    #apiKeyVonage
+
+    #token
+
+    #apiKeyWemed
+
     /**
      * @param {string} Current sessionId, this can be seen as the room id.
      */
@@ -65,19 +73,16 @@ class Patient {
      */
     foyer;
 
-    constructor(apiKey, token, sessionId) {
-        //TODO : constructor(API_KEY_WEMED, ROOM_ID)
-        //TODO faire un fetch dans la BDD WeMed afin de vérifier que la clé API_WEMED
-        // Si la clé est valide alors on fait un fetch pour récupérer les infos de la session
-        // Sinon on affiche un message d'erreur
-
-        // Ensuite on fait le traitement normal du constructeur
-
-
+    constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED) {
         // Used to access objects in functions.
         const self = this;
         this.#usingSkop = false;
-        this.#filter = new Filter();
+        this.#filter = new Filter.Filter();
+        this.#apiKeyVonage = APIKEY;
+        this.#token = TOKEN;
+        this.#sessionId = SESSIONID;
+
+        this.#apiKeyWemed = APIKEY_WEMED;
 
 
         Swal.fire({
@@ -90,25 +95,19 @@ class Patient {
             confirmButtonText: 'Yes, I do.',
             cancelButtonText: "No, I don't.",
         }).then(result => {
-            if(result.value){
-                this.#hasSkop = true;
-            }
-            else{
-                this.#hasSkop = false;
-            }
+            this.#hasSkop = !!result.value;
         })
 
 
         /**
          * @@type {OT.Session} The session object.
          */
-        const session = OT.initSession(apiKey, sessionId);
+        const session = OT.initSession(self.#apiKeyVonage, self.#sessionId);
         this.#session = session;
-        this.#sessionId = sessionId;
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
-            var subscriberOptions = {
+            let subscriberOptions = {
                 insertMode: 'append',
                 width: '100%',
                 height: '100%',
@@ -128,7 +127,7 @@ class Patient {
         });
 
         //When a patient receives a signal:stop it stops the filtering.
-        session.on("signal:stop", function(event) {
+        session.on("signal:stop", function() {
             self.#stopUsingSkop()
                 .catch(e => {
                     console.log("Error stopping using Skop" + e);
@@ -147,18 +146,18 @@ class Patient {
         });
 
         // initialize the publisher
-        var publisherOptions = {
+        let publisherOptions = {
             insertMode: 'append',
             width: '100%',
             height: '100%',
             resolution: '1280x720',
         };
-        var publisher = OT.initPublisher('publisher', publisherOptions, handleError)
+        let publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.#publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
 
 
         // Connect to the session
-        session.connect(token, function callback(error) {
+        session.connect(self.#token, function callback(error) {
             if (error) {
                 handleError(error);
             } else {
@@ -176,9 +175,20 @@ class Patient {
         })
     }
 
+    static async init(API_KEY_WEMED, ROOM_ID){
+
+        return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            if(res === true){
+               return fetchVonage(ROOM_ID).then(res=> {
+                    return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
+                })
+            }
+        })
+    }
+
     //--------- SKOP MANIPULATION METHODS ---------//
     async #detectSkop(){
-        await detection(this.#stream);
+        await detection.detection(this.#stream);
     }
 
     async #useSkop(heartZone){
@@ -188,7 +198,7 @@ class Patient {
         }
         this.setFoyer(heartZone);
         this.#setUsingSkop(true);
-        await this.#filter.ModifyAudio(heartZone, this);
+        await this.#filter.ModifyAudio(heartZone, this , this.#apiKeyWemed);
         if(this.#usingAR) await foyer.start(this.getFoyer());
 
     }
@@ -221,13 +231,6 @@ class Patient {
 
     //--------- GETTER AND SETTER  ---------//
 
-    /**
-     *  Returns the audio source of the user, if it is available.
-     * @returns The current MediaStreamTrack of the user.
-     */
-    getAudioSource() {
-        return this.#publisher.getAudioSource();
-    }
 
     /**
      * Sets the users current's Audio source.
