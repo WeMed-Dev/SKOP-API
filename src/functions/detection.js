@@ -1,4 +1,4 @@
-const Swal = require('sweetalert2');
+import Swal from "sweetalert2";
 
 
 // variable declaration
@@ -10,7 +10,7 @@ let dataArray;
 const tapPopup = () => {
     Swal.fire({
         titleText: "Gently tap the SKOP's membrane",
-        text: "If sound is detected, this means that the SKOP is active",
+        text: "If sound is detected, this means that the Skop is active",
         icon: "info",
         allowOutsideClick: false,
         allowEscapeKey: false,
@@ -20,7 +20,7 @@ const tapPopup = () => {
 }
 
 async function detection(mediaStream) {
-    if(mediaStream == null || mediaStream == undefined) {
+    if(mediaStream == null) {
         throw new Error("MediaStream is not defined - Detection function");
     }
     //Detect if user is on a iOS device
@@ -36,7 +36,7 @@ async function detection(mediaStream) {
         })
        return;
     }
-    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+    audioCtx = new window.AudioContext;
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
 
@@ -67,9 +67,9 @@ function detectTap(){
 
 
         analyser.getByteTimeDomainData(dataArray);
-        for (var i = 0; i < bufferLength; i++) {
-            var v = dataArray[i] / 128.0;
-            var y = v * 1500 / 2;
+        for (let i = 0; i < bufferLength; i++) {
+            let v = dataArray[i] / 128.0;
+            let y = v * 1500 / 2;
             if(y > 1200){
                 console.log(y);
                 clearInterval(id);
@@ -106,4 +106,4 @@ function detectTap(){
     }
 }
 
-module.exports = detection;
+export{detection}
