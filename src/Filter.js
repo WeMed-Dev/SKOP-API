@@ -1,5 +1,4 @@
-const axios = require("axios");
-const visualisation = require('./functions/visualisation');
+import {saveRecord} from "./functions/request";
 
 class Filter{
     filter;
@@ -19,15 +18,16 @@ class Filter{
      * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone.
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
      * @param {*} heartZone
+     * @param {*} patient instance of the patient class
+     * @param {*} apiKeyWemed api key of the wemed server
      */
-    async ModifyAudio(heartZone, patient) {
+    async ModifyAudio(heartZone, patient, apiKeyWemed) {
 
-        try{
-            if (heartZone == null || heartZone == undefined) {
+            if (heartZone == null) {
                 throw new Error("No heartZone given - cannot modify audio");
             }
             // define variables
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const audioCtx = new window.AudioContext;
             //let audioSource = audioCtx.createMediaStreamSource(mediaStream);
             //let audioDestination = audioCtx.createMediaStreamDestination();
 
@@ -47,9 +47,7 @@ class Filter{
 
                 audioSource.connect(biquadFilter);
                 biquadFilter.connect(audioDestination);
-
             }
-
 
             if(heartZone === Filter.PULMONARY){ // les ondes entres 80 et 500 sont limitées
 
@@ -66,27 +64,18 @@ class Filter{
             this.mediaRecorder = new MediaRecorder(audioDestination.stream);
             this.mediaRecorder.start();
             this.mediaRecorder.addEventListener("dataavailable", (event) => {
-                var audio = document.createElement("audio");
+                let audio = document.createElement("audio");
                 // use the blob from the MediaRecorder as source for the audio tag
                 audio.src = URL.createObjectURL(event.data);
-                this.sendAudio(event.data, heartZone, patient);
+                this.sendAudio(patient.getSessionId(), apiKeyWemed, patient.getFoyer(),event.data);
                 document.body.appendChild(audio);
-                //audio.play();
             });
-
-
-
-
-
 
             // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
 
             // Sets the OT.publisher Audio Source to be the modified stream.
             patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
             console.log("SKOP : Audio input modified")
-        }catch(error){
-            handleError(error);
-        }
     }
 
     async defaultAudio(patient){
@@ -99,7 +88,7 @@ class Filter{
             patient.setAudioSource(defStreamTrack);
             console.log("SKOP : Audio input set to default - No modifications")
         }catch(err){
-            handleError(err)
+            console.log(err)
         }
     }
 
@@ -107,89 +96,20 @@ class Filter{
      * Sets the current level of gain of the patient's Skop audio output.
      */
     setGain(gain){
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let audioCtx = new window.AudioContext;
         this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
         this.gain = gain;
     }
 
 
-    sendAudio(audioBlob, heartZone, patient) {
-        /*
-        //Create a FormData object
-        let formData = new FormData();
-        // Append the audio file to the form data
-        formData.append("file", audioBlob);
-        // Append the session id to the form data
-        formData.append("sessionId", patient.getSessionId());
-        // Append the zone to the form data
-        formData.append("zone", heartZone);
-        console.log(Array.from(formData))
-
-        // Send the form data to the server
-        axios.post('http://localhost:3000/audio', formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            }
-        })
-            .catch(err => {
-                console.log(err);
-            })
-
-
-
-        // TESTING
-        axios.get('http://localhost:3000/last')
-            .then(res =>{
-                console.log("res.data.data : ", res.data.data);
-
-                let array = new Uint8Array(res.data.data.data);
-
-                // create audio element and set its source to the blob
-                //convert res to blob
-                let blob = new Blob([array], {type: 'audio/ogg; codecs=opus'});
-                console.log(blob);
-
-                //create URL + audio element
-                let url = window.URL.createObjectURL(blob);
-                let audio = document.createElement('audio');
-                audio.src = url;
-                audio.controls = true;
-
-                //append audio element to the page
-                document.body.appendChild(audio);
-            })
-    }
-    */
-
-        // TODO: décommenter pour continuer à transmettre les données
-
-        /*
-        var reader = new FileReader();
-        reader.onload = function() {
-            console.log(reader.result);
-            axios.post("http://localhost:3000/audioJson", {
-                sessionId: patient.getSessionId(),
-                zone: heartZone,
-                // TODO : change to base64
-                binary: reader.result
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-                .catch(err => {
-                    console.log(err);
-                })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+    async sendAudio(sessionId, apiKey, idFoyer, soundRec) {
+        let reader = new FileReader();
+        reader.readAsDataURL(soundRec);
+        reader.onloadend = async function() {
+            let base64data = reader.result;
+            await saveRecord(sessionId, apiKey, idFoyer, base64data)
         }
-        reader.readAsArrayBuffer(audioBlob);
-         */
     }
 }
 
-module.exports = Filter;
+export {Filter}
