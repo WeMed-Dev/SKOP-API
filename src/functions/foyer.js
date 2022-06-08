@@ -1,4 +1,5 @@
-const tf = require("@tensorflow/tfjs");
+const tf = require("@tensorflow/tfjs-core");
+require("@tensorflow/tfjs-backend-webgl");
 const blazeface = require("@tensorflow-models/blazeface");
 
 let model;
@@ -96,7 +97,7 @@ const detectFaces = async () => {
 
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
-                drawFocuses(distance, centerX, centerY, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0], prediction[0].landmarks[1][1]);
+                drawFocuses(distance, centerX, centerY, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 ctx.restore();
             }else{
                 // if no face detected, write "no face detected"
@@ -111,7 +112,7 @@ const detectFaces = async () => {
     }
 };
 
-function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEyeX, leftEyeY){
+function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEyeX){
 
     //test pour pulmonaire
     let xMultiplier = 1.5;
@@ -131,7 +132,7 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
             drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
         case "Aortic":
-            xMultiplier = -0.5;
+            xMultiplier = -0.2;
             yMultiplier = 3;
             drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
