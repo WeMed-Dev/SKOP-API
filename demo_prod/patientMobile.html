@@ -25,10 +25,10 @@
 </header>
 
 <main>
-  <div id="subscriber"></div>
+  <div class="video" id="subscriber"></div>
 
 
-    <div id="publisher"></div>
+    <div class="video" id="publisher"></div>
     <h2 id="role"> Rôle : <span id="role-span"></span></h2>
 
 
@@ -40,8 +40,9 @@
 <script>
   let role = document.getElementById("role-span");
 
-  function patient(){
-    let patient = new SkopAPI.Patient(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+  async function patient(){
+    let patient = await SkopAPI.Patient.init("3b6178e1-3d81-4297-91a3-ed168badb5e9", 12);
+    patient.setupAugmentedReality(canvas)
     role.innerText = "Patient"
   }
   patient();

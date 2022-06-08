@@ -1,29 +1,22 @@
 <!doctype html>
 <html class="no-js" lang="">
-
 <head>
     <meta charset="utf-8">
     <title>Skop API Demo</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <meta property="og:title" content="">
     <meta property="og:type" content="">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
-
-
     <link rel="stylesheet" href="css/doctor.css">
     <link rel="stylesheet" href="css/global.css">
-
     <meta name="theme-color" content="#fafafa">
 </head>
-
 <body>
 <header>
     <img id="img-header" src="img/demo_prod.png">
 </header>
-
 <main>
     <h2 id="role"> Rôle : <span id="role-span"></span></h2>
     <div id="videoContainer">
@@ -31,20 +24,13 @@
             <div class="video" id="subscriber"></div>
             <h3>Médecin</h3>
         </div>
-
         <div class="elementAndlabel" >
             <div class="video" id="publisher"></div>
             <h3>Moi</h3>
         </div>
     </div>
-
         <div id="buttons">
-
             <div id="div-select">
-                <!--
-                <h3><span id="space">ESPACE</span> pour passer en mode écoute.</h3>
-                -->
-
                 <select name="zones" id="zones">
                     <option class="zones-value" value="...">Zone</option>
                     <option class="zones-value" value="Aortic">Aortique</option>
@@ -55,10 +41,6 @@
                 <div id="div-range" >
                     <input type="range" min="0" max="100" value="10"  id="gainRange">
                 </div>
-
-
-
-
             </div>
             <div id="div-ar">
                 <label class="switch">
@@ -67,18 +49,9 @@
                 </label>
                 <p> Réalité augmentée </p>
             </div>
-
         </div>
-
-
-
-
-
 </main>
-
 <button class="button" id="endCall">QUITTER</button>
-
-
 </body>
 <script src="../dist/SkopAPI.js"></script>
 <script>
@@ -89,16 +62,13 @@
     let endCall = document.getElementById("endCall");
     let AR = document.getElementById("AR");
 
-
     endCall.addEventListener("click", () => {
         //go to another page
         window.location.href = "callEnd.html";
     });
 
-
-
-    function doctor(){
-        let doctor = new SkopAPI.Doctor(localStorage.getItem("apiKey"), localStorage.getItem("token"), localStorage.getItem("sessionId"));
+    async function doctor(){
+        let doctor = await SkopAPI.Doctor.init("3b6178e1-3d81-4297-91a3-ed168badb5e9", 12);
         let zone;
         let isSpaceDown = false;
         let useAR = false;
@@ -140,10 +110,7 @@
         };
         role.innerText = "Médecin"
     }
-
     doctor();
-
-
 </script>
 
 </html>
