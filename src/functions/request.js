@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import axios from "axios";
 
-var url = "http://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
+let url = "http://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
 
 async function checkAPIKEY(APIKEY){
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -20,7 +20,7 @@ async function checkAPIKEY(APIKEY){
         let parser = new DOMParser();
         let xml = parser.parseFromString(res.data, "text/xml")
         let json = JSON.parse(xml.activeElement.textContent)
-       if(json.Code == 201) return true;
+       if(json.Code === 201) return true;
        else{
            Swal.fire({
                titleText: "WeMed API key invalid",
@@ -39,7 +39,7 @@ async function checkAPIKEY(APIKEY){
 }
 
 async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
-    console.log(sessionId)
+    console.log(soundRec)
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
    <soapenv:Header/>
    <soapenv:Body>
