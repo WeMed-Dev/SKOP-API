@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import axios from "axios";
 
-let url = "http://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
+let url = "https://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
 
 async function checkAPIKEY(APIKEY){
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
@@ -41,7 +41,6 @@ async function checkAPIKEY(APIKEY){
 }
 
 async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
-    console.log(soundRec)
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
    <soapenv:Header/>
    <soapenv:Body>
@@ -65,7 +64,7 @@ async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
                 SOAPAction: "urn:WS_Halfred/Save_Records"
             }
     }).then(res => {
-        console.log(res)
+        //console.log(res)
     }).catch(err => {
         console.log(err)
     })
