@@ -5,11 +5,11 @@ let url = "http://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
 
 async function checkAPIKEY(APIKEY){
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <sApiKey>${APIKEY}</sApiKey>
-   </soapenv:Body>
-</soapenv:Envelope>`;
+                 <soapenv:Header/>
+                        <soapenv:Body>
+                            <sApiKey>${APIKEY}</sApiKey>
+                        </soapenv:Body>
+                </soapenv:Envelope>`;
 
    return await axios.post(url, data,{headers:
             {
@@ -17,10 +17,12 @@ async function checkAPIKEY(APIKEY){
                 SOAPAction: "urn:WS_Halfred/CheckAPIKEY"
             }
     }).then(res => {
+        //We parse the response to get the data in a XML format
         let parser = new DOMParser();
         let xml = parser.parseFromString(res.data, "text/xml")
+        //We now parse the textContent in the XML to get the data in a JSON format
         let json = JSON.parse(xml.activeElement.textContent)
-       if(json.Code === 201) return true;
+       if(json.Code == 201) return true;
        else{
            Swal.fire({
                titleText: "WeMed API key invalid",
