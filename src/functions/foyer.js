@@ -1,6 +1,10 @@
-const tf = require("@tensorflow/tfjs-core");
+// const tf = require("@tensorflow/tfjs-core");
+// require("@tensorflow/tfjs-backend-webgl");
+// const blazeface = require("@tensorflow-models/blazeface");
+
+import * as tf  from '@tensorflow/tfjs-core';
 require("@tensorflow/tfjs-backend-webgl");
-const blazeface = require("@tensorflow-models/blazeface");
+import * as blazeface from '@tensorflow-models/blazeface';
 
 let model;
 let video;
