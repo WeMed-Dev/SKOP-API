@@ -39,8 +39,6 @@ function getVisualisationData(timeData, analyzer, bufferLength) {
     }
 }
 
+export { visualize }
 
-
-
-
-module.exports = visualize;
+//module.exports = visualize;
