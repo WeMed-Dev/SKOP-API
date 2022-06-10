@@ -176,8 +176,9 @@ class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            //TODO enlever le res = true
+            res = true;
             if(res === true){
                return fetchVonage(ROOM_ID).then(res=> {
                     return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
@@ -216,7 +217,7 @@ class Patient {
 
     async augmentedReality(boolean){
         if(boolean){
-            await foyer.init(this.#cameraDimensions.width, this.#cameraDimensions.height);
+            await foyer.init(640, 480);
 
             // test
             this.#usingAR = boolean;
@@ -259,6 +260,23 @@ class Patient {
 
     getFoyer(){
         return this.foyer;
+    }
+
+    getIdFoyer(){
+        switch (this.foyer) {
+            case "Aortic":
+                return 1;
+                break;
+            case "Mitral":
+                return 2;
+                break;
+            case "Pulmonary":
+                return 3;
+                break;
+            case "Tricuspid":
+                return 4;
+                break;
+        }
     }
 
     setFoyer(foyer){

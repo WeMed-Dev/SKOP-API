@@ -1,9 +1,10 @@
 import {saveRecord} from "./functions/request";
+import base64url from "base64url";
 
 class Filter{
     filter;
     gain;
-    mediaRecorder;
+    audioRecorder;
 
     static AORTIC = "Aortic";
     static MITRAL = "Mitral";
@@ -60,18 +61,35 @@ class Filter{
                 biquadFilter.connect(audioDestination);
             }
 
-            console.log("Recording started");
-            this.mediaRecorder = new MediaRecorder(audioDestination.stream);
-            this.mediaRecorder.start();
-            this.mediaRecorder.addEventListener("dataavailable", (event) => {
-                let audio = document.createElement("audio");
-                // use the blob from the MediaRecorder as source for the audio tag
-                audio.src = URL.createObjectURL(event.data);
-                this.sendAudio(patient.getSessionId(), apiKeyWemed, patient.getFoyer(),event.data);
-                document.body.appendChild(audio);
-            });
 
-            // biquadFilter.connect(audioCtx.destination); //UNCOMMENT THIS IF YOU WANT TO HEAR THE RESULT
+            // Recording audio, when the recording is finished,
+            // the audio is converted to a base64URL string and sent to a
+            // webservice to be saved in the database through the saveRecord function
+            let chunks = [];
+            this.audioRecorder = new MediaRecorder(audioDestination.stream);
+            this.audioRecorder.ondataavailable= e => {
+                chunks.push(e.data);
+                if(this.audioRecorder.state == "inactive"){
+                    let blob = new Blob(chunks, {'type': 'audio/wav'});
+
+                    //listen to the audio
+                    let audio = new Audio(URL.createObjectURL(blob));
+                    audio.play();
+
+                    // Reading the data from the blob
+                    let reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = async function() {
+                        let base64data = reader.result;
+                        // Encoding the data as base64URL
+                        base64data = base64url.fromBase64(base64data.split(",")[1]);
+                        //Save the data in the database
+                        await saveRecord(patient.getSessionId(), apiKeyWemed, patient.getIdFoyer(), base64data)
+                        console.log(base64data);
+                    }
+                }
+            }
+            this.audioRecorder.start();
 
             // Sets the OT.publisher Audio Source to be the modified stream.
             patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
@@ -80,9 +98,8 @@ class Filter{
 
     async defaultAudio(patient){
         try{
-            if(this.mediaRecorder !== undefined){
-                this.mediaRecorder.stop();
-            }
+            if(this.audioRecorder != null) this.audioRecorder.stop();
+
             let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
             patient.setAudioSource(defStreamTrack);
@@ -99,16 +116,6 @@ class Filter{
         let audioCtx = new window.AudioContext;
         this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
         this.gain = gain;
-    }
-
-
-    async sendAudio(sessionId, apiKey, idFoyer, soundRec) {
-        let reader = new FileReader();
-        reader.readAsDataURL(soundRec);
-        reader.onloadend = async function() {
-            let base64data = reader.result;
-            await saveRecord(sessionId, apiKey, idFoyer, base64data)
-        }
     }
 }
 

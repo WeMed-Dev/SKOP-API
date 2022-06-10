@@ -2,16 +2,17 @@
 // require("@tensorflow/tfjs-backend-webgl");
 // const blazeface = require("@tensorflow-models/blazeface");
 
-import * as tf  from '@tensorflow/tfjs-core';
-require("@tensorflow/tfjs-backend-webgl");
+import * as tf from '@tensorflow/tfjs-core';
 import * as blazeface from '@tensorflow-models/blazeface';
+
+require("@tensorflow/tfjs-backend-webgl");
 
 let model;
 let video;
 let intervalId;
 let prediction;
-let width;
-let height;
+let cWidth;
+let cHeight;
 let canvas;
 let ctx;
 let currentFoyer;
@@ -34,12 +35,15 @@ function setupAR(userCanvas){
     }
 }
 
-async function init(resWidth, resHeight){
+async function init(width, height){
+    cWidth = width;
+    cHeight = height;
+
     //show canvas
     canvas.style.display = "block";
     ctx = canvas.getContext('2d');
-    canvas.width = 640;
-    canvas.height = 480;
+    canvas.width = cWidth;
+    canvas.height = cHeight;
     await tf.ready();
 
     // TODO peut etre enlever ce morceau de l'api pour laisser le choix au dev de cacher la camera ou non
@@ -51,13 +55,15 @@ async function init(resWidth, resHeight){
     video = document.createElement('video');
     navigator.mediaDevices
         .getUserMedia({
-            video: {width: 640, height: 480},
+            video: true,
             audio: false,
         })
         .then((stream) => {
             video.srcObject = stream;
-            video.width = 640;
-            video.height = 480;
+
+            video.width = width;
+            video.height = height;
+
             console.log(video.width);
             video.play();
         });
@@ -75,12 +81,14 @@ const detectFaces = async () => {
             if(prediction.length > 0) {
                 //flip the video
                 ctx.save();
-                ctx.translate(640, 0);
+                ctx.translate(cWidth, 0);
                 ctx.scale(-1, 1);
-                ctx.drawImage(video, 0, 0, 640, 480);
+
+                ctx.drawImage(video, 0, 0, video.width, video.height);
+
 
                 // TODO enlever le dessin des yeux
-                /*
+
                 // draw eyes
                 ctx.beginPath(); //right eye
                 ctx.arc(prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], 3, 0, 2 * Math.PI);
@@ -93,7 +101,7 @@ const detectFaces = async () => {
                 ctx.fillStyle = 'red';
                 ctx.fill();
                 ctx.stroke();
-                */
+
                 //get center between eyes
                 let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
                 let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
@@ -107,7 +115,7 @@ const detectFaces = async () => {
                 // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
-                ctx.fillText("No face detected", width/3, height/2);
+                ctx.fillText("No face detected", cWidth/3, cHeight/2);
             }
 
         })
@@ -161,10 +169,6 @@ function drawPoint(x, y, color = "#a2d2ff"){
 
 async function start(foyer){
     currentFoyer = foyer;
-    //canvas.style.width = width + "px";
-    //canvas.style.height = height + "px";
-    canvas.style.width = 640 + "px";
-    canvas.style.height = 480 + "px";
     intervalId = setInterval( detectFaces, 100)
     return prediction;
 }
