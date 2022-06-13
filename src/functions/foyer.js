@@ -17,10 +17,14 @@ let canvas;
 let ctx;
 let currentFoyer;
 
-function setupAR(userCanvas){
+function setupAR(userCanvas, width, height){
     if(userCanvas === undefined || userCanvas === null){
         throw new Error("Canvas is undefined or null");
     }
+
+    cWidth = width;
+    cHeight = height;
+
     //check if canvas is a string
     if(typeof userCanvas === "string"){
         canvas = document.getElementById(userCanvas);
@@ -41,9 +45,9 @@ function setupAR(userCanvas){
  * @param height A positive value describing the height of the canvas in pixels
  * @returns {Promise<void>}
  */
-async function init(width, height){
-    cWidth = width;
-    cHeight = height;
+async function init(){
+    // cWidth = width;
+    // cHeight = height;
 
     //show canvas
     canvas.style.display = "block";
@@ -67,8 +71,8 @@ async function init(width, height){
         .then((stream) => {
             video.srcObject = stream;
 
-            video.width = width;
-            video.height = height;
+            video.width = cWidth;
+            video.height = cHeight;
 
             console.log(video.width);
             video.play();
