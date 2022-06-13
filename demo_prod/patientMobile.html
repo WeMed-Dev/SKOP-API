@@ -41,7 +41,7 @@
   let role = document.getElementById("role-span");
 
   async function patient(){
-    let patient = await SkopAPI.Patient.init("3b6178e1-3d81-4297-91a3-ed168badb5e9", 12);
+    let patient = await HalfredAPI.Patient.init("3b6178e1-3d81-4297-91a3-ed168badb5e9", 12);
     patient.setupAugmentedReality(canvas)
     role.innerText = "Patient"
   }
