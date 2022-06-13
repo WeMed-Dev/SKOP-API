@@ -82,11 +82,8 @@ class Doctor {
 
     static async init(API_KEY_WEMED, ROOM_ID){
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
-            //TODO enlever le res = true
-            //res = true;
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
-                    console.log(res)
                     return new Doctor(res.apiKey, res.token, res.sessionId)
                 })
             }
