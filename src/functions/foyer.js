@@ -17,7 +17,6 @@ let canvas;
 let ctx;
 let currentFoyer;
 
-
 function setupAR(userCanvas){
     if(userCanvas === undefined || userCanvas === null){
         throw new Error("Canvas is undefined or null");
@@ -35,6 +34,13 @@ function setupAR(userCanvas){
     }
 }
 
+/**
+ * Initiates the logic for augmented reality. The ratio of the width and height must be of 4:3.
+ * Todo make it possible to use 16:9 ratio.
+ * @param width A positive value describing the width of the canvas in pixels
+ * @param height A positive value describing the height of the canvas in pixels
+ * @returns {Promise<void>}
+ */
 async function init(width, height){
     cWidth = width;
     cHeight = height;
@@ -76,6 +82,8 @@ async function init(width, height){
 
 const detectFaces = async () => {
     try{
+        let rateX = cWidth/640;
+        let rateY = cHeight/480;
         if(model === undefined) return;
         prediction = await model.estimateFaces(video, false).then(prediction => {
             if(prediction.length > 0) {
@@ -83,21 +91,19 @@ const detectFaces = async () => {
                 ctx.save();
                 ctx.translate(cWidth, 0);
                 ctx.scale(-1, 1);
-
                 ctx.drawImage(video, 0, 0, video.width, video.height);
 
-
                 // TODO enlever le dessin des yeux
-
+                /*
                 // draw eyes
                 ctx.beginPath(); //right eye
-                ctx.arc(prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], 3, 0, 2 * Math.PI);
+                ctx.arc(prediction[0].landmarks[0][0] * rateX, prediction[0].landmarks[0][1]*rateY, 3, 0, 2 * Math.PI);
                 ctx.fillStyle = 'blue';
                 ctx.fill();
 
                 //left eye
                 ctx.beginPath();
-                ctx.arc(prediction[0].landmarks[1][0], prediction[0].landmarks[1][1], 3, 0, 2 * Math.PI);
+                ctx.arc(prediction[0].landmarks[1][0]* rateX, prediction[0].landmarks[1][1]*rateY, 3, 0, 2 * Math.PI);
                 ctx.fillStyle = 'red';
                 ctx.fill();
                 ctx.stroke();
@@ -106,36 +112,43 @@ const detectFaces = async () => {
                 let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
                 let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
 
-
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, centerX, centerY, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 ctx.restore();
+                */
             }else{
                 // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
                 ctx.fillText("No face detected", cWidth/3, cHeight/2);
             }
-
         })
     }catch (e) {
-        console.log(e);
+        console.error(e)
     }
 };
 
 function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEyeX){
 
     //test pour pulmonaire
-    let xMultiplier = 1.5;
-    let yMultiplier = 3.5;
+    let xMultiplier;
+    let yMultiplier;
+    let rateX = cWidth/640;
+    let rateY = cHeight/480;
+    let color;
 
     switch (currentFoyer) {
         case "Pulmonary":
             xMultiplier = 1.4;
             yMultiplier = 3.2;
             //pulmonaire
-            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
+            //drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
+
+
+            // Test avec le ration de 640/width canvas voulu et 480/height canvas voulu
+            // TODO Testez la correction qui utilise un ratio.
+            drawPoint((rightEyeX + (leftEyeX-rightEyeX) * xMultiplier) * rateX , (rightEyeY + (leftEyeX -rightEyeX) * yMultiplier) * rateY);
             break;
         case "Mitral":
             //mitral
@@ -154,8 +167,14 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
             drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
         default:
+            throw new Error("Unknown zone, please give a zone that is in the list");
             break;
+
     }
+
+    //todo rajouter la variable couleur à la fin de l'appel.
+    //drawPoint((rightEyeX + (leftEyeX-rightEyeX) * xMultiplier) * rateX , (rightEyeY + (leftEyeX -rightEyeX) * yMultiplier) * rateY);
+
 }
 
 function drawPoint(x, y, color = "#a2d2ff"){
