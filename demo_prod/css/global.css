@@ -89,9 +89,3 @@ button:hover, a:hover{
     font-family: "Satoshi Variable";
     src: url('../assets/Satoshi-Variable.ttf');
 }
-
-@font-face {
-   font-family: "LeagueSpartan";
-   src: url('../assets/LeagueSpartan-Bold.otf');
-}
-
