@@ -178,7 +178,7 @@ class Patient {
     static async init(API_KEY_WEMED, ROOM_ID){
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             //TODO enlever le res = true
-            res = true;
+            //res = true;
             if(res === true){
                return fetchVonage(ROOM_ID).then(res=> {
                     return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
@@ -217,7 +217,7 @@ class Patient {
 
     async augmentedReality(boolean){
         if(boolean){
-            await foyer.init(640, 480);
+            await foyer.init(800,    600);
 
             // test
             this.#usingAR = boolean;
