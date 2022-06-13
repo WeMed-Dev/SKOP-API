@@ -107,7 +107,7 @@ const detectFaces = async () => {
                 ctx.fillStyle = 'red';
                 ctx.fill();
                 ctx.stroke();
-
+                 */
                 //get center between eyes
                 let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
                 let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
@@ -116,7 +116,7 @@ const detectFaces = async () => {
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, centerX, centerY, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 ctx.restore();
-                */
+
             }else{
                 // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
