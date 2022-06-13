@@ -211,13 +211,13 @@ class Patient {
 
     //--------- AUGMENTED REALITY ---------//
 
-    setupAugmentedReality(canvas){
-        foyer.setupAR(canvas);
+    setupAugmentedReality(canvas, width, height){
+        foyer.setupAR(canvas, width, height);
     }
 
     async augmentedReality(boolean){
         if(boolean){
-            await foyer.init(800,    600);
+            await foyer.init();
 
             // test
             this.#usingAR = boolean;
