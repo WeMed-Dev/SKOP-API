@@ -47,14 +47,32 @@
 <script defer>
     let role = document.getElementById("role-span");
     let canvas = document.getElementById("canvas");
+    let btnEnd = document.getElementById("endCall");
+
     canvas.style.display = "none";
 
+
+
     async function patient(){
-        let patient = await HalfredAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 12);
-        patient.setupAugmentedReality(canvas, 800, 600);
+        let patient = await HalfredAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 232);
+        //if on mobile, we need to use the mobile version of the API
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+            patient.setupAugmentedReality(canvas, 400, 300);
+        }else{
+            patient.setupAugmentedReality(canvas, 640, 480);
+        }
+
         role.innerText = "Patient"
+
+        btnEnd.addEventListener("click", function(e){
+            e.preventDefault();
+            patient.disconnect();
+            window.location.href = "callEnd.html";
+        });
     }
     patient();
+
+
 </script>
 
 </html>
