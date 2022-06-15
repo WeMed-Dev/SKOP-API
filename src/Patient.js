@@ -176,14 +176,16 @@ class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        return checkAPIKEY(API_KEY_WEMED).then(res =>{
-            //TODO enlever le res = true
-            //res = true;
-            if(res === true){
-               return fetchVonage(ROOM_ID).then(res=> {
-                    return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
-                })
-            }
+        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
+        //     if(res === true){
+        //         return fetchVonage(ROOM_ID).then(res=> {
+        //             return new Patient(res.apiKey, res.token, res.sessionId)
+        //         })
+        //     }
+        // })
+
+        return fetchVonage(ROOM_ID).then(res=> {
+            return new Patient(res.apiKey, res.token, res.sessionId)
         })
     }
 
