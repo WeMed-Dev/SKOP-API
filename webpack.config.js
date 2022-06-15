@@ -1,11 +1,25 @@
 const path = require('path');
+const loader = require("ts-loader");
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
   mode: 'development',
-  output: {
-    filename: 'HalfredAPI.min.js',
-    path: path.resolve(__dirname, 'dist'),
-    library: 'HalfredAPI',
+  devtool: "inline-source-map",
+
+  resolve: {
+    extensions: ['.ts','.js'],
   },
+    module: {
+        rules: [{
+          test: /\.ts$/,
+          use: [
+              'ts-loader',
+              ]
+        }],
+    },
+    output: {
+        filename: 'HalfredAPI.min.js',
+        path: path.resolve(__dirname, 'dist'),
+        library: 'HalfredAPI',
+    },
 };
