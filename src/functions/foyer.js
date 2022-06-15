@@ -1,7 +1,3 @@
-// const tf = require("@tensorflow/tfjs-core");
-// require("@tensorflow/tfjs-backend-webgl");
-// const blazeface = require("@tensorflow-models/blazeface");
-
 import * as tf from '@tensorflow/tfjs-core';
 import * as blazeface from '@tensorflow-models/blazeface';
 
@@ -39,11 +35,8 @@ function setupAR(userCanvas, width, height){
 }
 
 /**
- * Initiates the logic for augmented reality. The ratio of the width and height must be of 4:3.
+ * Initiates the logic for augmented reality.
  * Todo make it possible to use 16:9 ratio.
- * @param width A positive value describing the width of the canvas in pixels
- * @param height A positive value describing the height of the canvas in pixels
- * @returns {Promise<void>}
  */
 async function init(){
     // cWidth = width;
@@ -125,7 +118,7 @@ const detectFaces = async () => {
                 // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
-                ctx.fillText("No face detected", cWidth/3, cHeight/2);
+                ctx.fillText("No face detected", (cWidth/3) *rateX , (cHeight/2) *rateY);
             }
         })
     }catch (e) {
@@ -146,44 +139,32 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
         case "Pulmonary":
             xMultiplier = 1.4;
             yMultiplier = 3.2;
-            //pulmonaire
-            //drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier);
-
-
-            // Test avec le ration de 640/width canvas voulu et 480/height canvas voulu
-            // TODO Testez la correction qui utilise un ratio.
-            drawPoint((rightEyeX + (leftEyeX-rightEyeX) * xMultiplier) * rateX , (rightEyeY + (leftEyeX -rightEyeX) * yMultiplier) * rateY);
             break;
         case "Mitral":
-            //mitral
             xMultiplier = 2;
-            yMultiplier = 4;
-            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
+            yMultiplier = 4.3;
+            color = "red";
             break;
         case "Aortic":
             xMultiplier = -0.2;
             yMultiplier = 3;
-            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
         case "Tricuspid":
             xMultiplier = 0.9;
             yMultiplier = 4.5;
-            drawPoint(rightEyeX + (leftEyeX-rightEyeX) * xMultiplier, rightEyeY + (leftEyeX -rightEyeX) * yMultiplier, "red");
             break;
         default:
             throw new Error("Unknown zone, please give a zone that is in the list");
             break;
 
     }
-
-    //todo rajouter la variable couleur à la fin de l'appel.
-    //drawPoint((rightEyeX + (leftEyeX-rightEyeX) * xMultiplier) * rateX , (rightEyeY + (leftEyeX -rightEyeX) * yMultiplier) * rateY);
+    drawPoint((rightEyeX + (leftEyeX-rightEyeX) * xMultiplier) * rateX , (rightEyeY + (leftEyeX -rightEyeX) * yMultiplier) * rateY, color);
 
 }
 
 function drawPoint(x, y, color = "#a2d2ff"){
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, 2 * Math.PI);
+    ctx.arc(x, y, 7, 0, 2 * Math.PI);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.strokeStyle = color;
