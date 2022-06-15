@@ -69,11 +69,11 @@ button:hover, a:hover{
     background-color: #931229;
     color: white;
     border-radius: 30px;
-    padding: 7px 10px;
     position: absolute;
     bottom: 10px;
     right: 10px;
     border: none;
+    width:150px;
     min-width: 110px;
     max-width: 150px;
     font-size: 1.2em;
