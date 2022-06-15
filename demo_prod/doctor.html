@@ -43,7 +43,7 @@
                 </div>
                 <div id="div-ar">
                     <label class="switch">
-                        <input type="checkbox" id="AR" >
+                        <input type="checkbox" id="AR" checked>
                         <span class="slider round"></span>
                     </label>
                     <p> Réalité augmentée </p>
@@ -55,7 +55,7 @@
 </main>
 <button class="button" id="endCall">QUITTER</button>
 </body>
-<script src="../dist/HalfredAPI.js"></script>
+<script src="../dist/HalfredAPI.min.js"></script>
 <script>
     let role = document.getElementById("role-span");
     let select = document.getElementById("zones");
@@ -64,6 +64,7 @@
     let endCall = document.getElementById("endCall");
     let AR = document.getElementById("AR");
     let btnStart = document.getElementById("btn-start");
+    let btnEnd = document.getElementById("endCall");
 
     endCall.addEventListener("click", () => {
         //go to another page
@@ -130,6 +131,13 @@
             doctor.skop();
             isSpaceDown = false;
             console.log("Stop Listening");
+        });
+
+
+        btnEnd.addEventListener("click", function(e){
+            e.preventDefault();
+            doctor.disconnect();
+            window.location.href = "callEnd.html";
         });
     }
     doctor();
