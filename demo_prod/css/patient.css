@@ -41,13 +41,13 @@ canvas{
 }
 
 #subscriber{
-    width: 640px;
-    height: 480px;
+    width: 35vw;
+    height: 26vw;
 }
 
 #publisher{
-    width: 640px;
-    height: 480px;
+    width: 35vw;
+    height: 26vw;
 }
 
 #right{
@@ -60,7 +60,46 @@ canvas{
 }
 
 
+@media screen and (max-width: 1100px) {
+
+    #videoContainer{
+        flex-direction: column;
+    }
+
+    #subscriber, #publisher{
+        width: 55vw;
+        height: 41vw;
+    }
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width: 500px) {
+
+    #img-header{
+        max-height: 50px!important;
+    }
+
+    #videoContainer{
+        flex-direction: column;
+    }
+    #subscriber, #publisher{
+        width: 60vw;
+        height: 45vw;
+    }
+}
 
 
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1100px) and (orientation: landscape) {
+    #videoContainer
+    {
+        flex-direction: row;
+    }
+
+    #subscriber, #publisher{
+        width: 46vw;
+        height: 35vw;
+    }
+}
 
 
