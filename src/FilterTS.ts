@@ -124,4 +124,5 @@ class FilterTS{
     }
 }
 
+export {FilterTS}
 
