@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import axios from "axios";
 
-let url = "https://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
+let url = "https://apps.mk-1.fr/WS_HALFRED_WEB/awws/WS_Halfred.awws"
 
 async function checkAPIKEY(APIKEY){
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
