@@ -1,4 +1,4 @@
-import * as OT from '@opentok/client';
+import OT from '@opentok/client';
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 
 /**
