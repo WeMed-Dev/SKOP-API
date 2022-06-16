@@ -75,7 +75,7 @@ class PatientTS {
 
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:heartZone", function(event:any) {
-            this.useSkop(event.data)
+            self.useSkop(event.data)
             console.log("Using Skop - " + event.data);
         });
 
