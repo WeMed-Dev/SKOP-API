@@ -1,4 +1,4 @@
-import {Filter} from "./Filter";
+import {FilterTS} from "./FilterTS";
 import Swal from "sweetalert2";
 import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
@@ -32,7 +32,7 @@ class PatientTS {
     private stream:MediaStream;
     private cameraDimensions;
 
-    private filter:Filter;
+    private filter:FilterTS;
     private foyer:string;
 
     constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED){
@@ -40,7 +40,7 @@ class PatientTS {
         this.token = TOKEN;
         this.sessionId = SESSIONID;
         this.apiKeyWemed = APIKEY_WEMED;
-        this.filter = new Filter();
+        this.filter = new FilterTS();
         let self = this;
 
         Swal.fire({
@@ -129,17 +129,17 @@ class PatientTS {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
-        //     if(res === true){
-        //         return fetchVonage(ROOM_ID).then(res=> {
-        //             return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
-        //         })
-        //     }
-        // })
-
-        return fetchVonage(ROOM_ID).then(res=> {
-            return new PatientTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            if(res === true){
+                return fetchVonage(ROOM_ID).then(res=> {
+                    return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+                })
+            }
         })
+
+        // return fetchVonage(ROOM_ID).then(res=> {
+        //     return new PatientTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        // })
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
