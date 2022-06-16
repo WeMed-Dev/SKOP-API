@@ -17,11 +17,26 @@ async function checkAPIKEY(APIKEY){
                 SOAPAction: "urn:WS_Halfred/CheckAPIKEY"
             }
     }).then(res => {
-        //We parse the response to get the data in a XML format
-        let parser = new DOMParser();
-        let xml = parser.parseFromString(res.data, "text/xml")
-        //We now parse the textContent in the XML to get the data in a JSON format
-        let json = JSON.parse(xml.activeElement.textContent)
+       //We parse the response to get the data in a XML format
+
+       let json;
+       //check if navigator is chrome
+       if(navigator.userAgent.indexOf("Chrome") > -1){
+           let parser = new DOMParser();
+           let xml = parser.parseFromString(res.data, "text/xml");
+           console.log(xml)
+           let jsonInXml = xml.getElementsByTagName("CheckAPIKEYResult")[0].textContent;
+           json = JSON.parse(jsonInXml);
+           console.log(json)
+       }
+       else{//Code for firefox-mozilla//
+           let parser = new DOMParser();
+           let xml = parser.parseFromString(res.data, "text/xml")
+           console.log(xml)
+           //We now parse the textContent in the XML to get the data in a JSON format
+           json = JSON.parse(xml.activeElement.textContent)
+            console.log(json)
+       }
        if(json.Code == 201) return true;
        else{
            Swal.fire({
