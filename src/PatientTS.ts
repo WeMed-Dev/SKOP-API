@@ -30,7 +30,7 @@ class PatientTS {
 
     // Video related variables
     private stream:MediaStream;
-    private cameraDimesions;
+    private cameraDimensions;
 
     private filter:Filter;
     private foyer:string;
@@ -116,7 +116,7 @@ class PatientTS {
             } else {
                 // If the connection is successful, publish the publisher to the session
                 session.publish(publisher , handleError);
-                this.cameraDimensions = {
+                self.cameraDimensions = {
                     width: publisher.videoWidth(),
                     height: publisher.videoHeight()
                 };
