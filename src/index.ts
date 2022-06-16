@@ -1,6 +1,6 @@
 const Doctor = require('./Doctor');
 const Patient = require('./Patient');
-import { DoctorTS } from './DoctorTS';
+import { DoctorTS} from './DoctorTS';
 
 
 // module.exports = {
