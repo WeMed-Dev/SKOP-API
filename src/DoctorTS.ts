@@ -19,6 +19,7 @@ class DoctorTS{
 
     private apiKeyWemed: string;
 
+    public currentFocus: string;
 
     constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED){
         this.apiKeyVonage = APIKEY;
@@ -137,7 +138,7 @@ class DoctorTS{
 
     //--- USING SKOP ---//
 
-    skop(heartZone:string){
+    public skop(heartZone:string){
         if(heartZone === null || heartZone === undefined || heartZone === ""){
             this.signalStopUsingSkop();
         }
@@ -146,7 +147,26 @@ class DoctorTS{
         }
     }
 
-    setGain(gain:number){
+    public useSkop(){
+        if(this.currentFocus === null || this.currentFocus === undefined || this.currentFocus === ""){
+            throw new Error("No focus set - You must set a focus before using the Skop");
+        }
+        this.signalHeartZone(this.currentFocus);
+    }
+
+    public stopUsingSkop(){
+        this.signalStopUsingSkop();
+    }
+
+    public getCurrentFocus(){
+        return this.currentFocus;
+    }
+
+    public setCurrentFocus(focus:string){
+        this.currentFocus = focus;
+    }
+
+    public setGain(gain:number){
         if (gain === null || gain === undefined) {
             throw new TypeError("Gain cannot be null or undefined");
         }
@@ -156,8 +176,7 @@ class DoctorTS{
         this.signalGain(gain);
     }
 
-
-    useAR(useAR:boolean){
+    public useAR(useAR:boolean){
         if (useAR === null || useAR === undefined) {
             throw new TypeError("Use AR cannot be null or undefined");
         }
@@ -165,6 +184,11 @@ class DoctorTS{
             throw new TypeError("Argument must be a boolean");
         }
         this.signalUseAugmentedReality(useAR);
+    }
+
+    //-- SESSION ---//
+    public disconnect(){
+        this.session.disconnect();
     }
 
 }
