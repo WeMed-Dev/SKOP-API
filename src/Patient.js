@@ -284,6 +284,10 @@ class Patient {
     setFoyer(foyer){
         this.foyer = foyer;
     }
+
+    disconnect(){
+        this.#session.disconnect();
+    }
 }
 
 module.exports = Patient;
