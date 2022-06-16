@@ -129,13 +129,13 @@ class PatientTS {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        return checkAPIKEY(API_KEY_WEMED).then(res =>{
-            if(res === true){
-                return fetchVonage(ROOM_ID).then(res=> {
-                    return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
-                })
-            }
-        })
+        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
+        //     if(res === true){
+        //         return fetchVonage(ROOM_ID).then(res=> {
+        //             return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+        //         })
+        //     }
+        // })
 
         return fetchVonage(ROOM_ID).then(res=> {
             return new PatientTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
@@ -247,3 +247,5 @@ class PatientTS {
     }
 
 }
+
+export {PatientTS};
