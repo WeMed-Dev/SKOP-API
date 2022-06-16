@@ -82,17 +82,17 @@ class Doctor {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
-        //     if(res === true){
-        //         return fetchVonage(ROOM_ID).then(res=> {
-        //             return new Doctor(res.apiKey, res.token, res.sessionId)
-        //         })
-        //     }
-        // })
-
-        return fetchVonage(ROOM_ID).then(res=> {
-            return new Doctor(res.apiKey, res.token, res.sessionId)
+        return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            if(res === true){
+                return fetchVonage(ROOM_ID).then(res=> {
+                    return new Doctor(res.apiKey, res.token, res.sessionId)
+                })
+            }
         })
+
+        // return fetchVonage(ROOM_ID).then(res=> {
+        //     return new Doctor(res.apiKey, res.token, res.sessionId)
+        // })
     }
 
     //---- USING SKOP -------//
