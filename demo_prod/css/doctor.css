@@ -122,10 +122,6 @@ main{
     justify-content: center;
 }
 
-#btn-start img{
-    width: 30px;
-    height: 30px;
-}
 
 #btn-start span{
     width: 70%;
