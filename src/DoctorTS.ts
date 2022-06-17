@@ -35,7 +35,7 @@ class DoctorTS{
             let subscriberOptions:OT.SubscriberProperties = {
                 insertMode: 'append',
                 width: '100%',
-                height: '100%'
+                height: '100%',
             }
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         })
@@ -83,10 +83,10 @@ class DoctorTS{
 
     //------ SIGNALING ------//
 
-    private signalHeartZone(signal) {
+    private signalStartSkop() {
         this.session.signal({
-            type: 'heartZone',
-            data: signal
+            type: 'startSkop',
+            data: 'start'
         }, function(error) {
             if (error) {
                 console.log('Error sending signal:' + error.message);
@@ -98,7 +98,7 @@ class DoctorTS{
 
     private signalStopUsingSkop() {
         this.session.signal({
-            type: 'stop',
+            type: 'stopSkop',
             data: 'stop'
         }, function(error) {
             if (error) {
@@ -135,35 +135,40 @@ class DoctorTS{
         })
     }
 
+    private signalCurrentFocus(focus:string){
+        this.session.signal({
+            type: 'focus',
+            data: focus
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
 
     //--- USING SKOP ---//
-
-    public skop(heartZone:string){
-        if(heartZone === null || heartZone === undefined || heartZone === ""){
-            this.signalStopUsingSkop();
-        }
-        else{
-            this.signalHeartZone(heartZone);
-        }
-    }
 
     public useSkop(){
         if(this.currentFocus === null || this.currentFocus === undefined || this.currentFocus === ""){
             throw new Error("No focus set - You must set a focus before using the Skop");
         }
-        this.signalHeartZone(this.currentFocus);
+        this.signalStartSkop();
     }
 
     public stopUsingSkop(){
         this.signalStopUsingSkop();
     }
 
+    //--- GETTERS & SETTERS ---//
     public getCurrentFocus(){
         return this.currentFocus;
     }
 
     public setCurrentFocus(focus:string){
         this.currentFocus = focus;
+        this.signalCurrentFocus(focus);
     }
 
     public setGain(gain:number){
@@ -185,7 +190,6 @@ class DoctorTS{
         }
         this.signalUseAugmentedReality(useAR);
     }
-
     //-- SESSION ---//
     public disconnect(){
         this.session.disconnect();
