@@ -33,7 +33,7 @@ class PatientTS {
     private cameraDimensions;
 
     private filter:FilterTS;
-    private foyer:string;
+    private focus:string;
 
     constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED){
         this.apiKeyVonage = APIKEY;
@@ -73,32 +73,6 @@ class PatientTS {
             console.log('You were disconnected from the session.', event.reason);
         });
 
-        // When a user receive a signal with a heartZone, it modifies the audio input of the user.
-        session.on("signal:heartZone", function(event:any) {
-            self.useSkop(event.data)
-            console.log("Using Skop - " + event.data);
-        });
-
-
-        //When a patient receives a signal:stop it stops the filtering.
-        session.on("signal:stop", function() {
-            self.stopUsingSkop()
-                .catch(e => {
-                    console.log("Error stopping using Skop" + e);
-                });
-        });
-
-        // When a user receive a signal with a gain, it modifies the gain of the user.
-        session.on("signal:gain", function(event:any) {
-            //console.log("Signal data: " + event.data);
-            self.setGain(event.data)
-        });
-
-        // When a user receive a signal to use AR
-        session.on("signal:useAR", async function(event:any) {
-            await self.augmentedReality(event.data);
-        });
-
         // initialize the publisher
         let publisherOptions: OT.PublisherProperties = {
             insertMode: 'append',
@@ -122,6 +96,38 @@ class PatientTS {
                 };
             }
         });
+
+        //---- SIGNALS ----//
+        // When a user receive a signal with a heartZone, it modifies the audio input of the user.
+        session.on("signal:startSkop", function(event:any) {
+            self.useSkop()
+            console.log("Using Skop - " + event.data);
+        });
+
+
+        //When a patient receives a signal:stop it stops the filtering.
+        session.on("signal:stopSkop", function() {
+            self.stopUsingSkop()
+                .catch(e => {
+                    console.log("Error stopping using Skop" + e);
+                });
+        });
+
+        // When a user receive a signal with a gain, it modifies the gain of the user.
+        session.on("signal:gain", function(event:any) {
+            //console.log("Signal data: " + event.data);
+            self.setGain(event.data)
+        });
+
+        // When a user receive a signal to use AR
+        session.on("signal:useAR", async function(event:any) {
+            await self.augmentedReality(event.data);
+        });
+
+        session.on("signal:focus", function(event:any) {
+            self.setFocus(event.data);
+        });
+
 
         navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream =>{
             this.stream = stream;
@@ -147,16 +153,13 @@ class PatientTS {
         await detection(this.stream);
     }
 
-    private async useSkop(heartZone){
+    private async useSkop(){
         if(!this.skopDetected && this.hasSkop){
             await this.detectSkop()
             this.skopDetected = true;
         }
-        this.setFoyer(heartZone);
         this.setUsingSkop(true);
-        await this.filter.ModifyAudio(heartZone, this , this.apiKeyWemed);
-        if(this.usingAR) await foyer.start(this.getFoyer());
-
+        await this.filter.ModifyAudio(this.focus, this , this.apiKeyWemed);
     }
 
     private async stopUsingSkop(){
@@ -173,21 +176,18 @@ class PatientTS {
 
     async augmentedReality(boolean){
         if(boolean){
-            await foyer.init();
-
-            // test
             this.usingAR = boolean;
-
-            //await foyer.start(this.getFoyer());
-            console.log(this.getFoyer());
+            let canvasStream = await foyer.init();
+            this.initNewPublisher(canvasStream);
+            await foyer.start(this.getFocus());
         }
         else {
             foyer.stop();
+            this.initNewPublisher(this.stream);
         }
     }
 
     //--------- GETTER AND SETTER  ---------//
-
 
     /**
      * Sets the users current's Audio source.
@@ -201,8 +201,6 @@ class PatientTS {
      * Sets the current level of gain of the patient's Skop audio output.
      */
     private setGain(gain){
-        //let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        //this.#filter.gain.setValueAtTime(gain, audioCtx.currentTime);
         this.filter.setGain(gain);
     }
 
@@ -214,12 +212,16 @@ class PatientTS {
         return this.sessionId;
     }
 
-    getFoyer(){
-        return this.foyer;
+    public getFocus(){
+        return this.focus;
+    }
+    public setFocus(focus){
+        this.focus = focus;
+        if(this.usingAR) foyer.start(this.getFocus());
     }
 
-    getIdFoyer(){
-        switch (this.foyer) {
+    getIdFocus(){
+        switch (this.focus) {
             case "Aortic":
                 return 1;
                 break;
@@ -235,17 +237,28 @@ class PatientTS {
         }
     }
 
-    setFoyer(foyer){
-        this.foyer = foyer;
-    }
-
-
     //---- SESSION METHODS ----//
-
     public disconnect(){
         this.session.disconnect();
     }
 
+    private initNewPublisher(stream:MediaStream){
+        console.log(this)
+        let streamTrack = stream.getVideoTracks()[0];
+        this.publisher.setAudioSource(streamTrack);
+        let tmp = this.publisher;
+
+        const publisherOptions:OT.PublisherProperties = {
+            insertMode: 'append',
+            width: '100%',
+            height: '100%',
+            videoSource: streamTrack,
+        }
+        const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+        this.publisher = publisher;
+        this.session.unpublish(tmp);
+        this.session.publish(publisher , handleError);
+    }
 }
 
 export {PatientTS};
