@@ -79,7 +79,7 @@ async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
                 SOAPAction: "urn:WS_Halfred/Save_Records"
             }
     }).then(res => {
-        //console.log(res)
+        console.log(res)
     }).catch(err => {
         console.log(err)
     })
