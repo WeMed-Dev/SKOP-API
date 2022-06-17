@@ -4,16 +4,16 @@ import * as blazeface from '@tensorflow-models/blazeface';
 require("@tensorflow/tfjs-backend-webgl");
 
 let model;
-let video;
+let video: HTMLVideoElement;
 let intervalId;
 let prediction;
-let cWidth;
-let cHeight;
+let cWidth:number;
+let cHeight:number;
 let canvas;
-let ctx;
-let currentFoyer;
+let ctx:CanvasRenderingContext2D;
+let currentFoyer:string;
 
-function setupAR(userCanvas, width, height){
+function setupAR(userCanvas:string|HTMLCanvasElement, width:number, height:number){
     if(userCanvas === undefined || userCanvas === null){
         throw new Error("Canvas is undefined or null");
     }
@@ -22,16 +22,10 @@ function setupAR(userCanvas, width, height){
     cHeight = height;
 
     //check if canvas is a string
-    if(typeof userCanvas === "string"){
-        canvas = document.getElementById(userCanvas);
-        console.log(typeof userCanvas)
-    }
-    else if(userCanvas.nodeName === "CANVAS"){
-        canvas = userCanvas;
-    }
-    else {
-        throw new Error("Canvas is not a string nor a canvas");
-    }
+    if(typeof userCanvas === "string") canvas = document.getElementById(userCanvas);
+    else if(userCanvas.nodeName === "CANVAS") canvas = userCanvas;
+    else throw new Error("Canvas is not a string nor a canvas");
+
 }
 
 /**
@@ -39,9 +33,6 @@ function setupAR(userCanvas, width, height){
  * Todo make it possible to use 16:9 ratio.
  */
 async function init(){
-    // cWidth = width;
-    // cHeight = height;
-
     //show canvas
     canvas.style.display = "block";
     ctx = canvas.getContext('2d');
@@ -74,7 +65,10 @@ async function init(){
     // When the video stream is ready, load the model
     video.addEventListener("play", async () => {
         model = await blazeface.load();
+
     })
+    let canvasStream = canvas.captureStream(30);
+    return canvas.captureStream(30)
 }
 
 const detectFaces = async () => {
@@ -85,6 +79,7 @@ const detectFaces = async () => {
         prediction = await model.estimateFaces(video, false).then(prediction => {
             if(prediction.length > 0) {
                 //flip the video
+                ctx.clearRect(0, 0, cWidth, cHeight);
                 ctx.save();
                 ctx.translate(cWidth, 0);
                 ctx.scale(-1, 1);
@@ -105,15 +100,15 @@ const detectFaces = async () => {
                 ctx.fill();
                 ctx.stroke();
                  */
+
                 //get center between eyes
-                let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
-                let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
+                //let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
+                //let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
 
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
-                drawFocuses(distance, centerX, centerY, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
+                drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 ctx.restore();
-
             }else{
                 // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
@@ -124,9 +119,11 @@ const detectFaces = async () => {
     }catch (e) {
         console.error(e)
     }
+
+
 };
 
-function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEyeX){
+function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
 
     //test pour pulmonaire
     let xMultiplier;
@@ -154,7 +151,9 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
             yMultiplier = 4.5;
             break;
         default:
-            throw new Error("Unknown zone, please give a zone that is in the list");
+            xMultiplier = 100;
+            yMultiplier = 100;
+            console.error("Unknown zone, please give a zone that is in the list");
             break;
 
     }
@@ -162,7 +161,7 @@ function drawFocuses(eyeDistance, centerX, centerY, rightEyeX, rightEyeY, leftEy
 
 }
 
-function drawPoint(x, y, color = "#a2d2ff"){
+function drawPoint(x:number, y:number, color:string = "#a2d2ff"){
     ctx.beginPath();
     ctx.arc(x, y, 7, 0, 2 * Math.PI);
     ctx.fillStyle = color;
@@ -171,10 +170,9 @@ function drawPoint(x, y, color = "#a2d2ff"){
     ctx.stroke();
 }
 
-async function start(foyer){
+async function start(foyer:string){
     currentFoyer = foyer;
-    intervalId = setInterval( detectFaces, 100)
-    return prediction;
+    intervalId = setInterval(detectFaces, 100);
 }
 
 function stop(){

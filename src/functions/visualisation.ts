@@ -3,8 +3,8 @@
  * Calls getVisualisationData()
  * @param stream The stream to be visualised
  */
-function visualize(stream) {
-    let bufferLength;
+function visualize(stream:MediaStream) {
+    let bufferLength:number;
     const audioCtx = new AudioContext();
     let analyzer = audioCtx.createAnalyser();
     const source = audioCtx.createMediaStreamSource(stream);

@@ -2,10 +2,10 @@ import Swal from "sweetalert2";
 
 
 // variable declaration
-let audioCtx;
-let analyser;
-let bufferLength;
-let dataArray;
+let audioCtx: AudioContext;
+let analyser: AnalyserNode;
+let bufferLength: number;
+let dataArray: Uint8Array;
 
 const tapPopup = () => {
     Swal.fire({
@@ -19,7 +19,7 @@ const tapPopup = () => {
     })
 }
 
-async function detection(mediaStream) {
+async function detection(mediaStream:MediaStream){
     if(mediaStream == null) {
         throw new Error("MediaStream is not defined - Detection function");
     }
@@ -62,14 +62,14 @@ async function detection(mediaStream) {
 
 function detectTap(){
     let id = setInterval(detect, 70);
-    let count = 0;
+    let count:number = 0;
     function detect(){
 
 
         analyser.getByteTimeDomainData(dataArray);
         for (let i = 0; i < bufferLength; i++) {
-            let v = dataArray[i] / 128.0;
-            let y = v * 1500 / 2;
+            let v:number = dataArray[i] / 128.0;
+            let y:number = v * 1500 / 2;
             if(y > 1200){
                 console.log(y);
                 clearInterval(id);
