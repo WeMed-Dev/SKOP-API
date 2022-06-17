@@ -142,13 +142,13 @@
         else{
             // mouse down
             btnStart.addEventListener("mousedown", (e) =>{
-                doctor.skop(zone);
+                doctor.useSkop();
                 console.log("Listening to " + zone);
             });
 
             // mouse up
             btnStart.addEventListener("mouseup", (e) =>{
-                doctor.skop();
+                doctor.stopUsingSkop();
                 isSpaceDown = false;
                 console.log("Stop Listening");
             });

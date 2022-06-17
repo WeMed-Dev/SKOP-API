@@ -13,30 +13,23 @@ let canvas;
 let ctx:CanvasRenderingContext2D;
 let currentFoyer:string;
 
-function setupAR(userCanvas:string|HTMLCanvasElement, width:number, height:number){
-    if(userCanvas === undefined || userCanvas === null){
-        throw new Error("Canvas is undefined or null");
-    }
 
-    cWidth = width;
-    cHeight = height;
-
-    //check if canvas is a string
-    if(typeof userCanvas === "string") canvas = document.getElementById(userCanvas);
-    else if(userCanvas.nodeName === "CANVAS") canvas = userCanvas;
-    else throw new Error("Canvas is not a string nor a canvas");
-
-}
 
 /**
  * Initiates the logic for augmented reality.
  * Todo make it possible to use 16:9 ratio.
  */
 async function init(){
-    //show canvas
+    canvas = document.createElement('canvas');
+    cWidth = 640;
+    cHeight = 480;
+
+
     ctx = canvas.getContext('2d');
-    canvas.width = cWidth;
-    canvas.height = cHeight;
+    // canvas.width = cWidth;
+    // canvas.height = cHeight;
+    canvas.width = 640;
+    canvas.height = 480;
     await tf.ready();
 
     // TODO peut etre enlever ce morceau de l'api pour laisser le choix au dev de cacher la camera ou non
@@ -66,7 +59,6 @@ async function init(){
         model = await blazeface.load();
 
     })
-    let canvasStream = canvas.captureStream(30);
     return canvas.captureStream(30)
 }
 
@@ -175,10 +167,10 @@ async function start(foyer:string){
 }
 
 function stop(){
-    canvas.style.display = "none";
+    //canvas.style.display = "none";
     const videoVonage = document.getElementById("publisher");
     videoVonage.style.display = "block";
     clearInterval(intervalId);
 }
 
-export {setupAR ,init, start, stop};
+export {init, start, stop};
