@@ -34,7 +34,6 @@ function setupAR(userCanvas:string|HTMLCanvasElement, width:number, height:numbe
  */
 async function init(){
     //show canvas
-    canvas.style.display = "block";
     ctx = canvas.getContext('2d');
     canvas.width = cWidth;
     canvas.height = cHeight;
@@ -43,7 +42,7 @@ async function init(){
     // TODO peut etre enlever ce morceau de l'api pour laisser le choix au dev de cacher la camera ou non
     //hide video
     const videoVonage = document.getElementById("publisher");
-    videoVonage.style.display = "none";
+    //videoVonage.style.display = "none";
 
     //Getting video stream
     video = document.createElement('video');
