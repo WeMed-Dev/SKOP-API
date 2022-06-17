@@ -1,8 +1,8 @@
 import Swal from "sweetalert2";
 import axios from "axios";
 
-let url = "https://apps.mk-1.fr/WS_HALFRED_WEB/awws/WS_Halfred.awws"
-
+//let url = "https://217.160.58.144/WS_HALFRED_WEB/awws/WS_Halfred.awws";
+let url ="https://apps.mk-1.fr/WS_HALFRED_WEB/awws/WS_Halfred.awws"
 async function checkAPIKEY(APIKEY){
     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
                  <soapenv:Header/>
@@ -11,30 +11,41 @@ async function checkAPIKEY(APIKEY){
                         </soapenv:Body>
                 </soapenv:Envelope>`;
 
-   return await axios.post(url, data,{headers:
+    return await axios.post(url, data,{headers:
             {
                 'Content-Type': 'text/xml',
                 SOAPAction: "urn:WS_Halfred/CheckAPIKEY"
             }
     }).then(res => {
         //We parse the response to get the data in a XML format
-        let parser = new DOMParser();
-        let xml = parser.parseFromString(res.data, "text/xml")
-        //We now parse the textContent in the XML to get the data in a JSON format
-        let json = JSON.parse(xml.activeElement.textContent)
-       if(json.Code == 201) return true;
-       else{
-           Swal.fire({
-               titleText: "WeMed API key invalid",
-               text: "Please be sure to have a registered key.",
-               icon: "error",
-               allowOutsideClick: false,
-               allowEscapeKey: false,
-               allowEnterKey: false,
-               showConfirmButton: true,
-           })
-           return false;
-       }
+
+        let json;
+        //check if navigator is chrome
+        if(navigator.userAgent.indexOf("Chrome") > -1){
+            let parser = new DOMParser();
+            let xml = parser.parseFromString(res.data, "text/xml");
+            let jsonInXml = xml.getElementsByTagName("CheckAPIKEYResult")[0].textContent;
+            json = JSON.parse(jsonInXml);
+        }
+        else{//Code for firefox-mozilla//
+            let parser = new DOMParser();
+            let xml = parser.parseFromString(res.data, "text/xml")
+            //We now parse the textContent in the XML to get the data in a JSON format
+            json = JSON.parse(xml.activeElement.textContent)
+        }
+        if(json.Code == 201) return true;
+        else{
+            Swal.fire({
+                titleText: "WeMed API key invalid",
+                text: "Please be sure to have a registered key.",
+                icon: "error",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                showConfirmButton: true,
+            })
+            return false;
+        }
     }).catch(err => {
         console.log(err)
     })
@@ -74,7 +85,7 @@ function fetchVonage(ROOM_ID){
     return fetch("https://test-wemed.herokuapp.com/room/" + ROOM_ID)
         .then(data => data.json())
         .then(data => {
-           return data;
+            return data;
         })
 }
 
