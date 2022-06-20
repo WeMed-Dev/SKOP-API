@@ -17,6 +17,7 @@ class PatientTS {
     private usingAR: boolean;
     private hasSkop: boolean;
     private skopDetected: boolean = false;
+    private faceCam:boolean = true;
 
     //All API information
     private apiKeyVonage: string;
@@ -135,17 +136,21 @@ class PatientTS {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        return checkAPIKEY(API_KEY_WEMED).then(res =>{
-            if(res === true){
-                return fetchVonage(ROOM_ID).then(res=> {
-                    return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
-                })
-            }
-        })
-
-        // return fetchVonage(ROOM_ID).then(res=> {
-        //     return new PatientTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
+        //     if(res === true){
+        //         return fetchVonage(ROOM_ID).then(res=> {
+        //             return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+        //         })
+        //     }
         // })
+
+        return fetchVonage(ROOM_ID).then(res=> {
+            return new PatientTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        })
+    }
+
+    public turnCamera(){
+        this.initNewPublisher(this.stream);
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -233,6 +238,7 @@ class PatientTS {
         }
     }
 
+
     //---- SESSION METHODS ----//
     public disconnect(){
         this.session.disconnect();
@@ -241,14 +247,14 @@ class PatientTS {
     private initNewPublisher(stream:MediaStream){
         console.log(this)
         let streamTrack = stream.getVideoTracks()[0];
-        this.publisher.setAudioSource(streamTrack);
-        let tmp = this.publisher;
 
+        let tmp = this.publisher;
         const publisherOptions:OT.PublisherProperties = {
             insertMode: 'append',
             width: '100%',
             height: '100%',
             videoSource: streamTrack,
+            facingMode:  "environment",
         }
         const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
         this.publisher = publisher;
