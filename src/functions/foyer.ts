@@ -32,11 +32,6 @@ async function init(){
     canvas.height = 480;
     await tf.ready();
 
-    // TODO peut etre enlever ce morceau de l'api pour laisser le choix au dev de cacher la camera ou non
-    //hide video
-    const videoVonage = document.getElementById("publisher");
-    //videoVonage.style.display = "none";
-
     //Getting video stream
     video = document.createElement('video');
     navigator.mediaDevices
@@ -49,6 +44,7 @@ async function init(){
 
             video.width = cWidth;
             video.height = cHeight;
+            video.autoplay = true;
 
             console.log(video.width);
             video.play();
@@ -129,8 +125,8 @@ function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
             yMultiplier = 3.2;
             break;
         case "Mitral":
-            xMultiplier = 2;
-            yMultiplier = 4.3;
+            xMultiplier = 2.2;
+            yMultiplier = 4.5;
             color = "red";
             break;
         case "Aortic":
