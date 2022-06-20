@@ -1,0 +1,11 @@
+node_modules
+demo_prod
+
+.idea/.name
+.idea/Halfred.iml
+.idea/vcs.xml
+.idea/modules.xml
+
+tsconfig.json
+webpack.config.js
+
