@@ -55,7 +55,7 @@
 </main>
 <button class="button" id="endCall">QUITTER</button>
 </body>
-<script src="../dist/HalfredAPI.min.js" ></script>
+<script src="../dist/HalfredAPI.js" ></script>
 <script>
     let role = document.getElementById("role-span");
     let select = document.getElementById("zones");
@@ -106,7 +106,6 @@
         document.onkeydown = function (e) {
             if(e.keyCode === 32 && !isSpaceDown && zone != null){
                 isSpaceDown = true;
-                //doctor.skop(zone);
                 doctor.useSkop();
                 console.log("Listening to " + zone);
             }
@@ -128,13 +127,13 @@
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
             // touchstart
             btnStart.addEventListener("touchstart", (e) =>{
-                doctor.skop(zone);
+                doctor.useSkop();
                 console.log("Listening to " + zone);
             });
 
             // touchend
             btnStart.addEventListener("touchend", (e) =>{
-                doctor.skop();
+                doctor.stopUsingSkop();
                 isSpaceDown = false;
                 console.log("Stop Listening");
             });
@@ -153,10 +152,6 @@
                 console.log("Stop Listening");
             });
         }
-
-
-
-
 
 
 

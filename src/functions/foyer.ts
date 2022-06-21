@@ -32,11 +32,6 @@ async function init(){
     canvas.height = 480;
     await tf.ready();
 
-    // TODO peut etre enlever ce morceau de l'api pour laisser le choix au dev de cacher la camera ou non
-    //hide video
-    const videoVonage = document.getElementById("publisher");
-    //videoVonage.style.display = "none";
-
     //Getting video stream
     video = document.createElement('video');
     navigator.mediaDevices
@@ -46,11 +41,16 @@ async function init(){
         })
         .then((stream) => {
             video.srcObject = stream;
-
             video.width = cWidth;
             video.height = cHeight;
+            video.autoplay = true;
 
-            console.log(video.width);
+            // check if on iOS
+            // if iOS we add certain parameters to the video
+            if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+                video.muted = true;
+                video.playsInline = true;
+            }
             video.play();
         });
 
@@ -92,16 +92,11 @@ const detectFaces = async () => {
                 ctx.stroke();
                  */
 
-                //get center between eyes
-                //let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
-                //let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
-
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 ctx.restore();
             }else{
-                // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
                 ctx.fillText("No face detected", (cWidth/3) *rateX , (cHeight/2) *rateY);
@@ -110,8 +105,6 @@ const detectFaces = async () => {
     }catch (e) {
         console.error(e)
     }
-
-
 };
 
 function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
@@ -129,8 +122,8 @@ function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
             yMultiplier = 3.2;
             break;
         case "Mitral":
-            xMultiplier = 2;
-            yMultiplier = 4.3;
+            xMultiplier = 1.9;
+            yMultiplier = 4.5;
             color = "red";
             break;
         case "Aortic":

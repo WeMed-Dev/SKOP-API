@@ -195,6 +195,9 @@ class DoctorTS{
         this.session.disconnect();
     }
 
+    public mute(boolean:boolean){
+        this.publisher.publishAudio(boolean);
+    }
 }
 
 export { DoctorTS };

@@ -94,7 +94,7 @@ class FilterTS{
                         base64data = base64url.fromBase64(base64data.split(",")[1]);
                     }
                     //Save the data in the database
-                    await saveRecord(patient.getSessionId(), apiKeyWemed, patient.getIdFoyer(), base64data)
+                    await saveRecord(patient.getSessionId(), apiKeyWemed, patient.getIdFocus(), base64data)
                 }
             }
         }
