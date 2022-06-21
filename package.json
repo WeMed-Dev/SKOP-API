@@ -1,9 +1,8 @@
 {
   "name": "halfred-api",
-  "version": "0.0.13",
+  "version": "0.0.16",
   "description": "API for the Skop",
-  "browser": "index.ts",
-  "main": "index.ts",
+  "main": "dist/HalfredAPI.js",
   "keywords": [
     "api",
     "skop",
@@ -11,8 +10,6 @@
     "halfred-api",
     "health api",
     "health",
-    "wemed",
-    "Wemed",
     "WeMed"
   ],
   "author": "Ben Gregory",
