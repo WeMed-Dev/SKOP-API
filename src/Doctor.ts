@@ -9,7 +9,7 @@ function handleError(error) {
     if (error) console.error(error);
 }
 
-class DoctorTS{
+class Doctor {
     private session: OT.Session;
     private publisher: OT.Publisher;
 
@@ -19,7 +19,7 @@ class DoctorTS{
 
     private apiKeyWemed: string;
 
-    public currentFocus: string;
+    private currentFocus: string;
 
     constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED){
         this.apiKeyVonage = APIKEY;
@@ -71,12 +71,12 @@ class DoctorTS{
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
-                    return new DoctorTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+                    return new Doctor(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
                 })
             }
         })
         // return fetchVonage(ROOM_ID).then(res=> {
-        //     return new DoctorTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
+        //     return new Doctor(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
         // })
     }
 
@@ -200,4 +200,4 @@ class DoctorTS{
     }
 }
 
-export { DoctorTS };
+export { Doctor };

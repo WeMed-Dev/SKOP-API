@@ -10,7 +10,7 @@ function handleError(error) {
     if (error) console.error(error);
 }
 
-class PatientTS {
+class Patient {
     // All boolean properties
     private usingSkop: boolean;
     private usingAR: boolean;
@@ -148,12 +148,12 @@ class PatientTS {
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
-                    return new PatientTS(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+                    return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
                 })
             }
         })
         // return fetchVonage(ROOM_ID).then(res=> {
-        //     return new PatientTS(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        //     return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
         // })
     }
 
@@ -271,9 +271,10 @@ class PatientTS {
     }
 
     public turnCamera(){
+        this.faceCamera = !this.faceCamera;
         if(this.usingAR) this.augmentedReality(true);
         else this.initNewPublisher(this.audioStream);
     }
 }
 
-export {PatientTS};
+export {Patient};
