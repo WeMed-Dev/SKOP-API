@@ -19,17 +19,18 @@ class PatientTS {
     private faceCamera:boolean = true;
 
     //All API information
-    private apiKeyVonage: string;
-    private apiKeyWemed: string;
-    private token : string;
-    private sessionId: string;
+    private readonly apiKeyVonage: string;
+    private readonly apiKeyWemed: string;
+    private readonly token : string;
+    private readonly sessionId: string;
 
     //All Vonage elements
     private session: OT.Session;
     private publisher: OT.Publisher;
 
-    // Video related variables
-    private stream:MediaStream;
+
+    private audioStream:MediaStream;
+    private videoStream:MediaStream;
     private cameraDimensions;
 
     private filter:FilterTS;
@@ -129,9 +130,18 @@ class PatientTS {
         });
 
 
-        navigator.mediaDevices.getUserMedia({audio: true,video: false}).then(stream =>{
-            this.stream = stream;
+        navigator.mediaDevices.getUserMedia({audio: true,video: true}).then(stream =>{
+
+            let audioStreamTrack = stream.getAudioTracks()[0];
+            //make audio stream from streamTrack
+            this.audioStream = new MediaStream([audioStreamTrack]);
+
+            //video streamTrack
+            let videoStreamTrack = stream.getVideoTracks()[0];
+            this.videoStream = new MediaStream([videoStreamTrack]);
+
         })
+
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
@@ -147,11 +157,9 @@ class PatientTS {
         // })
     }
 
-
-
     //--------- SKOP MANIPULATION METHODS ---------//
     private async detectSkop(){
-        await detection(this.stream);
+        await detection(this.audioStream);
     }
 
     private async useSkop(){
@@ -168,19 +176,18 @@ class PatientTS {
         await this.filter.defaultAudio(this.publisher);
     }
 
-
     //--------- AUGMENTED REALITY ---------//
 
     async augmentedReality(boolean){
         if(boolean){
             this.usingAR = boolean;
-            let canvasStream = await foyer.init();
+            let canvasStream = await foyer.init(this.videoStream);
             this.initNewPublisher(canvasStream);
             await foyer.start(this.getFocus());
         }
         else {
             foyer.stop();
-            this.initNewPublisher(this.stream);
+            this.initNewPublisher(this.audioStream);
         }
     }
 
@@ -205,7 +212,7 @@ class PatientTS {
         this.usingSkop = isUsingSkop;
     }
 
-    getSessionId(){
+    public getSessionId(){
         return this.sessionId;
     }
 
@@ -218,7 +225,7 @@ class PatientTS {
         if(this.usingAR) foyer.start(this.getFocus());
     }
 
-    getIdFocus(){
+    public getIdFocus(){
         switch (this.focus) {
             case "Aortic":
                 return 1;
@@ -241,7 +248,8 @@ class PatientTS {
     }
 
     private initNewPublisher(stream:MediaStream){
-        console.log(this)
+        this.videoStream = stream;
+        //console.log(this)
         let streamTrack = stream.getVideoTracks()[0];
 
         let tmp = this.publisher;
@@ -263,7 +271,8 @@ class PatientTS {
     }
 
     public turnCamera(){
-        this.initNewPublisher(this.stream);
+        if(this.usingAR) this.augmentedReality(true);
+        else this.initNewPublisher(this.audioStream);
     }
 }
 

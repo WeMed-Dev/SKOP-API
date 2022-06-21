@@ -19,11 +19,10 @@ let currentFoyer:string;
  * Initiates the logic for augmented reality.
  * Todo make it possible to use 16:9 ratio.
  */
-async function init(){
+async function init(stream:MediaStream){
     canvas = document.createElement('canvas');
     cWidth = 640;
     cHeight = 480;
-
 
     ctx = canvas.getContext('2d');
     // canvas.width = cWidth;
@@ -34,6 +33,11 @@ async function init(){
 
     //Getting video stream
     video = document.createElement('video');
+    video.srcObject = stream;
+    video.width = 640;
+    video.height = 480;
+    await video.play();
+
     navigator.mediaDevices
         .getUserMedia({
             video: true,
@@ -68,6 +72,7 @@ const detectFaces = async () => {
         let rateY = cHeight/480;
         if(model === undefined) return;
         prediction = await model.estimateFaces(video, false).then(prediction => {
+
             if(prediction.length > 0) {
                 //flip the video
                 ctx.clearRect(0, 0, cWidth, cHeight);
