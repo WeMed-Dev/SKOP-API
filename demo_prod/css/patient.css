@@ -34,7 +34,6 @@ main{
 .video *{
     border-radius: 15px;
     background-color: transparent;
-    position: relative!important;
 }
 
 canvas{
@@ -49,7 +48,6 @@ canvas{
 #publisher{
     width: 40vw;
     height: 23vw;
-    position: relative;
 }
 
 #right{
