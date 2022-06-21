@@ -4,7 +4,7 @@
  */
 
 
-import {DoctorTS} from './DoctorTS';
-import {PatientTS} from './PatientTS';
+import {Doctor} from './Doctor';
+import {Patient} from './Patient';
 
-export { PatientTS , DoctorTS };
+export { Patient , Doctor };
