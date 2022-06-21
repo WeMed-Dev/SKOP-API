@@ -92,16 +92,11 @@ const detectFaces = async () => {
                 ctx.stroke();
                  */
 
-                //get center between eyes
-                //let centerX = (prediction[0].landmarks[0][0] + prediction[0].landmarks[1][0]) / 2;
-                //let centerY = (prediction[0].landmarks[0][1] + prediction[0].landmarks[1][1]) / 2;
-
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 ctx.restore();
             }else{
-                // if no face detected, write "no face detected"
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
                 ctx.fillText("No face detected", (cWidth/3) *rateX , (cHeight/2) *rateY);
@@ -110,8 +105,6 @@ const detectFaces = async () => {
     }catch (e) {
         console.error(e)
     }
-
-
 };
 
 function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
