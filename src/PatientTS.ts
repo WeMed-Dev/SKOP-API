@@ -16,7 +16,7 @@ class PatientTS {
     private usingAR: boolean;
     private hasSkop: boolean;
     private skopDetected: boolean = false;
-    private faceCam:boolean = true;
+    private faceCamera:boolean = true;
 
     //All API information
     private apiKeyVonage: string;
@@ -147,9 +147,7 @@ class PatientTS {
         // })
     }
 
-    public turnCamera(){
-        this.initNewPublisher(this.stream);
-    }
+
 
     //--------- SKOP MANIPULATION METHODS ---------//
     private async detectSkop(){
@@ -214,6 +212,7 @@ class PatientTS {
     public getFocus(){
         return this.focus;
     }
+
     public setFocus(focus){
         this.focus = focus;
         if(this.usingAR) foyer.start(this.getFocus());
@@ -236,7 +235,6 @@ class PatientTS {
         }
     }
 
-
     //---- SESSION METHODS ----//
     public disconnect(){
         this.session.disconnect();
@@ -252,7 +250,7 @@ class PatientTS {
             width: '100%',
             height: '100%',
             videoSource: streamTrack,
-            facingMode:  "environment",
+            facingMode: this.faceCamera ? 'user' : 'environment',
         }
         const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
         this.publisher = publisher;
@@ -262,6 +260,10 @@ class PatientTS {
 
     public mute(boolean:boolean){
         this.publisher.publishAudio(boolean);
+    }
+
+    public turnCamera(){
+        this.initNewPublisher(this.stream);
     }
 }
 
