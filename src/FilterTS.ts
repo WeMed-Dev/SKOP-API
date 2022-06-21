@@ -79,7 +79,7 @@ class FilterTS{
 
                 //listen to the audio
                 let audio = new Audio(URL.createObjectURL(blob));
-                audio.play();
+                //audio.play();
 
                 // Reading the data from the blob
                 let reader = new FileReader();
