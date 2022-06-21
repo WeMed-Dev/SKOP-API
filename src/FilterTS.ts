@@ -3,7 +3,8 @@ import base64url from "base64url";
 
 
 class FilterTS{
-    public filter:BiquadFilterNode;
+    public audioCtx:AudioContext;
+    public biquadFilter:BiquadFilterNode
     public audioRecorder:MediaRecorder;
     public gain:number;
 
@@ -14,6 +15,8 @@ class FilterTS{
 
     constructor(){
         this.gain = 10;
+        this.audioCtx = new window.AudioContext;
+        this.biquadFilter = this.audioCtx.createBiquadFilter();
     }
 
     /**
@@ -28,38 +31,32 @@ class FilterTS{
         if (heartZone == null) {
             throw new Error("No heartZone given - cannot modify audio");
         }
-        // define variables
-        const audioCtx = new window.AudioContext;
-        //let audioSource = audioCtx.createMediaStreamSource(mediaStream);
-        //let audioDestination = audioCtx.createMediaStreamDestination();
 
         //Version test avec getUserMedia
         let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-        let audioSource = audioCtx.createMediaStreamSource(stream);
-        let audioDestination = audioCtx.createMediaStreamDestination();
+        let audioSource = this.audioCtx.createMediaStreamSource(stream);
+        let audioDestination = this.audioCtx.createMediaStreamDestination();
 
-        //Create the biquad filter
-        let biquadFilter = audioCtx.createBiquadFilter();
-        this.filter = biquadFilter;
+  
 
         if(heartZone === FilterTS.AORTIC || heartZone === FilterTS.MITRAL || heartZone === FilterTS.TRICUSPID){
-            biquadFilter.type = "lowshelf"; // low shelf filter
-            biquadFilter.frequency.setValueAtTime(250, audioCtx.currentTime); // 250Hz
-            biquadFilter.gain.setValueAtTime(this.gain, audioCtx.currentTime);
+            this.biquadFilter.type = "lowshelf"; // low shelf filter
+            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
+            this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
 
-            audioSource.connect(biquadFilter);
-            biquadFilter.connect(audioDestination);
+            audioSource.connect(this.biquadFilter);
+            this.biquadFilter.connect(audioDestination);
         }
 
         if(heartZone === FilterTS.PULMONARY){ // les ondes entres 80 et 500 sont limitées
 
-            biquadFilter.type = "peaking"; // peaking filter
-            biquadFilter.frequency.setValueAtTime(290, audioCtx.currentTime);
-            biquadFilter.Q.setValueAtTime(10, audioCtx.currentTime);
+            this.biquadFilter.type = "peaking"; // peaking filter
+            this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
+            this.biquadFilter.Q.setValueAtTime(10, this.audioCtx.currentTime);
 
             // connect the nodes together
-            audioSource.connect(biquadFilter);
-            biquadFilter.connect(audioDestination);
+            audioSource.connect(this.biquadFilter);
+            this.biquadFilter.connect(audioDestination);
         }
 
         this.recordAudio(audioDestination.stream, patient, apiKeyWemed);
@@ -118,8 +115,7 @@ class FilterTS{
      * Sets the current level of gain of the patient's Skop audio output.
      */
     public setGain(gain){
-        let audioCtx = new window.AudioContext;
-        this.filter.gain.setValueAtTime(gain, audioCtx.currentTime);
+        this.biquadFilter.gain.setValueAtTime(gain, this.audioCtx.currentTime);
         this.gain = gain;
     }
 }
