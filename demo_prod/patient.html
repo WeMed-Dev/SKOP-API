@@ -39,6 +39,7 @@
     </div>
 </main>
 <a class="button" id="endCall" href="callEnd.html">QUITTER</a>
+<button id="turn" class="button" style="max-width: 110px">Turn Camera</button>
 
 
 </body>
@@ -47,8 +48,7 @@
     let role = document.getElementById("role-span");
     let canvas = document.getElementById("canvas");
     let btnEnd = document.getElementById("endCall");
-
-
+    let btnTurn = document.getElementById("turn");
 
     async function patient(){
         let patient = await HalfredAPI.PatientTS.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 23);
@@ -58,6 +58,10 @@
             e.preventDefault();
             patient.disconnect();
             window.location.href = "callEnd.html";
+        });
+        btnTurn.addEventListener("click", function(e){
+            e.preventDefault();
+            patient.turnCamera();
         });
     }
     patient();
