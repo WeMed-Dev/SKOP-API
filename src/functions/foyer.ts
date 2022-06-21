@@ -41,12 +41,16 @@ async function init(){
         })
         .then((stream) => {
             video.srcObject = stream;
-
             video.width = cWidth;
             video.height = cHeight;
             video.autoplay = true;
 
-            console.log(video.width);
+            // check if on iOS
+            // if iOS we add certain parameters to the video
+            if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+                video.muted = true;
+                video.playsInline = true;
+            }
             video.play();
         });
 
@@ -125,7 +129,7 @@ function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
             yMultiplier = 3.2;
             break;
         case "Mitral":
-            xMultiplier = 2.2;
+            xMultiplier = 1.9;
             yMultiplier = 4.5;
             color = "red";
             break;
