@@ -261,6 +261,10 @@ class PatientTS {
         this.session.unpublish(tmp);
         this.session.publish(publisher , handleError);
     }
+
+    public mute(boolean:boolean){
+        this.publisher.publishAudio(boolean);
+    }
 }
 
 export {PatientTS};
