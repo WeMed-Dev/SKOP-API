@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import Swal, {SweetAlertResult} from "sweetalert2";
 
 
 // variable declaration
@@ -34,7 +34,7 @@ async function detection(mediaStream:MediaStream){
             allowEnterKey: false,
             showConfirmButton: true,
         })
-       return;
+        return;
     }
     audioCtx = new window.AudioContext;
     analyser = audioCtx.createAnalyser();
@@ -95,7 +95,7 @@ function detectTap(){
                 allowEnterKey: false,
                 confirmButtonText: "Try again",
                 showCloseButton: true,
-            }).then((res)=>{
+            }).then((res:SweetAlertResult)=>{
                 if (res.value){
                     id = setInterval(detect, 70);
                     tapPopup();

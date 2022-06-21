@@ -132,6 +132,11 @@ main{
    transform: translateY(4px);
 }
 
+.active{
+    background-color: #6a00ff!important;
+    color: white;
+}
+
 #btn-start:hover{
     background-color: #6a00ff;
     color: white;
