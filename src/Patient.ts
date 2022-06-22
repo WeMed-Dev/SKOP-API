@@ -45,14 +45,8 @@ class Patient {
         let self = this;
         let ios = false;
 
-
-
         const session = OT.initSession(this.apiKeyVonage, this.sessionId);
         this.session = session;
-
-
-
-
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
