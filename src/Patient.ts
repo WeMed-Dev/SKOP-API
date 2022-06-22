@@ -145,16 +145,16 @@ class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        return checkAPIKEY(API_KEY_WEMED).then(res =>{
-            if(res === true){
-                return fetchVonage(ROOM_ID).then(res=> {
-                    return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
-                })
-            }
-        })
-        // return fetchVonage(ROOM_ID).then(res=> {
-        //     return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
+        //     if(res === true){
+        //         return fetchVonage(ROOM_ID).then(res=> {
+        //             return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+        //         })
+        //     }
         // })
+        return fetchVonage(ROOM_ID).then(res=> {
+            return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        })
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -180,12 +180,11 @@ class Patient {
 
     async augmentedReality(boolean){
         if(boolean){
-            console.log("Patient - Augmented reality enabled");
             this.usingAR = boolean;
-            let canvasStream = await foyer.init(this.videoStream);
-            console.log(canvasStream);
-            this.initNewPublisher(canvasStream);
-            await foyer.start(this.getFocus());
+            await foyer.init(this.videoStream).then(canvasStream => {
+                this.initNewPublisher(canvasStream);
+                foyer.start(this.getFocus())
+            })
         }
         else {
             foyer.stop();
@@ -276,8 +275,10 @@ class Patient {
         this.faceCamera = !this.faceCamera;
         if(this.usingAR){
             this.augmentedReality(true);
-            this.initNewPublisher(this.videoStream);
+            this.initNewPublisher(this.audioStream);
         }
+        // DO NOT TOUCH EVER THIS WORKS PERFECTLY
+        // Even tho this is an audio stream it works whereas using the video stream it doesn't.
         else this.initNewPublisher(this.audioStream);
     }
 }

@@ -12,6 +12,7 @@ let cHeight:number;
 let canvas;
 let ctx:CanvasRenderingContext2D;
 let currentFoyer:string;
+let stopAnimation = false;
 
 
 
@@ -34,11 +35,7 @@ async function init(stream:MediaStream){
     console.log("Foyer - init second line tf.ready");
     //Getting video stream
     video = document.createElement('video');
-    document.body.appendChild(video);
-    video.srcObject = stream;
-    video.width = 640;
-    video.height = 480;
-    await video.play();
+
 
     navigator.mediaDevices
         .getUserMedia({
@@ -59,11 +56,13 @@ async function init(stream:MediaStream){
             }
             video.play();
         });
-    console.log("Foyer - init third line getUserMedia");
+        //wait for the video to be loaded
+
 
     // When the video stream is ready, load the model
     video.addEventListener("play", async () => {
         model = await blazeface.load();
+        await detectFaces();
         console.log("Loaded Blazeface")
 
     })
@@ -101,10 +100,10 @@ const detectFaces = async () => {
                 ctx.fill();
                 ctx.stroke();
                  */
-
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
+                console.log("Drawings done");
                 ctx.restore();
             }else{
                 ctx.font = "30px Arial";
@@ -112,9 +111,12 @@ const detectFaces = async () => {
                 ctx.fillText("No face detected", (cWidth/3) *rateX , (cHeight/2) *rateY);
             }
         })
+
     }catch (e) {
         console.error(e)
     }
+    if(stopAnimation === false) requestAnimationFrame(detectFaces);
+
 };
 
 function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
@@ -166,15 +168,11 @@ function drawPoint(x:number, y:number, color:string = "#a2d2ff"){
 
 async function start(foyer:string){
     currentFoyer = foyer;
-    intervalId = setInterval(detectFaces, 100);
+    stopAnimation = false;
 }
 
 function stop(){
-    //canvas.style.display = "none";
-    const videoVonage = document.getElementById("publisher");
-    videoVonage.style.display = "block";
-    if(intervalId == undefined) console.error("intervalId is undefined");
-    clearInterval(intervalId);
+    stopAnimation = true;
 }
 
 export {init, start, stop};
