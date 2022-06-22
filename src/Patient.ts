@@ -180,6 +180,7 @@ class Patient {
 
     async augmentedReality(boolean){
         if(boolean){
+            console.log("Patient - Augmented reality enabled");
             this.usingAR = boolean;
             let canvasStream = await foyer.init(this.videoStream);
             this.initNewPublisher(canvasStream);
