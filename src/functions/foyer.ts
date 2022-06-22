@@ -34,6 +34,7 @@ async function init(stream:MediaStream){
     console.log("Foyer - init second line tf.ready");
     //Getting video stream
     video = document.createElement('video');
+    document.body.appendChild(video);
     video.srcObject = stream;
     video.width = 640;
     video.height = 480;
