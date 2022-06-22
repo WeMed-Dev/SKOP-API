@@ -43,16 +43,9 @@ class Patient {
         this.apiKeyWemed = APIKEY_WEMED;
         this.filter = new FilterTS();
         let self = this;
-
-
-
-
+      
         const session = OT.initSession(this.apiKeyVonage, this.sessionId);
         this.session = session;
-
-
-
-
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
