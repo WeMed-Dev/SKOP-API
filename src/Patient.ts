@@ -183,6 +183,7 @@ class Patient {
             console.log("Patient - Augmented reality enabled");
             this.usingAR = boolean;
             let canvasStream = await foyer.init(this.videoStream);
+            console.log(canvasStream);
             this.initNewPublisher(canvasStream);
             await foyer.start(this.getFocus());
         }
@@ -273,7 +274,10 @@ class Patient {
 
     public turnCamera(){
         this.faceCamera = !this.faceCamera;
-        if(this.usingAR) this.augmentedReality(true);
+        if(this.usingAR){
+            this.augmentedReality(true);
+            this.initNewPublisher(this.videoStream);
+        }
         else this.initNewPublisher(this.audioStream);
     }
 }
