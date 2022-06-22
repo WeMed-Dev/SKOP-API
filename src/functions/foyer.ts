@@ -39,25 +39,25 @@ async function init(stream:MediaStream){
     video.height = 480;
     await video.play();
 
-    // navigator.mediaDevices
-    //     .getUserMedia({
-    //         video: true,
-    //         audio: false,
-    //     })
-    //     .then((stream) => {
-    //         video.srcObject = stream;
-    //         video.width = cWidth;
-    //         video.height = cHeight;
-    //         video.autoplay = true;
-    //
-    //         // check if on iOS
-    //         // if iOS we add certain parameters to the video
-    //         if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
-    //             video.muted = true;
-    //             video.playsInline = true;
-    //         }
-    //         video.play();
-    //     });
+    navigator.mediaDevices
+        .getUserMedia({
+            video: true,
+            audio: false,
+        })
+        .then((stream) => {
+            video.srcObject = stream;
+            video.width = cWidth;
+            video.height = cHeight;
+            video.autoplay = true;
+
+            // check if on iOS
+            // if iOS we add certain parameters to the video
+            if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+                video.muted = true;
+                video.playsInline = true;
+            }
+            video.play();
+        });
     console.log("Foyer - init third line getUserMedia");
 
     // When the video stream is ready, load the model
