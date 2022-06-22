@@ -43,47 +43,9 @@ class Patient {
         this.apiKeyWemed = APIKEY_WEMED;
         this.filter = new FilterTS();
         let self = this;
-
-
-
-
-
-
-        Swal.fire({
-            title: 'Welcome!',
-            text: "Do you have a Skop ?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, I do.',
-            cancelButtonText: "No, I don't.",
-        }).then(result => {
-            this.hasSkop = !!result.value;
-        })
-
+      
         const session = OT.initSession(this.apiKeyVonage, this.sessionId);
         this.session = session;
-
-        if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
-            Swal.fire({
-                title: 'Warning',
-                text: 'Augmented reality is not supported on iOS yet. If you want to use it use a different device.',
-                icon: 'warning',
-                confirmButtonText: 'Ok'
-            });
-            this.session.signal({
-                type: "iOS",
-                data: 'true'
-            }, function(error) {
-                if (error) {
-                    console.log('Error sending signal:' + error.message);
-                } else {
-                    console.log('Signal sent.');
-                }
-            })
-        }
-
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
@@ -122,6 +84,38 @@ class Patient {
                 };
             }
         });
+
+
+        Swal.fire({
+            title: 'Welcome!',
+            text: "Do you have a Skop ?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, I do.',
+            cancelButtonText: "No, I don't.",
+        }).then(result => {
+            this.hasSkop = !!result.value;
+            if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+                Swal.fire({
+                    title: 'Warning',
+                    text: 'Augmented reality is not supported on iOS yet. Please use a different device if want to use augmented reality.',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                });
+                this.session.signal({
+                    type: "iOS",
+                    data: 'true'
+                }, function(error) {
+                    if (error) {
+                        console.log('Error sending signal:' + error.message);
+                    } else {
+                        console.log('Signal sent.');
+                    }
+                })
+            }
+        })
 
         //---- SIGNALS ----//
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
