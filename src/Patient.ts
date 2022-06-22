@@ -68,7 +68,7 @@ class Patient {
         if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
             Swal.fire({
                 title: 'Warning',
-                text: 'Augmented reality is not supported on iOS yerself. Please use a different device.',
+                text: 'Augmented reality is not supported on iOS yet. If you want to use it use a different device.',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
             });
