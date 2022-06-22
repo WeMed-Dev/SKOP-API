@@ -20,6 +20,7 @@ let currentFoyer:string;
  * Todo make it possible to use 16:9 ratio.
  */
 async function init(stream:MediaStream){
+    console.log("Foyer - init first line");
     canvas = document.createElement('canvas');
     cWidth = 640;
     cHeight = 480;
@@ -61,12 +62,14 @@ async function init(stream:MediaStream){
     // When the video stream is ready, load the model
     video.addEventListener("play", async () => {
         model = await blazeface.load();
+        console.log("Loaded Blazeface")
 
     })
     return canvas.captureStream(30)
 }
 
 const detectFaces = async () => {
+    console.log("Detectfaces")
     try{
         let rateX = cWidth/640;
         let rateY = cHeight/480;
