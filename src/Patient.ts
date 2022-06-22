@@ -43,7 +43,7 @@ class Patient {
         this.apiKeyWemed = APIKEY_WEMED;
         this.filter = new FilterTS();
         let self = this;
-
+        let ios = false;
 
 
 
@@ -62,6 +62,18 @@ class Patient {
                 height: '100%',
             }
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+            if(ios){
+                this.session.signal({
+                    type: "iOS",
+                    data: 'true'
+                }, function(error) {
+                    if (error) {
+                        console.log('Error sending signal:' + error.message);
+                    } else {
+                        console.log('Signal sent.');
+                    }
+                });
+            }
         });
 
         session.on('sessionDisconnected', function sessionDisconnected(event) {
@@ -105,22 +117,13 @@ class Patient {
         }).then(result => {
             this.hasSkop = !!result.value;
             if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+                ios = true;
                 Swal.fire({
                     title: 'Warning',
                     text: 'Augmented reality is not supported on iOS yet. Please use a different device if want to use augmented reality.',
                     icon: 'warning',
                     confirmButtonText: 'Ok'
                 });
-                this.session.signal({
-                    type: "iOS",
-                    data: 'true'
-                }, function(error) {
-                    if (error) {
-                        console.log('Error sending signal:' + error.message);
-                    } else {
-                        console.log('Signal sent.');
-                    }
-                })
             }
         })
 
