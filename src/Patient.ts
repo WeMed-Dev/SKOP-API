@@ -44,6 +44,11 @@ class Patient {
         this.filter = new FilterTS();
         let self = this;
 
+
+
+
+
+
         Swal.fire({
             title: 'Welcome!',
             text: "Do you have a Skop ?",
@@ -59,6 +64,26 @@ class Patient {
 
         const session = OT.initSession(this.apiKeyVonage, this.sessionId);
         this.session = session;
+
+        if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+            Swal.fire({
+                title: 'Warning',
+                text: 'Augmented reality is not supported on iOS yerself. Please use a different device.',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+            });
+            this.session.signal({
+                type: "iOS",
+                data: 'true'
+            }, function(error) {
+                if (error) {
+                    console.log('Error sending signal:' + error.message);
+                } else {
+                    console.log('Signal sent.');
+                }
+            })
+        }
+
 
         //subscribe to a new stream in the session
         session.on('streamCreated', function streamCreated(event) {
@@ -131,7 +156,6 @@ class Patient {
 
 
         navigator.mediaDevices.getUserMedia({audio: true,video: true}).then(stream =>{
-
             let audioStreamTrack = stream.getAudioTracks()[0];
             //make audio stream from streamTrack
             this.audioStream = new MediaStream([audioStreamTrack]);
@@ -139,7 +163,6 @@ class Patient {
             //video streamTrack
             let videoStreamTrack = stream.getVideoTracks()[0];
             this.videoStream = new MediaStream([videoStreamTrack]);
-
         })
 
     }

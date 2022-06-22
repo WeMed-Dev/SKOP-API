@@ -1,5 +1,6 @@
 import OT from '@opentok/client';
 import {checkAPIKEY, fetchVonage} from "./functions/request";
+import Swal from "sweetalert2";
 
 /**
  * Displays any error messages.
@@ -30,6 +31,8 @@ class Doctor {
 
         const session = OT.initSession(this.apiKeyVonage, this.sessionId);
         this.session = session;
+
+
 
         session.on('streamCreated', (event) => {
             let subscriberOptions:OT.SubscriberProperties = {
@@ -64,6 +67,16 @@ class Doctor {
                 session.publish(publisher, handleError);
             }
         });
+
+
+        session.on('signal:iOS', (event) => {
+               Swal.fire({
+                    title: 'Warning',
+                    text: "Augmented reality is not supported on the patient's device.",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+               })
+        })
 
     }
 
