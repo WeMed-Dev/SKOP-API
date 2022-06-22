@@ -31,7 +31,7 @@ async function init(stream:MediaStream){
     canvas.width = 640;
     canvas.height = 480;
     await tf.ready();
-
+    console.log("Foyer - init second line tf.ready");
     //Getting video stream
     video = document.createElement('video');
     video.srcObject = stream;
@@ -39,25 +39,26 @@ async function init(stream:MediaStream){
     video.height = 480;
     await video.play();
 
-    navigator.mediaDevices
-        .getUserMedia({
-            video: true,
-            audio: false,
-        })
-        .then((stream) => {
-            video.srcObject = stream;
-            video.width = cWidth;
-            video.height = cHeight;
-            video.autoplay = true;
-
-            // check if on iOS
-            // if iOS we add certain parameters to the video
-            if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
-                video.muted = true;
-                video.playsInline = true;
-            }
-            video.play();
-        });
+    // navigator.mediaDevices
+    //     .getUserMedia({
+    //         video: true,
+    //         audio: false,
+    //     })
+    //     .then((stream) => {
+    //         video.srcObject = stream;
+    //         video.width = cWidth;
+    //         video.height = cHeight;
+    //         video.autoplay = true;
+    //
+    //         // check if on iOS
+    //         // if iOS we add certain parameters to the video
+    //         if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+    //             video.muted = true;
+    //             video.playsInline = true;
+    //         }
+    //         video.play();
+    //     });
+    console.log("Foyer - init third line getUserMedia");
 
     // When the video stream is ready, load the model
     video.addEventListener("play", async () => {
@@ -171,6 +172,7 @@ function stop(){
     //canvas.style.display = "none";
     const videoVonage = document.getElementById("publisher");
     videoVonage.style.display = "block";
+    if(intervalId == undefined) console.error("intervalId is undefined");
     clearInterval(intervalId);
 }
 
