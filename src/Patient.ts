@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
-import * as foyer from './functions/foyer';
+import * as focus from './functions/focus';
 
 
 function handleError(error) {
@@ -166,16 +166,16 @@ class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
-        //     if(res === true){
-        //         return fetchVonage(ROOM_ID).then(res=> {
-        //             return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
-        //         })
-        //     }
-        // })
-        return fetchVonage(ROOM_ID).then(res=> {
-            return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            if(res === true){
+                return fetchVonage(ROOM_ID).then(res=> {
+                    return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+                })
+            }
         })
+        // return fetchVonage(ROOM_ID).then(res=> {
+        //     return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        // })
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -202,13 +202,13 @@ class Patient {
     async augmentedReality(boolean){
         if(boolean){
             this.usingAR = boolean;
-            await foyer.init(this.videoStream).then(canvasStream => {
+            await focus.init(this.videoStream).then(canvasStream => {
                 this.initNewPublisher(canvasStream);
-                foyer.start(this.getFocus())
+                focus.start(this.getFocus())
             })
         }
         else {
-            foyer.stop();
+            focus.stop();
             this.initNewPublisher(this.audioStream);
         }
     }
@@ -242,9 +242,9 @@ class Patient {
         return this.focus;
     }
 
-    public setFocus(focus){
-        this.focus = focus;
-        if(this.usingAR) foyer.start(this.getFocus());
+    public setFocus(currentfocus){
+        this.focus = currentfocus;
+        if(this.usingAR) focus.start(this.getFocus());
     }
 
     public getIdFocus(){
@@ -298,8 +298,12 @@ class Patient {
             this.augmentedReality(true);
             this.initNewPublisher(this.audioStream);
         }
-        // DO NOT TOUCH EVER THIS WORKS PERFECTLY
+        // DO NOT TOUCH, THIS WORKS PERFECTLY
         // Even tho this is an audio stream it works whereas using the video stream it doesn't.
+        // videoStream has all his media tracks ended after some time.
+        // audioStream does not for some reason.
+        // I will rework this later.
+
         else this.initNewPublisher(this.audioStream);
     }
 }
