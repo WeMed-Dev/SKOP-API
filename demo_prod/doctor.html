@@ -31,11 +31,30 @@
             <div id="buttons">
                 <div id="div-select">
                     <select name="zones" id="zones">
-                        <option class="zones-value" value="...">Zone</option>
+                        <option class="zones-value" value="...">Foyer</option>
                         <option class="zones-value" value="Aortic">Aortique</option>
                         <option class="zones-value" value="Mitral">Mitrale</option>
-                        <option class="zones-value" value="Pulmonary">Pulmonaire</option>
                         <option class="zones-value" value="Tricuspid">Tricuspide</option>
+                        <option class="zones-value" value="ANT1L">ANT1L</option>
+                        <option class="zones-value" value="ANT1R">ANT1R</option>
+                        <option class="zones-value" value="ANT2L">ANT2L</option>
+                        <option class="zones-value" value="ANT2R">ANT2R</option>
+                        <option class="zones-value" value="ANT3L">ANT3L</option>
+                        <option class="zones-value" value="ANT3R">ANT3R</option>
+                        <option class="zones-value" value="ANT4L">ANT4L</option>
+                        <option class="zones-value" value="ANT4R">ANT4R</option>
+                        <option class="zones-value" value="ANT5L">ANT5L</option>
+                        <option class="zones-value" value="ANT5R">ANT5R</option>
+                        <option class="zones-value" value="P1L">P1L</option>
+                        <option class="zones-value" value="P1R">P1R</option>
+                        <option class="zones-value" value="P2L">P2L</option>
+                        <option class="zones-value" value="P2R">P2R</option>
+                        <option class="zones-value" value="P3L">P3L</option>
+                        <option class="zones-value" value="P3R">P3R</option>
+                        <option class="zones-value" value="P4L">P4L</option>
+                        <option class="zones-value" value="P4R">P4R</option>
+                        <option class="zones-value" value="P5L">P5L</option>
+                        <option class="zones-value" value="P5R">P5R</option>
                     </select>
                     <div id="div-range" >
                         <input type="range" min="0" max="100" value="10"  id="gainRange">
@@ -72,13 +91,11 @@
     });
 
     async function doctor(){
-        let doctor = await HalfredAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 10);
+        let doctor = await HalfredAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 11);
 
         let zone;
         let isSpaceDown = false;
         let useAR = false;
-
-
 
 
         select.addEventListener("change", (e) =>{
@@ -95,10 +112,10 @@
         AR.addEventListener("change", (e) =>{
             useAR = e.target.checked;
             if (useAR) {
-                doctor.useAR(useAR);
+                doctor.useAR(true);
                 console.log(useAR)
             } else {
-                doctor.useAR(useAR)
+                doctor.useAR(false)
             }
         })
 

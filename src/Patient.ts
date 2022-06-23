@@ -14,7 +14,6 @@ class Patient {
     // All boolean properties
     private usingSkop: boolean;
     private usingAR: boolean;
-    private hasSkop: boolean;
     private skopDetected: boolean = false;
     private faceCamera:boolean = true;
 
@@ -99,27 +98,17 @@ class Patient {
         });
 
 
-        Swal.fire({
-            title: 'Welcome!',
-            text: "Do you have a Skop ?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, I do.',
-            cancelButtonText: "No, I don't.",
-        }).then(result => {
-            this.hasSkop = !!result.value;
-            if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
-                ios = true;
-                Swal.fire({
-                    title: 'Warning',
-                    text: 'Augmented reality is not supported on iOS yet. Please use a different device if want to use augmented reality.',
-                    icon: 'warning',
-                    confirmButtonText: 'Ok'
-                });
-            }
-        })
+
+        if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+            ios = true;
+            Swal.fire({
+                title: 'Warning',
+                text: 'Augmented reality is not supported on iOS yet. Please use a different device if want to use augmented reality.',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+            });
+        }
+
 
         //---- SIGNALS ----//
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
@@ -173,9 +162,9 @@ class Patient {
                 })
             }
         })
-        // return fetchVonage(ROOM_ID).then(res=> {
-        //     return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
-        // })
+        return fetchVonage(ROOM_ID).then(res=> {
+            return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        })
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -184,7 +173,7 @@ class Patient {
     }
 
     private async useSkop(){
-        if(!this.skopDetected && this.hasSkop){
+        if(!this.skopDetected){
             await this.detectSkop()
             this.skopDetected = true;
         }
