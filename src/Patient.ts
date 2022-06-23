@@ -166,16 +166,16 @@ class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
-        // return checkAPIKEY(API_KEY_WEMED).then(res =>{
-        //     if(res === true){
-        //         return fetchVonage(ROOM_ID).then(res=> {
-        //             return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
-        //         })
-        //     }
-        // })
-        return fetchVonage(ROOM_ID).then(res=> {
-            return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        return checkAPIKEY(API_KEY_WEMED).then(res =>{
+            if(res === true){
+                return fetchVonage(ROOM_ID).then(res=> {
+                    return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
+                })
+            }
         })
+        // return fetchVonage(ROOM_ID).then(res=> {
+        //     return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        // })
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//
@@ -298,8 +298,12 @@ class Patient {
             this.augmentedReality(true);
             this.initNewPublisher(this.audioStream);
         }
-        // DO NOT TOUCH EVER THIS WORKS PERFECTLY
+        // DO NOT TOUCH, THIS WORKS PERFECTLY
         // Even tho this is an audio stream it works whereas using the video stream it doesn't.
+        // videoStream has all his media tracks ended after some time.
+        // audioStream does not for some reason.
+        // I will rework this later.
+
         else this.initNewPublisher(this.audioStream);
     }
 }
