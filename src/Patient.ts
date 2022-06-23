@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
-import * as foyer from './functions/foyer';
+import * as focus from './functions/focus';
 
 
 function handleError(error) {
@@ -202,13 +202,13 @@ class Patient {
     async augmentedReality(boolean){
         if(boolean){
             this.usingAR = boolean;
-            await foyer.init(this.videoStream).then(canvasStream => {
+            await focus.init(this.videoStream).then(canvasStream => {
                 this.initNewPublisher(canvasStream);
-                foyer.start(this.getFocus())
+                focus.start(this.getFocus())
             })
         }
         else {
-            foyer.stop();
+            focus.stop();
             this.initNewPublisher(this.audioStream);
         }
     }
@@ -242,9 +242,9 @@ class Patient {
         return this.focus;
     }
 
-    public setFocus(focus){
-        this.focus = focus;
-        if(this.usingAR) foyer.start(this.getFocus());
+    public setFocus(currentfocus){
+        this.focus = currentfocus;
+        if(this.usingAR) focus.start(this.getFocus());
     }
 
     public getIdFocus(){
