@@ -120,44 +120,158 @@ const detectFaces = async () => {
 };
 
 function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
-
-    //test pour pulmonaire
-    let xMultiplier;
-    let yMultiplier;
+    let xMultiplier:number;
+    let yMultiplier:number;
     let rateX = cWidth/640;
     let rateY = cHeight/480;
-    let color;
+    let color:string;
+    let colorANT = "#a2d2ff";
+    let colorP = "#ffa2a2";
+    let colorC = "#ff0000";
 
     switch (currentFoyer) {
-        case "Pulmonary":
+        //Pulmonary focuses
+        //frontal
+        case "ANT1L":
             xMultiplier = 1.4;
-            yMultiplier = 3.2;
+            yMultiplier = 2.2;
+            color = colorANT;
             break;
+        case "ANT1R":
+            xMultiplier = -0.6;
+            yMultiplier = 2.2;
+            color = colorANT;
+            break
+        case "ANT2L":
+            xMultiplier = 0.7;
+            yMultiplier = 3.2;
+            color = colorANT;
+            break;
+        case "ANT2R":
+            xMultiplier = 0;
+            yMultiplier = 3.2;
+            color = colorANT;
+            break;
+        case "ANT3L":
+            xMultiplier = 0.7;
+            yMultiplier = 3.7;
+            color = colorANT;
+            break;
+        case "ANT3R":
+            xMultiplier = 0;
+            yMultiplier = 3.7;
+            color = colorANT;
+            break;
+        case "ANT4L":
+            xMultiplier = 1.9;
+            yMultiplier = 3.9;
+            color = colorANT;
+            break;
+        case "ANT4R":
+            xMultiplier = -1;
+            yMultiplier = 3.9;
+            color = colorANT;
+            break;
+        case "ANT5L":
+            xMultiplier = 2.2;
+            yMultiplier = 4.9;
+            color = colorANT;
+            break;
+        case "ANT5R":
+            xMultiplier = -1.5;
+            yMultiplier = 4.9;
+            color = colorANT;
+            break;
+        //Back focuses
+        case "P1L":
+            xMultiplier = 1.4;
+            yMultiplier = 2.2;
+            color = colorP;
+            break;
+        case "P1R":
+            xMultiplier = -0.6;
+            yMultiplier = 2.2;
+            color = colorP;
+            break;
+        case "P2L":
+            xMultiplier = 1;
+            yMultiplier = 2.8;
+            color = colorP;
+            break;
+        case "P2R":
+            xMultiplier = -0.1;
+            yMultiplier = 2.8;
+            color = colorP;
+            break;
+        case "P3L":
+            xMultiplier = 0.67;
+            yMultiplier = 3.2;
+            color = colorP;
+            break;
+        case "P3R":
+            xMultiplier = 0.22;
+            yMultiplier = 3.2;
+            color = colorP;
+            break;
+        case "P4L":
+            xMultiplier = 0.80;
+            yMultiplier = 3.7;
+            color = colorP;
+            break;
+        case "P4R":
+            xMultiplier = 0;
+            yMultiplier = 3.7;
+            color = colorP;
+            break;
+        case "P5L":
+            xMultiplier = 1.2;
+            yMultiplier = 5;
+            color = colorP;
+            break;
+        case "P5R":
+            xMultiplier = -0.6;
+            yMultiplier = 5;
+            color = colorP;
+            break;
+        case "P6L":
+            break;
+        case "P6R":
+            break;
+        case "P7L":
+            break;
+        case "P7R":
+            break;
+        case "P8L":
+            break;
+        case "P8R":
+            break;
+
+        // Cardiac focuses
         case "Mitral":
             xMultiplier = 1.9;
             yMultiplier = 4.5;
-            color = "red";
+            color = colorC;
             break;
         case "Aortic":
             xMultiplier = -0.2;
             yMultiplier = 3;
+            color = colorC;
             break;
         case "Tricuspid":
             xMultiplier = 0.9;
             yMultiplier = 4.5;
+            color = colorC;
             break;
         default:
             xMultiplier = 100;
             yMultiplier = 100;
             console.error("Unknown zone, please give a zone that is in the list");
             break;
-
     }
     drawPoint((rightEyeX + (leftEyeX-rightEyeX) * xMultiplier) * rateX , (rightEyeY + (leftEyeX -rightEyeX) * yMultiplier) * rateY, color);
-
 }
 
-function drawPoint(x:number, y:number, color:string = "#a2d2ff"){
+function drawPoint(x:number, y:number, color:string = "red"){
     ctx.beginPath();
     ctx.arc(x, y, 7, 0, 2 * Math.PI);
     ctx.fillStyle = color;
