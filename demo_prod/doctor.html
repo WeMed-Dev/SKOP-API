@@ -55,6 +55,12 @@
                         <option class="zones-value" value="P4R">P4R</option>
                         <option class="zones-value" value="P5L">P5L</option>
                         <option class="zones-value" value="P5R">P5R</option>
+                        <option class="zones-value" value="P6L">P6L</option>
+                        <option class="zones-value" value="P6R">P6R</option>
+                        <option class="zones-value" value="P7L">P7L</option>
+                        <option class="zones-value" value="P7R">P7R</option>
+                        <option class="zones-value" value="P8L">P8L</option>
+                        <option class="zones-value" value="P8R">P8R</option>
                     </select>
                     <div id="div-range" >
                         <input type="range" min="0" max="100" value="10"  id="gainRange">
@@ -62,7 +68,7 @@
                 </div>
                 <div id="div-ar">
                     <label class="switch">
-                        <input type="checkbox" id="AR" checked>
+                        <input type="checkbox" id="AR">
                         <span class="slider round"></span>
                     </label>
                     <p> Réalité augmentée </p>
@@ -91,7 +97,7 @@
     });
 
     async function doctor(){
-        let doctor = await HalfredAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 11);
+        let doctor = await HalfredAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 10);
 
         let zone;
         let isSpaceDown = false;
