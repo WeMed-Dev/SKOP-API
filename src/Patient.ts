@@ -162,9 +162,9 @@ class Patient {
                 })
             }
         })
-        return fetchVonage(ROOM_ID).then(res=> {
-            return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
-        })
+        // return fetchVonage(ROOM_ID).then(res=> {
+        //     return new Patient(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
+        // })
     }
 
     //--------- SKOP MANIPULATION METHODS ---------//

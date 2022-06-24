@@ -144,32 +144,32 @@ function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
             break
         case "ANT2L":
             xMultiplier = 0.7;
-            yMultiplier = 3.2;
+            yMultiplier = 3.35;
             color = colorANT;
             break;
         case "ANT2R":
             xMultiplier = 0;
-            yMultiplier = 3.2;
+            yMultiplier = 3.35;
             color = colorANT;
             break;
         case "ANT3L":
             xMultiplier = 0.7;
-            yMultiplier = 3.7;
+            yMultiplier = 3.85;
             color = colorANT;
             break;
         case "ANT3R":
             xMultiplier = 0;
-            yMultiplier = 3.7;
+            yMultiplier = 3.85;
             color = colorANT;
             break;
         case "ANT4L":
             xMultiplier = 1.9;
-            yMultiplier = 3.9;
+            yMultiplier = 4.05;
             color = colorANT;
             break;
         case "ANT4R":
             xMultiplier = -1;
-            yMultiplier = 3.9;
+            yMultiplier = 4.05;
             color = colorANT;
             break;
         case "ANT5L":
@@ -204,46 +204,64 @@ function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
             color = colorP;
             break;
         case "P3L":
-            xMultiplier = 0.67;
+            xMultiplier = 0.685;
             yMultiplier = 3.2;
             color = colorP;
             break;
         case "P3R":
-            xMultiplier = 0.22;
+            xMultiplier = 0.235;
             yMultiplier = 3.2;
             color = colorP;
             break;
         case "P4L":
-            xMultiplier = 0.80;
+            xMultiplier = 0.815;
             yMultiplier = 3.7;
             color = colorP;
             break;
         case "P4R":
-            xMultiplier = 0;
+            xMultiplier = 0.3;
             yMultiplier = 3.7;
             color = colorP;
             break;
         case "P5L":
-            xMultiplier = 1.2;
-            yMultiplier = 5;
+            xMultiplier = 1.1;
+            yMultiplier = 4.9;
             color = colorP;
             break;
         case "P5R":
             xMultiplier = -0.6;
-            yMultiplier = 5;
+            yMultiplier = 4.9;
             color = colorP;
             break;
         case "P6L":
+            xMultiplier = 0.7;
+            yMultiplier = 6;
+            color = colorP;
             break;
         case "P6R":
+            xMultiplier = -0.7;
+            yMultiplier = 6;
+            color = colorP;
             break;
         case "P7L":
+            xMultiplier = 1.7;
+            yMultiplier = 6;
+            color = colorP;
             break;
         case "P7R":
+            xMultiplier = -1.2;
+            yMultiplier = 6;
+            color = colorP;
             break;
         case "P8L":
+            xMultiplier = 1.7;
+            yMultiplier = 5.1;
+            color = colorP;
             break;
         case "P8R":
+            xMultiplier = -1.2;
+            yMultiplier = 5.1;
+            color = colorP;
             break;
 
         // Cardiac focuses
