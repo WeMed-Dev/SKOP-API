@@ -22,13 +22,13 @@ class FilterTS{
     /**
      * This method gets the sound inpot of the user (that should be a patient) and modifies it so it is coherent with the given heartZone.
      * Afterwards the modified stream is used by the publisher instead of the direct user sound input.
-     * @param {*} heartZone
+     * @param {*} focus
      * @param {*} patient instance of the patient class
      * @param {*} apiKeyWemed api key of the wemed server
      */
-    public async ModifyAudio(heartZone, patient, apiKeyWemed) {
+    public async ModifyAudio(focus, patient, apiKeyWemed) {
 
-        if (heartZone == null) {
+        if (focus == null) {
             throw new Error("No heartZone given - cannot modify audio");
         }
 
@@ -39,7 +39,7 @@ class FilterTS{
 
   
 
-        if(heartZone === FilterTS.AORTIC || heartZone === FilterTS.MITRAL || heartZone === FilterTS.TRICUSPID){
+        if(focus === FilterTS.AORTIC || focus === FilterTS.MITRAL || focus === FilterTS.TRICUSPID){
             this.biquadFilter.type = "lowshelf"; // low shelf filter
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
             this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
@@ -47,8 +47,7 @@ class FilterTS{
             audioSource.connect(this.biquadFilter);
             this.biquadFilter.connect(audioDestination);
         }
-
-        if(heartZone === FilterTS.PULMONARY){ // les ondes entres 80 et 500 sont limitées
+        else{ // les ondes entres 80 et 500 sont limitées
 
             this.biquadFilter.type = "peaking"; // peaking filter
             this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
