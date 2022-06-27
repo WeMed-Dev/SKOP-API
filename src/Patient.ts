@@ -278,7 +278,7 @@ class Patient {
     }
 
     public mute(boolean:boolean){
-        this.publisher.publishAudio(boolean);
+        this.publisher.publishAudio(!boolean);
     }
 
     public turnCamera(){
