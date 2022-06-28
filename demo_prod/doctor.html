@@ -16,7 +16,7 @@
 </head>
 <body>
 <header>
-    <img id="img-header" src="img/demo_prod.png">
+    <img id="img-header" src="img/logo_demo.png">
 </header>
 <main>
     <h2 id="role"> Rôle : <span id="role-span">Médecin</span></h2>
@@ -31,36 +31,41 @@
             <div id="buttons">
                 <div id="div-select">
                     <select name="zones" id="zones">
-                        <option class="zones-value" value="...">Foyer</option>
-                        <option class="zones-value" value="Aortic">Aortique</option>
-                        <option class="zones-value" value="Mitral">Mitrale</option>
-                        <option class="zones-value" value="Tricuspid">Tricuspide</option>
-                        <option class="zones-value" value="ANT1L">ANT1L</option>
-                        <option class="zones-value" value="ANT1R">ANT1R</option>
-                        <option class="zones-value" value="ANT2L">ANT2L</option>
-                        <option class="zones-value" value="ANT2R">ANT2R</option>
-                        <option class="zones-value" value="ANT3L">ANT3L</option>
-                        <option class="zones-value" value="ANT3R">ANT3R</option>
-                        <option class="zones-value" value="ANT4L">ANT4L</option>
-                        <option class="zones-value" value="ANT4R">ANT4R</option>
-                        <option class="zones-value" value="ANT5L">ANT5L</option>
-                        <option class="zones-value" value="ANT5R">ANT5R</option>
-                        <option class="zones-value" value="P1L">P1L</option>
-                        <option class="zones-value" value="P1R">P1R</option>
-                        <option class="zones-value" value="P2L">P2L</option>
-                        <option class="zones-value" value="P2R">P2R</option>
-                        <option class="zones-value" value="P3L">P3L</option>
-                        <option class="zones-value" value="P3R">P3R</option>
-                        <option class="zones-value" value="P4L">P4L</option>
-                        <option class="zones-value" value="P4R">P4R</option>
-                        <option class="zones-value" value="P5L">P5L</option>
-                        <option class="zones-value" value="P5R">P5R</option>
-                        <option class="zones-value" value="P6L">P6L</option>
-                        <option class="zones-value" value="P6R">P6R</option>
-                        <option class="zones-value" value="P7L">P7L</option>
-                        <option class="zones-value" value="P7R">P7R</option>
-                        <option class="zones-value" value="P8L">P8L</option>
-                        <option class="zones-value" value="P8R">P8R</option>
+                        <optgroup label="Cardiaque">
+                            <option selected class="zones-value" value="Aortic">Aortique</option>
+                            <option class="zones-value" value="Pulmonary">Pulmonaire</option>
+                            <option class="zones-value" value="Tricuspid">Tricuspide</option>
+                            <option class="zones-value" value="Mitral">Mitrale</option>
+                        </optgroup>
+                        <optgroup label="Pulmonaire">
+                            <option class="zones-value" value="ANT1L">ANT1L</option>
+                            <option class="zones-value" value="ANT1R">ANT1R</option>
+                            <option class="zones-value" value="ANT2L">ANT2L</option>
+                            <option class="zones-value" value="ANT2R">ANT2R</option>
+                            <option class="zones-value" value="ANT3L">ANT3L</option>
+                            <option class="zones-value" value="ANT3R">ANT3R</option>
+                            <option class="zones-value" value="ANT4L">ANT4L</option>
+                            <option class="zones-value" value="ANT4R">ANT4R</option>
+                            <option class="zones-value" value="ANT5L">ANT5L</option>
+                            <option class="zones-value" value="ANT5R">ANT5R</option>
+                            <option class="zones-value" value="P1L">P1L</option>
+                            <option class="zones-value" value="P1R">P1R</option>
+                            <option class="zones-value" value="P2L">P2L</option>
+                            <option class="zones-value" value="P2R">P2R</option>
+                            <option class="zones-value" value="P3L">P3L</option>
+                            <option class="zones-value" value="P3R">P3R</option>
+                            <option class="zones-value" value="P4L">P4L</option>
+                            <option class="zones-value" value="P4R">P4R</option>
+                            <option class="zones-value" value="P5L">P5L</option>
+                            <option class="zones-value" value="P5R">P5R</option>
+                            <option class="zones-value" value="P6L">P6L</option>
+                            <option class="zones-value" value="P6R">P6R</option>
+                            <option class="zones-value" value="P7L">P7L</option>
+                            <option class="zones-value" value="P7R">P7R</option>
+                            <option class="zones-value" value="P8L">P8L</option>
+                            <option class="zones-value" value="P8R">P8R</option>
+                        </optgroup>
+
                     </select>
                     <div id="div-range" >
                         <input type="range" min="0" max="100" value="10"  id="gainRange">
@@ -111,6 +116,8 @@
             //set focus on btnStart
             btnStart.focus();
         });
+
+
         gainRange.oninput = function() {
             doctor.setGain(this.value);
         };
@@ -151,6 +158,7 @@
                 if (listenState == true) {
                     doctor.useSkop();
                     btnStart.style.backgroundColor = "rgba(106,0,255,0.91)";
+                    console.log("Listening to " + zone);
                 }
                 else {
                     doctor.stopUsingSkop();
