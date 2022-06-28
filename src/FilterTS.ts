@@ -47,11 +47,19 @@ class FilterTS{
             audioSource.connect(this.biquadFilter);
             this.biquadFilter.connect(audioDestination);
         }
-        else{ // les ondes entres 80 et 500 sont limitées
-
+        else if(focus === FilterTS.PULMONARY){// les ondes entres 80 et 500 sont limitées
             this.biquadFilter.type = "peaking"; // peaking filter
             this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
             this.biquadFilter.Q.setValueAtTime(10, this.audioCtx.currentTime);
+
+            // connect the nodes together
+            audioSource.connect(this.biquadFilter);
+            this.biquadFilter.connect(audioDestination);
+        }
+        else{ //todo : ajouter les foyer pneumo
+            this.biquadFilter.type = "lowshelf"
+            this.biquadFilter.frequency.setValueAtTime(800, this.audioCtx.currentTime);
+            this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
 
             // connect the nodes together
             audioSource.connect(this.biquadFilter);
