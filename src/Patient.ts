@@ -99,17 +99,6 @@ class Patient {
 
 
 
-        if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
-            ios = true;
-            Swal.fire({
-                title: 'Warning',
-                text: 'Augmented reality is not supported on iOS yet. Please use a different device if want to use augmented reality.',
-                icon: 'warning',
-                confirmButtonText: 'Ok'
-            });
-        }
-
-
         //---- SIGNALS ----//
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:startSkop", function(event:any) {
@@ -233,6 +222,7 @@ class Patient {
 
     public setFocus(currentfocus){
         this.focus = currentfocus;
+        if(this.usingSkop) this.useSkop()
         if(this.usingAR) focus.start(this.getFocus());
     }
 

@@ -1,8 +1,12 @@
 {
   "name": "halfred-api",
-  "version": "0.0.16",
+  "version": "1.0.1",
   "description": "API for the Skop",
   "main": "dist/HalfredAPI.js",
+  "files": [
+    "dist"
+  ],
+  "license": "",
   "keywords": [
     "api",
     "skop",
@@ -18,7 +22,6 @@
     "url": "https://github.com/BenGregory23/Halfred-documentation.git"
   },
   "homepage": "https://github.com/BenGregory23/Halfred-documentation#readme",
-
   "scripts": {
     "build": "webpack"
   },

@@ -3,9 +3,10 @@ const loader = require("ts-loader");
 
 module.exports = {
   entry: './src/index.ts',
-  mode: 'development',
-  devtool: "inline-source-map",
-  resolve: {
+  mode: 'production',
+  //devtool: "inline-source-map",
+  target: "web",
+    resolve: {
     extensions: ['.ts','.js'],
   },
     module: {
@@ -20,7 +21,5 @@ module.exports = {
         filename: 'HalfredAPI.js',
         path: path.resolve(__dirname, 'dist'),
         library: 'HalfredAPI',
-
-
     },
 };
