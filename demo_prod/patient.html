@@ -21,7 +21,7 @@
 <body>
 
 <header>
-    <img id="img-header" src="img/demo_prod.png">
+    <img id="img-header" src="img/logo_demo.png">
 </header>
 
 <main>
@@ -51,6 +51,11 @@
     let btnTurn = document.getElementById("turn");
 
     async function patient(){
+        //get session id in url
+        let url = new URL(window.location.href);
+        let sessionId = url.searchParams.get("sessionId");
+        //todo create a system to create a random id if none is provided
+
         let patient = await HalfredAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a",10);
         role.innerText = "Patient"
 
@@ -68,8 +73,6 @@
         if(!navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
             btnTurn.style.display = "none";
         }
-
-
     }
     patient();
 

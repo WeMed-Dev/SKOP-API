@@ -18,8 +18,8 @@ module.exports = {
         }],
     },
     output: {
-        filename: 'HalfredAPI.js',
+        filename: 'SkopAPI.js',
         path: path.resolve(__dirname, 'dist'),
-        library: 'HalfredAPI',
+        library: 'SkopAPI',
     },
 };
