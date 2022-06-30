@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/patient.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+    <h1>SKOP<span class="copyright">®</span> API</h1>
+</header>
+
+<div class="backgroundThrough" id="div-patient">
+    <div id="container-subscriber-publisher">
+
+        <div id="div-subscriber">
+            <div id="subscriber" class="video"></div>
+            <p class="role">MÉDECIN</p>
+        </div>
+
+        <div id="div-publisher">
+            <div id="publisher" class="video"></div>
+
+            <p class="role">PATIENT</p>
+        </div>
+
+
+    </div>
+    <button id="end" class="button" href="endCall.html">DÉCONNEXION</button>
+</div>
+<p id="p-powered">powered by WEMED</p>
+
+
+</body>
+<script src="../dist/SkopAPI.js"></script>
+<script defer>
+    let btnEnd = document.getElementById("end");
+
+
+
+    async function patient(){
+        //get session id in url
+        let url = new URL(window.location.href);
+        let sessionId = url.searchParams.get("sessionId");
+        //todo create a system to create a random id if none is provided
+
+        let patient = await SkopAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a",111);
+
+        btnEnd.addEventListener("click",function(){
+            if(patient == undefined){
+                window.location.href = "endCall.html";
+            }else{
+                patient.disconnect();
+                window.location.href = "endCall.html";
+            }
+        });
+
+    }
+    patient();
+</script>
+</html>

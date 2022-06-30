@@ -1,0 +1,108 @@
+body{
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    padding: 0px;
+    /* UI Properties */
+    background: transparent linear-gradient(61deg, #55D8ED 0%, #54EFC3 100%) 0% 0% no-repeat padding-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+header{
+    text-align: center;
+    color: #ffffff;
+    font-size: 2.2rem;
+}
+header .copyright{
+    font-size: 1.2rem;
+}
+
+.select{
+    padding: 0.7rem 1rem;
+    font-size: 1.2rem;
+    border-radius: 40px;
+    background-color: transparent;
+    border: 3px solid #417E80;
+    color : #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    margin: 15px;
+    text-align: center;
+}
+
+.select option{
+    background-color: transparent;
+    color : white;
+    text-align: left;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+}
+
+optgroup{
+    background-color: transparent;
+    color : white;
+    text-align: left;
+}
+
+.select:hover{
+    background-color: #417E80;
+    color : #ffffff;
+}
+.select:focus{
+    background-color: #417E80;
+    color : #ffffff;
+}
+
+
+.button{
+    text-decoration: none;
+    background: rgba(253, 253, 253, 0.93) 0% 0% no-repeat padding-box;
+    outline: none;
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 40px;
+    font-family: 'Montserrat', sans-serif;
+    margin:1rem;
+    color: #54EFC3;
+    font-size: 1.2rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover{
+  background-color: #417E80;
+    color: white;
+}
+
+.buttonActive{
+    background-color: #ff0000;
+    color: white;
+}
+
+.backgroundThrough{
+    padding: 20px;
+    background: rgba(253, 253, 253, 0.25);
+    border-radius: 15px;
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+video{
+    border-radius: 10px!important;
+}
+.video *{
+    border-radius: 10px;
+    background-color: transparent!important;
+}
+
+
+
+
+#p-powered{
+    color: white;
+    font-size: 1rem;
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');

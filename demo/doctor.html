@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Médecin</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/doctor.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+<header>
+    <h1>SKOP<span class="copyright">®</span> API</h1>
+</header>
+<div class="backgroundThrough" id="div-doctor">
+<div id="container-subscriber-publisher">
+        <div id="left">
+            <div id="publisher" class="video"></div>
+            <span class="role">MÉDECIN</span>
+
+
+            <div id="container-buttons">
+                <div id="buttons">
+                    <div id="volume-container">
+
+                        <label id="volume-label">VOLUME</label>
+                        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+
+
+                    </div>
+                    <select id="foyers" class="select">
+                        <optgroup label="Cardiaque">
+                            <option selected class="zones-value" value="Aortic">AORTIQUE</option>
+                            <option class="zones-value" value="Pulmonary">PULMONAIRE</option>
+                            <option class="zones-value" value="Tricuspid">TRICUSPIDE</option>
+                            <option class="zones-value" value="Mitral">MITRALE</option>
+                        </optgroup>
+                        <optgroup label="Pulmonaire">
+                            <option class="zones-value" value="ANT1L">ANT1L</option>
+                            <option class="zones-value" value="ANT1R">ANT1R</option>
+                            <option class="zones-value" value="ANT2L">ANT2L</option>
+                            <option class="zones-value" value="ANT2R">ANT2R</option>
+                            <option class="zones-value" value="ANT3L">ANT3L</option>
+                            <option class="zones-value" value="ANT3R">ANT3R</option>
+                            <option class="zones-value" value="ANT4L">ANT4L</option>
+                            <option class="zones-value" value="ANT4R">ANT4R</option>
+                            <option class="zones-value" value="ANT5L">ANT5L</option>
+                            <option class="zones-value" value="ANT5R">ANT5R</option>
+                            <option class="zones-value" value="P1L">P1L</option>
+                            <option class="zones-value" value="P1R">P1R</option>
+                            <option class="zones-value" value="P2L">P2L</option>
+                            <option class="zones-value" value="P2R">P2R</option>
+                            <option class="zones-value" value="P3L">P3L</option>
+                            <option class="zones-value" value="P3R">P3R</option>
+                            <option class="zones-value" value="P4L">P4L</option>
+                            <option class="zones-value" value="P4R">P4R</option>
+                            <option class="zones-value" value="P5L">P5L</option>
+                            <option class="zones-value" value="P5R">P5R</option>
+                            <option class="zones-value" value="P6L">P6L</option>
+                            <option class="zones-value" value="P6R">P6R</option>
+                            <option class="zones-value" value="P7L">P7L</option>
+                            <option class="zones-value" value="P7R">P7R</option>
+                            <option class="zones-value" value="P8L">P8L</option>
+                            <option class="zones-value" value="P8R">P8R</option>
+                        </optgroup>
+                    </select>
+
+
+                    <div id="div-ar">
+                        <label class="switch">
+                            <input type="checkbox" id="AR">
+                            <span class="slider"></span>
+                        </label>
+                        RÉALITÉ AUGMENTÉE
+                    </div>
+
+                    <button class="button" id="listen">ÉCOUTER</button>
+                </div>
+
+            </div>
+
+        </div>
+        <div id="right">
+            <div id="subscriber" class="video"></div>
+            <span class="role">PATIENT</span>
+        </div>
+
+</div>
+
+
+<div id="bottom">
+<button class="button" id="end">DÉCONNEXION</button>
+</div>
+
+</div>
+<p id="p-powered">powered by WEMED</p>
+
+</body>
+<script src="../dist/SkopAPI.js"></script>
+<script>
+
+    let select = document.getElementById("foyers");
+    let gainRange = document.getElementById("volume");
+    let btnDeconnexion = document.getElementById("end");
+    let btnListen = document.getElementById("listen");
+    let btnAR = document.getElementById("AR");
+
+
+    async function doctor(){
+        let doctor = await SkopAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 111);
+
+        btnDeconnexion.addEventListener("click", () => {
+            if(doctor == undefined) window.location.href = "./endCall.html";
+            else{
+                doctor.disconnect();
+                window.location.href = "./endCall.html";
+            }
+        });
+
+
+        select.addEventListener("change", (e) =>{
+            doctor.setCurrentFocus(e.target.value);
+            console.log(doctor.getCurrentFocus());
+            btnListen.focus();
+        });
+
+
+        gainRange.oninput = function() {
+            doctor.setGain(this.value);
+        };
+
+        AR.addEventListener("change", (e) =>{
+
+            if (e.target.checked) {
+                doctor.useAR(true);
+                console.log(e.target.checked);
+            } else {
+                doctor.useAR(false)
+            }
+        })
+
+        let listenState = false;
+        btnListen.addEventListener("click", () => {
+                listenState = !listenState;
+                if (listenState == true) {
+                    btnListen.classList.add("buttonActive");
+                    doctor.useSkop();
+                    //Add class
+                }
+                else {
+                    btnListen.classList.remove("buttonActive");
+                    doctor.stopUsingSkop();
+                    //Remove class
+                }
+            }
+        );
+    }
+    doctor();
+
+</script>
+</html>

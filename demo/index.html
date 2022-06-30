@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SKOP API</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+    <h1>SKOP<span class="copyright">®</span> API</h1>
+</header>
+<main>
+    <div id="home">
+        <p id="p-welcome"> Bonjour, <br> merci d'utiliser notre service SKOP API pour cette téléconsultation. </p>
+        <select id="select-role" class="select" >
+            <option selected>CHOISISSEZ VOTRE RÔLE</option>
+            <option value="doctor">MEDECIN</option>
+            <option value="patient">PATIENT</option>
+        </select>
+        <a class="button" id="btn-connexion">CONNEXION</a>
+    </div>
+    <p id="p-powered">powered by WEMED</p>
+</main>
+
+
+
+</body>
+<script src="../dist/SkopAPI.js"></script>
+<script defer>
+    let btnConnect = document.getElementById("btn-connexion");
+    let select = document.getElementById("select-role");
+    let role = select.value;
+
+    select.addEventListener("change",function(){
+        role = select.value;
+        console.log(role);
+    });
+
+    btnConnect.addEventListener("click",function(){
+        if(role == "doctor"){
+            window.location.href = "doctor.html";
+        }
+        else if(role == "patient"){
+            window.location.href = "patient.html";
+        }
+    });
+</script>
+</html>
