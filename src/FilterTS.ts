@@ -39,20 +39,10 @@ class FilterTS{
 
   
 
-        if(focus === FilterTS.AORTIC || focus === FilterTS.MITRAL || focus === FilterTS.TRICUSPID){
+        if(focus === FilterTS.AORTIC || focus === FilterTS.MITRAL || focus === FilterTS.TRICUSPID || focus === FilterTS.PULMONARY){
             this.biquadFilter.type = "lowshelf"; // low shelf filter
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
             this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
-
-            audioSource.connect(this.biquadFilter);
-            this.biquadFilter.connect(audioDestination);
-        }
-        else if(focus === FilterTS.PULMONARY){// les ondes entres 80 et 500 sont limitées
-            this.biquadFilter.type = "peaking"; // peaking filter
-            this.biquadFilter.frequency.setValueAtTime(290, this.audioCtx.currentTime);
-            this.biquadFilter.Q.setValueAtTime(10, this.audioCtx.currentTime);
-
-            // connect the nodes together
             audioSource.connect(this.biquadFilter);
             this.biquadFilter.connect(audioDestination);
         }
