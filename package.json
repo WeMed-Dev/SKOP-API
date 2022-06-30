@@ -1,8 +1,8 @@
 {
-  "name": "halfred-api",
+  "name": "skop-api",
   "version": "1.0.1",
   "description": "API for the Skop",
-  "main": "dist/HalfredAPI.js",
+  "main": "dist/SkopAPI.js",
   "files": [
     "dist"
   ],
@@ -10,8 +10,6 @@
   "keywords": [
     "api",
     "skop",
-    "halfred",
-    "halfred-api",
     "health api",
     "health",
     "WeMed"
@@ -19,9 +17,9 @@
   "author": "Ben Gregory",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BenGregory23/Halfred-documentation.git"
+    "url": "https://github.com/BenGregory23/SKOP-API-documentation.git"
   },
-  "homepage": "https://github.com/BenGregory23/Halfred-documentation#readme",
+  "homepage": "https://github.com/BenGregory23/SKOP-API-documentation#readme",
   "scripts": {
     "build": "webpack"
   },
