@@ -56,7 +56,7 @@
         let sessionId = url.searchParams.get("sessionId");
         //todo create a system to create a random id if none is provided
 
-        let patient = await SkopAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a",11);
+        let patient = await SkopAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a",10);
         role.innerText = "Patient"
 
         btnEnd.addEventListener("click", function(e){
