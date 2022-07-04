@@ -5,4 +5,4 @@ The Skop is a medical device that is used to communicate with a doctor and liste
 
 The company behind the Skop is called [WeMed](https://en.wemed.fr/ )
 
-> Check out the [**Demo here**](https://Halfred.wemed.fr/demo_prod)
+> Check out the [**Demo here**](https://Halfred.wemed.fr/demo)
