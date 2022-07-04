@@ -187,7 +187,10 @@ class Patient {
         }
         else {
             focus.stop();
-            this.initNewPublisher(this.audioStream);
+            navigator.mediaDevices.getUserMedia({audio: true,video: true}).then(stream =>{
+                this.initNewPublisher(stream);
+            })
+
         }
     }
 
