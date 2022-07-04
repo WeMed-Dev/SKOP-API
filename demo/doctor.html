@@ -15,9 +15,10 @@
 <div class="backgroundThrough" id="div-doctor">
 <div id="container-subscriber-publisher">
         <div id="left">
-            <div id="publisher" class="video"></div>
-            <span class="role">MÉDECIN</span>
-
+            <div>
+                <div id="publisher" class="video"></div>
+                <span class="role">MÉDECIN</span>
+            </div>
 
             <div id="container-buttons">
                 <div id="buttons">
@@ -98,16 +99,24 @@
 </body>
 <script src="../dist/SkopAPI.js"></script>
 <script>
-
     let select = document.getElementById("foyers");
     let gainRange = document.getElementById("volume");
     let btnDeconnexion = document.getElementById("end");
     let btnListen = document.getElementById("listen");
     let btnAR = document.getElementById("AR");
 
-
     async function doctor(){
-        let doctor = await SkopAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", 111);
+        //get session id in url
+        let url = new URL(window.location.href);
+        let room = url.searchParams.get("room");
+
+        if(room == null){
+            //room random
+            room = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+        }
+
+        console.log(room);
+        let doctor = await SkopAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", room);
 
         btnDeconnexion.addEventListener("click", () => {
             if(doctor == undefined) window.location.href = "./endCall.html";
@@ -117,13 +126,11 @@
             }
         });
 
-
         select.addEventListener("change", (e) =>{
             doctor.setCurrentFocus(e.target.value);
             console.log(doctor.getCurrentFocus());
             btnListen.focus();
         });
-
 
         gainRange.oninput = function() {
             doctor.setGain(this.value);

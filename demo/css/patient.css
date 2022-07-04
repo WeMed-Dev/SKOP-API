@@ -58,8 +58,8 @@ body{
     }
     #subscriber, #publisher{
         margin: 0.5rem;
-        width: 60vw;
-        height: 34vw;
+        width: 50vw;
+        height: 28vw;
     }
 
     #end{
