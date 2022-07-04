@@ -43,6 +43,7 @@ class FilterTS{
             this.biquadFilter.type = "lowshelf"; // low shelf filter
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
             this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
+
             audioSource.connect(this.biquadFilter);
             this.biquadFilter.connect(audioDestination);
         }

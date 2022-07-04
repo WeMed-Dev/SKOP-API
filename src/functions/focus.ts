@@ -275,7 +275,7 @@ function drawFocuses(eyeDistance:number, rightEyeX, rightEyeY, leftEyeX){
             yMultiplier = 3;
             color = colorC;
             break;
-            case "Pulmonary":
+        case "Pulmonary":
             xMultiplier = 1.4;
             yMultiplier = 3.2;
             color = colorC;

@@ -1,0 +1,295 @@
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    accent-color: #417E80;
+}
+
+
+#div-doctor{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+}
+
+#container-subscriber-publisher{
+    display: flex;
+    width: max-content;
+}
+
+#left{
+    width: 30%;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#publisher{
+    width: 17vw;
+    height: 10vw;
+    background-color: #2D2D2D;
+    border-radius: 10px;
+    justify-self: flex-start;
+}
+
+#left span {
+
+    font-weight: 600;
+    line-height: 2;
+    color: #ffffff;
+}
+
+#container-buttons{
+
+    display: flex;
+    flex-grow: 10;
+    width: 100%;
+
+    justify-content: space-around;
+    align-items: center;
+    max-width: max-content;
+}
+
+#buttons{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: max-content;
+    height: 100%;
+}
+
+#volume-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+}
+
+#volume{
+    width: 100%;
+    background-color: #2D2D2D;
+    border-radius: 10px;
+    height: 0.35rem;
+
+}
+
+#volume-label{
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #ffffff;
+}
+
+#buttons select{
+    width: 100%;
+}
+
+/*!* Button AR *!*/
+
+#div-ar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color:  white;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 62px;
+    height: 35px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 1;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.switch{
+    margin-right: 0.3rem;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    background: #d8d8d8;
+    transition: .4s;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1.9em;
+    width: 1.9em;
+    border-radius: 16px;
+    left: 1.2px;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px #999999;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #417e80;
+    border: 1px solid transparent;
+}
+
+input:checked + .slider:before {
+    transform: translateX(1.5em);
+}
+
+/* Div on the right */
+#right{
+    width: 70%;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* container for the subscriber video stream */
+#subscriber{
+    width: 45vw;
+    height: 25vw;
+    background-color: #2D2D2D;
+    border-radius: 10px;
+}
+
+/* span containing the role of the stream */
+.role{
+    font-size: 1.3rem;
+    font-weight : 600;
+    color: white;
+    margin-top: 5px;
+}
+
+/* button to quit the call */
+#end{
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-color: #417E80;
+    color: white;
+}
+
+#end:hover{
+    background-color: #FF0000;
+}
+
+
+/* IPAD AND TABLET LANDSCAPE*/
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1080px)
+and (orientation : landscape) {
+
+    #right, #left{
+           width: 100%;
+
+    }
+
+    #publisher{
+        width: 20vw;
+        height: 11vw;
+    }
+
+    #subscriber{
+        width: 52vw;
+        height: 29vw;
+
+    }
+
+    #buttons{
+        width: 90%;
+
+    }
+
+
+
+    #end{
+        font-size: 1.1rem;
+    }
+
+}
+
+
+
+@media screen and (max-width: 1280px) {
+    header{
+        font-size: 1rem;
+    }
+
+    #div-doctor{
+
+        width: 80vw;
+    }
+
+    #right{
+        width: fit-content;
+        margin: 0;
+        align-items: center;
+    }
+
+    #container-subscriber-publisher
+    {
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    #subscriber{
+        width: 55vw;
+        height: 31vw;
+    }
+
+    #left{
+        flex-direction: row-reverse;
+        justify-content: space-around;
+        width: max-content;
+    }
+
+
+
+    #publisher{
+        width: 25vw;
+        height: 14vw;
+    }
+
+    #container-buttons{
+        width: 100vw;
+        margin-right: 2rem;
+    }
+
+    #buttons{
+
+        width: 100%;
+        width: max-content;
+    }
+
+    #listen, #div-ar, #foyers, #volume-label{
+        font-size: 1rem;
+    }
+
+    #end{
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+}
