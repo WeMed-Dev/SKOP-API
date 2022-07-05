@@ -1,5 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 import * as blazeface from '@tensorflow-models/blazeface';
+import Swal from "sweetalert2";
 
 require("@tensorflow/tfjs-backend-webgl");
 
@@ -15,13 +16,20 @@ let currentFoyer:string;
 let stopAnimation = false;
 
 
+let distanceCamera: number;
+let oldDistanceCamera: number;
+let eyeSight:boolean = true;
+
+let image2:HTMLImageElement;
+
+
 
 /**
  * Initiates the logic for augmented reality.
  * Todo make it possible to use 16:9 ratio.
  */
 async function init(stream:MediaStream){
-    console.log("Foyer - init first line");
+
     canvas = document.createElement('canvas');
     cWidth = 640;
     cHeight = 480;
@@ -32,7 +40,7 @@ async function init(stream:MediaStream){
     canvas.width = 640;
     canvas.height = 480;
     await tf.ready();
-    console.log("Foyer - init second line tf.ready");
+
     //Getting video stream
     video = document.createElement('video');
 
@@ -64,14 +72,41 @@ async function init(stream:MediaStream){
         model = await blazeface.load();
         await detectFaces();
         console.log("Loaded Blazeface")
+        if(eyeSight === true){
+
+
+            Swal.fire({
+                position: 'top',
+                html: '<div> <img src="https://i.ibb.co/PFsd4cR/monoyer.png" id="monoyer" style="  top: 5%; left: 40%;"/>  </div>',
+                showConfirmButton: false,
+                showCloseButton: true,
+            })
+
+            image2 = document.getElementById("monoyer") as HTMLImageElement;
+            // image2 = document.createElement('img');
+            // image2.src = "https://i.ibb.co/PFsd4cR/monoyer.png";
+            // //image is absolutely positioned at center of the screen
+            // image2.style.position = "absolute";
+            // image2.style.top = "5%";
+            // image2.style.left = "40%";
+
+            //document.body.appendChild(image2);
+        }
 
     })
+
+
+
+
+
     return canvas.captureStream(30)
 }
 
 const detectFaces = async () => {
     console.log("Detectfaces")
     try{
+
+
         let rateX = cWidth/640;
         let rateY = cHeight/480;
         if(model === undefined) return;
@@ -104,7 +139,24 @@ const detectFaces = async () => {
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 console.log("Drawings done");
+
+                //distance between eyes and camera
+
+                oldDistanceCamera = distanceCamera;
+                distanceCamera = (1/(distance/90)) * 50;
+
+
+
+
                 ctx.restore();
+                if(oldDistanceCamera - Math.abs(distanceCamera) > 1){
+                    image2.width = ((((((1/60)*Math.PI/180)*(distanceCamera/100))*5)*1000)*11/2.55*381/11);
+                    image2.height = ((((((1/60)*Math.PI/180)*(distanceCamera/100))*5)*1000)*11/2.55*863/11);
+                }
+
+
+
+
             }else{
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "rgb(255,7,7)";
@@ -303,6 +355,11 @@ function drawPoint(x:number, y:number, color:string = "red"){
     ctx.stroke();
 }
 
+
+
+
+
+
 async function start(foyer:string){
     currentFoyer = foyer;
     stopAnimation = false;
@@ -313,3 +370,6 @@ function stop(){
 }
 
 export {init, start, stop};
+
+
+
