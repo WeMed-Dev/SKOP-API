@@ -75,6 +75,8 @@
                         RÉALITÉ AUGMENTÉE
                     </div>
 
+                    <button id="monoyer" class="button">Afficher Monoyer</button>
+
                     <button class="button" id="listen">ÉCOUTER</button>
                 </div>
 
@@ -104,6 +106,7 @@
     let btnDeconnexion = document.getElementById("end");
     let btnListen = document.getElementById("listen");
     let btnAR = document.getElementById("AR");
+    let btnMonoyer = document.getElementById("monoyer");
 
     async function doctor(){
         //get session id in url
@@ -145,6 +148,20 @@
                 doctor.useAR(false)
             }
         })
+
+        let stateMonoyer = false;
+        btnMonoyer.addEventListener("click", () => {
+            if(stateMonoyer == false){
+                doctor.useMonoyer(true);
+                stateMonoyer = true;
+                AR.checked = true;
+            }
+            else{
+                doctor.useMonoyer(false);
+                stateMonoyer = false;
+                AR.checked = false;
+            }
+        });
 
         let listenState = false;
         btnListen.addEventListener("click", () => {
