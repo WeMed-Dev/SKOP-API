@@ -130,6 +130,15 @@ class Patient {
             self.setFocus(event.data);
         });
 
+        session.on("signal:monoyer", function(event:any) {
+            if(event.data === "on"){
+                self.toggleMonoyer(true);
+            }
+            else{
+                self.toggleMonoyer(false);
+            }
+        })
+
 
         navigator.mediaDevices.getUserMedia({audio: true,video: true}).then(stream =>{
             let audioStreamTrack = stream.getAudioTracks()[0];
@@ -193,6 +202,13 @@ class Patient {
 
         }
     }
+
+    public toggleMonoyer(toggle:boolean){
+        if(toggle === true) this.augmentedReality(true);
+        else if (toggle === false) this.augmentedReality(false);
+        focus.toggleMonoyer(toggle);
+    }
+
 
     //--------- GETTER AND SETTER  ---------//
 
