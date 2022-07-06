@@ -18,7 +18,7 @@ let stopAnimation = false;
 
 let distanceCamera: number;
 let oldDistanceCamera: number;
-let eyeSight:boolean = true;
+let monoyer:boolean =false;
 
 let image2:HTMLImageElement;
 
@@ -72,41 +72,22 @@ async function init(stream:MediaStream){
         model = await blazeface.load();
         await detectFaces();
         console.log("Loaded Blazeface")
-        if(eyeSight === true){
-
-
+        if(monoyer === true){
             Swal.fire({
                 position: 'top',
                 html: '<div> <img src="https://i.ibb.co/PFsd4cR/monoyer.png" id="monoyer" style="  top: 5%; left: 40%;"/>  </div>',
                 showConfirmButton: false,
                 showCloseButton: true,
             })
-
             image2 = document.getElementById("monoyer") as HTMLImageElement;
-            // image2 = document.createElement('img');
-            // image2.src = "https://i.ibb.co/PFsd4cR/monoyer.png";
-            // //image is absolutely positioned at center of the screen
-            // image2.style.position = "absolute";
-            // image2.style.top = "5%";
-            // image2.style.left = "40%";
-
-            //document.body.appendChild(image2);
         }
-
     })
-
-
-
-
-
     return canvas.captureStream(30)
 }
 
 const detectFaces = async () => {
-    console.log("Detectfaces")
     try{
-
-
+        console.log(monoyer);
         let rateX = cWidth/640;
         let rateY = cHeight/480;
         if(model === undefined) return;
@@ -140,21 +121,21 @@ const detectFaces = async () => {
                 drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
                 console.log("Drawings done");
 
-                //distance between eyes and camera
-
-                oldDistanceCamera = distanceCamera;
-                distanceCamera = (1/(distance/90)) * 50;
-
-
-
 
                 ctx.restore();
-                if(oldDistanceCamera - Math.abs(distanceCamera) > 1){
-                    image2.width = ((((((1/60)*Math.PI/180)*(distanceCamera/100))*5)*1000)*11/2.55*381/11);
-                    image2.height = ((((((1/60)*Math.PI/180)*(distanceCamera/100))*5)*1000)*11/2.55*863/11);
+                if(monoyer === true){
+                    //distance between eyes and camera
+                    oldDistanceCamera = distanceCamera;
+                    distanceCamera = (1/(distance/90)) * 50;
+                    if(oldDistanceCamera - Math.abs(distanceCamera) > 1){
+                        image2.width = ((((((1/60)*Math.PI/180)*(distanceCamera/100))*5)*1000)*11/2.55*381/11);
+                        image2.height = ((((((1/60)*Math.PI/180)*(distanceCamera/100))*5)*1000)*11/2.55*863/11);
+                    }
                 }
-
-
+                else if (monoyer === false){
+                    Swal.close();
+                    console.log("Monoyer closed");
+                }
 
 
             }else{
@@ -356,10 +337,6 @@ function drawPoint(x:number, y:number, color:string = "red"){
 }
 
 
-
-
-
-
 async function start(foyer:string){
     currentFoyer = foyer;
     stopAnimation = false;
@@ -369,7 +346,13 @@ function stop(){
     stopAnimation = true;
 }
 
-export {init, start, stop};
+
+function toggleMonoyer(toggle:boolean){
+  monoyer = toggle;
+  console.log(monoyer);
+}
+
+export {init, start, stop, toggleMonoyer};
 
 
 
