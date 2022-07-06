@@ -161,6 +161,20 @@ class Doctor {
         })
     }
 
+    private signalMonoyer(toggle:string){
+        this.session.signal({
+            type: 'monoyer',
+            data: toggle
+        }, function(error) {
+            if (error) {
+                console.log('Error sending signal:' + error.message);
+            } else {
+                console.log('Signal sent.');
+            }
+        })
+    }
+
+
     //--- USING SKOP ---//
 
     public useSkop(){
@@ -202,6 +216,10 @@ class Doctor {
             throw new TypeError("Argument must be a boolean");
         }
         this.signalUseAugmentedReality(useAR);
+    }
+
+    public useMonoyer(toggle:boolean){
+        this.signalMonoyer(toggle ? "on" : "off");
     }
     //-- SESSION ---//
     public disconnect(){
