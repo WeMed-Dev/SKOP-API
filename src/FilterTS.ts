@@ -47,7 +47,7 @@ class FilterTS{
             audioSource.connect(this.biquadFilter);
             this.biquadFilter.connect(audioDestination);
         }
-        else{ //todo : ajouter les foyer pneumo
+        else{ 
             this.biquadFilter.type = "lowshelf"
             this.biquadFilter.frequency.setValueAtTime(800, this.audioCtx.currentTime);
             this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
