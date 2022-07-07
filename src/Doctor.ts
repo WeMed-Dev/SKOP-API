@@ -220,6 +220,14 @@ class Doctor {
 
     public useMonoyer(toggle:boolean){
         this.signalMonoyer(toggle ? "on" : "off");
+        if(toggle){
+            Swal.fire({
+                position: 'top',
+                html: '<div> <img src="https://i.ibb.co/PFsd4cR/monoyer.png" id="monoyer" style="  top: 5%; left: 40%;"/>  </div>',
+                showConfirmButton: false,
+                showCloseButton: true,
+            })
+        }
     }
     //-- SESSION ---//
     public disconnect(){
