@@ -4,7 +4,7 @@ import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
 import * as focus from './functions/focus';
-import {Sound} from "./SoundTest/Sound";
+
 
 
 function handleError(error) {
