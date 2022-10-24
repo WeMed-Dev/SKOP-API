@@ -29,7 +29,7 @@ let image2:HTMLImageElement;
  * Todo make it possible to use 16:9 ratio.
  */
 async function init(stream:MediaStream){
-
+    model = await blazeface.load();
     canvas = document.createElement('canvas');
     cWidth = 640;
     cHeight = 480;
@@ -69,7 +69,7 @@ async function init(stream:MediaStream){
 
     // When the video stream is ready, load the model
     video.addEventListener("play", async () => {
-        model = await blazeface.load();
+        //model = await blazeface.load();
         await detectFaces();
         console.log("Loaded Blazeface")
         if(monoyer === true){
