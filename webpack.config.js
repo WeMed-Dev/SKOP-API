@@ -3,7 +3,7 @@ const loader = require("ts-loader");
 
 module.exports = {
   entry: './src/index.ts',
-  mode: 'production',
+  mode: 'development',
   //devtool: "inline-source-map",
   target: "web",
     resolve: {
@@ -20,6 +20,7 @@ module.exports = {
     output: {
         filename: 'SkopAPI.js',
         path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'demo'),
         library: 'SkopAPI',
     },
 };
