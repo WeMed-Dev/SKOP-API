@@ -87,7 +87,6 @@ async function init(stream:MediaStream){
 
 const detectFaces = async () => {
     try{
-        console.log(monoyer);
         let rateX = cWidth/640;
         let rateY = cHeight/480;
         if(model === undefined) return;

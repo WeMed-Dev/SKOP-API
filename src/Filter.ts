@@ -2,7 +2,7 @@ import {saveRecord} from "./functions/request";
 import base64url from "base64url";
 
 
-class FilterTS{
+class Filter {
     public audioCtx:AudioContext;
     public biquadFilter:BiquadFilterNode
     public audioRecorder:MediaRecorder;
@@ -39,7 +39,7 @@ class FilterTS{
 
   
 
-        if(focus === FilterTS.AORTIC || focus === FilterTS.MITRAL || focus === FilterTS.TRICUSPID || focus === FilterTS.PULMONARY){
+        if(focus === Filter.AORTIC || focus === Filter.MITRAL || focus === Filter.TRICUSPID || focus === Filter.PULMONARY){
             this.biquadFilter.type = "lowshelf"; // low shelf filter
             this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
             this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
@@ -118,5 +118,5 @@ class FilterTS{
     }
 }
 
-export {FilterTS}
+export {Filter}
 
