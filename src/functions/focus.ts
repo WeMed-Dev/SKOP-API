@@ -68,10 +68,11 @@ async function init(stream:MediaStream){
 
 
     // When the video stream is ready, load the model
-    video.addEventListener("play", async () => {
-        //model = await blazeface.load();
-        await detectFaces();
+    video.addEventListener("loadeddata", async () => {
+        model = await blazeface.load();
         console.log("Loaded Blazeface")
+        await detectFaces();
+
         if(monoyer === true){
             Swal.fire({
                 position: 'top',
@@ -89,7 +90,7 @@ const detectFaces = async () => {
     try{
         let rateX = cWidth/640;
         let rateY = cHeight/480;
-        if(model === undefined) return;
+        if(model === undefined || model === null) return;
         prediction = await model.estimateFaces(video, false).then(prediction => {
 
             if(prediction.length > 0) {
@@ -118,7 +119,6 @@ const detectFaces = async () => {
                 //get distance between eyes
                 let distance = Math.sqrt(Math.pow(prediction[0].landmarks[0][0] - prediction[0].landmarks[1][0], 2) + Math.pow(prediction[0].landmarks[0][1] - prediction[0].landmarks[1][1], 2));
                 drawFocuses(distance, prediction[0].landmarks[0][0], prediction[0].landmarks[0][1], prediction[0].landmarks[1][0]);
-                console.log("Drawings done");
 
 
                 ctx.restore();
@@ -133,7 +133,6 @@ const detectFaces = async () => {
                 }
                 else if (monoyer === false){
                     Swal.close();
-                    console.log("Monoyer closed");
                 }
 
 
@@ -351,7 +350,14 @@ function toggleMonoyer(toggle:boolean){
   console.log(monoyer);
 }
 
-export {init, start, stop, toggleMonoyer};
+
+async function loadBlazeFaceModel(){
+    model = await blazeface.load().then( () =>
+        console.log("Model loaded")
+    )
+}
+
+export {init, start, stop, toggleMonoyer, loadBlazeFaceModel};
 
 
 
