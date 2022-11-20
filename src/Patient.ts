@@ -1,5 +1,4 @@
 import {Filter} from "./Filter";
-import Swal from "sweetalert2";
 import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
@@ -306,4 +305,4 @@ class Patient {
     }
 }
 
-export {Patient};
+export default Patient;

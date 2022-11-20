@@ -239,4 +239,4 @@ class Doctor {
     }
 }
 
-export { Doctor };
+export default Doctor;

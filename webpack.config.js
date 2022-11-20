@@ -21,6 +21,10 @@ module.exports = {
         filename: 'SkopAPI.js',
         path: path.resolve(__dirname, 'dist'),
         path: path.resolve(__dirname, 'demo'),
-        library: 'SkopAPI',
+        library:{
+            name: 'SkopAPI',
+            type: 'umd',
+        },
+        globalObject: 'this',
     },
 };

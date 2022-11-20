@@ -3,8 +3,9 @@
  * @author WeMed, Ben GREGORY
  */
 
+import Doctor from './Doctor';
+import Patient from './Patient';
 
-import {Doctor} from './Doctor';
-import {Patient} from './Patient';
 
-export { Patient , Doctor };
+
+export {Doctor, Patient};
