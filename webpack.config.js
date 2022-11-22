@@ -6,13 +6,13 @@ module.exports = {
     output: {
         filename: 'SkopAPI.js',
         path: path.resolve(__dirname, 'dist'),
-        path: path.resolve(__dirname, 'demo'),
+        //path: path.resolve(__dirname, 'demo'),
         library: {
-            name: 'SkopAPI',
-            type: 'commonjs-static'
-        }
+            type: "umd",
+        },
+        globalObject: "this",
     },
-  mode: 'development',
+  mode: 'production',
   //devtool: "inline-source-map",
   target: "web",
     resolve: {
@@ -26,5 +26,6 @@ module.exports = {
               ]
         }],
     },
+
 
 };
