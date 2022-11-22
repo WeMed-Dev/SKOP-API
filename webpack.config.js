@@ -9,6 +9,7 @@ module.exports = {
         //path: path.resolve(__dirname, 'demo'),
         library: {
             type: "umd",
+            name: "SkopAPI"
         },
         globalObject: "this",
     },
@@ -17,6 +18,9 @@ module.exports = {
   target: "web",
     resolve: {
     extensions: ['.ts','.js'],
+    alias: {
+        core: path.join(__dirname, 'core'),
+    },
   },
     module: {
         rules: [{
