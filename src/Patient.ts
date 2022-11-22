@@ -10,7 +10,7 @@ function handleError(error) {
     if (error) console.error(error);
 }
 
-class Patient {
+export default class Patient {
     // All boolean properties
     private usingSkop: boolean;
     private usingAR: boolean;
@@ -305,4 +305,3 @@ class Patient {
     }
 }
 
-export default Patient;
