@@ -10,7 +10,7 @@ function handleError(error) {
     if (error) console.error(error);
 }
 
-class Doctor {
+export default class Doctor {
     private session: OT.Session;
     private publisher: OT.Publisher;
 
@@ -239,4 +239,3 @@ class Doctor {
     }
 }
 
-export default Doctor;

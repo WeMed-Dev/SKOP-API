@@ -6,17 +6,21 @@ module.exports = {
     output: {
         filename: 'SkopAPI.js',
         path: path.resolve(__dirname, 'dist'),
-        path: path.resolve(__dirname, 'demo'),
+        //path: path.resolve(__dirname, 'demo'),
         library: {
-            name: 'SkopAPI',
-            type: 'commonjs-static'
-        }
+            type: "umd",
+            name: "SkopAPI"
+        },
+        globalObject: "this",
     },
-  mode: 'development',
+  mode: 'production',
   //devtool: "inline-source-map",
   target: "web",
     resolve: {
     extensions: ['.ts','.js'],
+    alias: {
+        core: path.join(__dirname, 'core'),
+    },
   },
     module: {
         rules: [{
@@ -26,5 +30,6 @@ module.exports = {
               ]
         }],
     },
+
 
 };
