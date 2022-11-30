@@ -9,3 +9,11 @@ demo_prod
 tsconfig.json
 webpack.config.js
 
+src/Doctor.ts
+src/Filter.ts
+src/functions/detection.ts
+src/functions/focus.ts
+src/functions/request.ts
+src/functions/visualisation.ts
+src/index.ts
+src/Patient.ts

@@ -1,9 +1,9 @@
-import {FilterTS} from "./FilterTS";
-import Swal from "sweetalert2";
+import {Filter} from "./Filter";
 import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
 import * as focus from './functions/focus';
+
 
 
 function handleError(error) {
@@ -32,7 +32,7 @@ class Patient {
     private videoStream:MediaStream;
     private cameraDimensions;
 
-    private filter:FilterTS;
+    private filter:Filter;
     private focus:string;
 
     constructor(APIKEY, TOKEN, SESSIONID, APIKEY_WEMED){
@@ -40,7 +40,7 @@ class Patient {
         this.token = TOKEN;
         this.sessionId = SESSIONID;
         this.apiKeyWemed = APIKEY_WEMED;
-        this.filter = new FilterTS();
+        this.filter = new Filter();
         let self = this;
         let ios = false;
 
@@ -149,7 +149,6 @@ class Patient {
             let videoStreamTrack = stream.getVideoTracks()[0];
             this.videoStream = new MediaStream([videoStreamTrack]);
         })
-
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
@@ -306,4 +305,4 @@ class Patient {
     }
 }
 
-export {Patient};
+export default Patient;
