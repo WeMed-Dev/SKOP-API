@@ -92,14 +92,18 @@
 
 
 <div id="bottom">
+    <button id="devices">Microphone</button>
 <button class="button" id="end">DÉCONNEXION</button>
 </div>
 
 </div>
 <p id="p-powered">powered by WEMED</p>
+<div id="inputDevices">
+
+</div>
 
 </body>
-<script src="./SkopAPI.js"></script>
+<script src="../dist/SkopAPI.js"></script>
 <script>
     let select = document.getElementById("foyers");
     let gainRange = document.getElementById("volume");
@@ -112,6 +116,8 @@
         //get session id in url
         let url = new URL(window.location.href);
         let room = url.searchParams.get("room");
+
+
 
         if(room == null){
             //room random
@@ -178,6 +184,53 @@
                 }
             }
         );
+
+        const setInput = (device) => {
+            console.log("selectAudioInputDevice", device);
+            doctor.setInputDevice(device.deviceId);
+        };
+        let btnDevices = document.getElementById("devices");
+        let inputDevices = document.getElementById("inputDevices");
+        btnDevices.addEventListener("click",function(){
+            doctor.getMediaDevices().then(function (devices) {
+                //console.log(devices);
+
+                // get audio input devices
+                let audioInputDevices = devices.filter(function (device) {
+                    return device.kind === 'audioinput';
+                });
+
+                // get label of audio input devices
+                let audioInputLabels = audioInputDevices.map(function (device) {
+                    return device.label;
+                });
+                console.log(audioInputLabels);
+
+                //foreach audio input device create a radio button and add it to the inputDevices div
+                // when the radio button is clicked, the setInput function is called with the device as parameter
+                inputDevices.innerHTML = "";
+                inputDevices.style.display = "block";
+                audioInputDevices.forEach(function (device) {
+
+                    let radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'audioSource';
+                    radio.id = device.deviceId;
+                    radio.value = device.deviceId;
+                    radio.onclick = () => setInput(device);
+                    inputDevices.appendChild(radio);
+
+                    let label = document.createElement('label');
+                    label.htmlFor = device.deviceId;
+                    label.appendChild(document.createTextNode(device.label));
+                    inputDevices.appendChild(label);
+
+                    let br = document.createElement('br');
+                    inputDevices.appendChild(br);
+                });
+
+            });
+        });
     }
     doctor();
 

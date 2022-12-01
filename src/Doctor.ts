@@ -189,6 +189,15 @@ export default class Doctor {
     }
 
     //--- GETTERS & SETTERS ---//
+
+    /**
+     * Sets the users current's Audio source.
+     * @param {MediaStreamTrack} audioSource
+     */
+    setAudioSource(audioSource) {
+        this.publisher.setAudioSource(audioSource);
+    }
+
     public getCurrentFocus(){
         return this.currentFocus;
     }
@@ -236,6 +245,18 @@ export default class Doctor {
 
     public mute(boolean:boolean){
         this.publisher.publishAudio(boolean);
+    }
+
+    public getMediaDevices(){
+        return navigator.mediaDevices.enumerateDevices();
+    }
+
+    public setInputDevice(deviceId:string){
+        navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
+            //replace the publisher audio source with the new stream
+            this.setAudioSource(stream.getAudioTracks()[0]);
+        })
+
     }
 }
 
