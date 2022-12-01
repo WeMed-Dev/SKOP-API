@@ -303,5 +303,17 @@ export default class Patient {
 
         else this.initNewPublisher(this.audioStream);
     }
+
+    public getMediaDevices(){
+        return navigator.mediaDevices.enumerateDevices();
+    }
+
+    public setInputDevice(deviceId:string){
+        navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
+            //replace the publisher audio source with the new stream
+            this.setAudioSource(stream.getAudioTracks()[0]);
+        })
+
+    }
 }
 
