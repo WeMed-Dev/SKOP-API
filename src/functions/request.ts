@@ -59,7 +59,7 @@ async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
 
 "APIKEY": "${apiKey}",
 
-"IdFoyer": "${2}",
+"IdFoyer": "${idFoyer}",
 
 "SoundRec": "${soundRec}"
 
@@ -80,7 +80,7 @@ async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
 }
 
 function fetchVonage(ROOM_ID){
-    return fetch("https://test-wemed.herokuapp.com/room/" + ROOM_ID)
+    return fetch("https://wemed-sessions.herokuapp.com/room/" + ROOM_ID)
         .then(data => data.json())
         .then(data => {
            return data;
