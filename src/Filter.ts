@@ -88,8 +88,9 @@ class Filter {
                     if (typeof base64data === "string") {
                         base64data = base64url.fromBase64(base64data.split(",")[1]);
                     }
-                    //Save the data in the database
-                    await saveRecord(patient.getSessionId(), apiKeyWemed, patient.getIdFocus(), base64data)
+                    //TODO enlever commentaire
+                    // //Save the data in the database
+                    // await saveRecord(patient.getSessionId(), apiKeyWemed, patient.getIdFocus(), base64data)
                 }
             }
         }
