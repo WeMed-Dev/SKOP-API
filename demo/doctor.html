@@ -7,108 +7,161 @@
     <link rel="stylesheet" href="./css/doctor.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+
 </head>
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
 <body>
-<header>
-    <h1>SKOP<span class="copyright">®</span> API</h1>
-</header>
-<div class="backgroundThrough" id="div-doctor">
-<div id="container-subscriber-publisher">
-        <div id="left">
-            <div>
-                <div id="publisher" class="video"></div>
-                <span class="role">MÉDECIN</span>
-            </div>
+    <header>
+        API SKOP<span class="copyright">®</span>
+    </header>
 
-            <div id="container-buttons">
-                <div id="buttons">
-                    <div id="volume-container">
+<div id="div-doctor">
+    <div id="subscriber">
 
-                        <label id="volume-label">VOLUME</label>
-                        <input type="range" id="volume" min="0" step="1" max="100" value="10">
+    </div>
 
-
-                    </div>
-                    <select id="foyers" class="select">
-                        <optgroup label="Cardiaque">
-                            <option selected class="zones-value" value="Aortic">AORTIQUE</option>
-                            <option class="zones-value" value="Pulmonary">PULMONAIRE</option>
-                            <option class="zones-value" value="Tricuspid">TRICUSPIDE</option>
-                            <option class="zones-value" value="Mitral">MITRALE</option>
-                        </optgroup>
-                        <optgroup label="Pulmonaire">
-                            <option class="zones-value" value="ANT1L">ANT1L</option>
-                            <option class="zones-value" value="ANT1R">ANT1R</option>
-                            <option class="zones-value" value="ANT2L">ANT2L</option>
-                            <option class="zones-value" value="ANT2R">ANT2R</option>
-                            <option class="zones-value" value="ANT3L">ANT3L</option>
-                            <option class="zones-value" value="ANT3R">ANT3R</option>
-                            <option class="zones-value" value="ANT4L">ANT4L</option>
-                            <option class="zones-value" value="ANT4R">ANT4R</option>
-                            <option class="zones-value" value="ANT5L">ANT5L</option>
-                            <option class="zones-value" value="ANT5R">ANT5R</option>
-                            <option class="zones-value" value="P1L">P1L</option>
-                            <option class="zones-value" value="P1R">P1R</option>
-                            <option class="zones-value" value="P2L">P2L</option>
-                            <option class="zones-value" value="P2R">P2R</option>
-                            <option class="zones-value" value="P3L">P3L</option>
-                            <option class="zones-value" value="P3R">P3R</option>
-                            <option class="zones-value" value="P4L">P4L</option>
-                            <option class="zones-value" value="P4R">P4R</option>
-                            <option class="zones-value" value="P5L">P5L</option>
-                            <option class="zones-value" value="P5R">P5R</option>
-                            <option class="zones-value" value="P6L">P6L</option>
-                            <option class="zones-value" value="P6R">P6R</option>
-                            <option class="zones-value" value="P7L">P7L</option>
-                            <option class="zones-value" value="P7R">P7R</option>
-                            <option class="zones-value" value="P8L">P8L</option>
-                            <option class="zones-value" value="P8R">P8R</option>
-                        </optgroup>
-                    </select>
-
-
-                    <div id="div-ar">
-                        <label class="switch">
-                            <input type="checkbox" id="AR">
-                            <span class="slider"></span>
-                        </label>
-                        RÉALITÉ AUGMENTÉE
-                    </div>
-
-                    <button id="monoyer" class="button">Afficher Monoyer</button>
-
-                    <button class="button" id="listen">ÉCOUTER</button>
-                </div>
-
-            </div>
-
+    <div id="publisherContainer" class="publisherContainer">
+        <div id="publisher">
         </div>
-        <div id="right">
-            <div id="subscriber" class="video"></div>
-            <span class="role">PATIENT</span>
+    </div>
+
+</div>
+
+
+    <svg xmlns="http://www.w3.org/2000/svg" height="128px" width="128px" viewBox="0 0 128 128" class="pl">
+        <defs>
+            <linearGradient y2="1" x2="0" y1="0" x1="0" id="pl-grad">
+                <stop stop-color="hsl(193,90%,55%)" offset="0%"></stop>
+                <stop stop-color="hsl(223,90%,55%)" offset="100%"></stop>
+            </linearGradient>
+        </defs>
+        <circle stroke-linecap="round" stroke-width="16" stroke="hsla(0,10%,10%,0.1)" fill="none" cy="64" cx="64" r="56" class="pl__ring"></circle>
+        <path stroke-dashoffset="10" stroke-dasharray="44 1111" stroke-linejoin="round" stroke-linecap="round" stroke-width="16" stroke="url(#pl-grad)" fill="none" d="M92,15.492S78.194,4.967,66.743,16.887c-17.231,17.938-28.26,96.974-28.26,96.974L119.85,59.892l-99-31.588,57.528,89.832L97.8,19.349,13.636,88.51l89.012,16.015S81.908,38.332,66.1,22.337C50.114,6.156,36,15.492,36,15.492a56,56,0,1,0,56,0Z" class="pl__worm"></path>
+    </svg>
+    <p id="p-powered">powered by WEMED</p>
+
+    <div id="controls">
+
+        <input type="checkbox" id="mute">
+        <label for="mute">
+            <img id="unmuted" src="https://img.icons8.com/ffffff/ios/50/null/microphone.png"/>
+            <img id="muted" src="https://img.icons8.com/ffffff/ios/50/null/no-microphone--v1.png"/>
+        </label>
+
+        <input type="checkbox" id="chooseMic">
+        <label for="chooseMic">
+            <img src="https://img.icons8.com/ffffff/ios/50/null/add-record.png"/>
+        </label>
+
+
+        <input type="checkbox" id="video">
+        <label for="video">
+            <img id="visibleVideo" src="https://img.icons8.com/ffffff/ios/50/null/video-call.png"/>
+            <img id="hiddenVideo"  src="https://img.icons8.com/ffffff/ios/50/null/no-video--v1.png"/>
+        </label>
+
+        <button id="quitter">
+            <img src="https://img.icons8.com/ffffff/ios/50/null/phone.png"/>
+        </button>
+
+
+    </div>
+    <div id="divDevices"></div>
+
+    <div id="skopControls">
+
+        <div class="elementControlSkop">
+            <label for="monoyer" class="switch">
+                <input id="monoyer" type="checkbox">
+                <span class="slider"></span>
+            </label>
+           <p>Test de la vue</p>
         </div>
 
-</div>
+        <div class="elementControlSkop">
+            <label for="AR" class="switch">
+                <input id="AR" type="checkbox">
+                <span class="slider"></span>
+            </label>
+            <p>Réalité augmentée</p>
+        </div>
+
+        <div class="elementControlSkop">
+            <label for="filtration" class="switch">
+                <input id="filtration" type="checkbox">
+                <span class="slider"></span>
+            </label>
+            <p>Filtration audio</p>
+        </div>
+        <input class="elementControlSkop" id="gainRange" type="range">
+
+        <select class="elementControlSkop" id="select-focus">
+            <optgroup label="Cardiaque">
+                <option selected class="zones-value" value="Aortic">AORTIQUE</option>
+                <option class="zones-value" value="Pulmonary">PULMONAIRE</option>
+                <option class="zones-value" value="Tricuspid">TRICUSPIDE</option>
+                <option class="zones-value" value="Mitral">MITRALE</option>
+            </optgroup>
+            <optgroup label="Pulmonaire">
+                <option class="zones-value" value="ANT1L">ANT1L</option>
+                <option class="zones-value" value="ANT1R">ANT1R</option>
+                <option class="zones-value" value="ANT2L">ANT2L</option>
+                <option class="zones-value" value="ANT2R">ANT2R</option>
+                <option class="zones-value" value="ANT3L">ANT3L</option>
+                <option class="zones-value" value="ANT3R">ANT3R</option>
+                <option class="zones-value" value="ANT4L">ANT4L</option>
+                <option class="zones-value" value="ANT4R">ANT4R</option>
+                <option class="zones-value" value="ANT5L">ANT5L</option>
+                <option class="zones-value" value="ANT5R">ANT5R</option>
+                <option class="zones-value" value="P1L">P1L</option>
+                <option class="zones-value" value="P1R">P1R</option>
+                <option class="zones-value" value="P2L">P2L</option>
+                <option class="zones-value" value="P2R">P2R</option>
+                <option class="zones-value" value="P3L">P3L</option>
+                <option class="zones-value" value="P3R">P3R</option>
+                <option class="zones-value" value="P4L">P4L</option>
+                <option class="zones-value" value="P4R">P4R</option>
+                <option class="zones-value" value="P5L">P5L</option>
+                <option class="zones-value" value="P5R">P5R</option>
+                <option class="zones-value" value="P6L">P6L</option>
+                <option class="zones-value" value="P6R">P6R</option>
+                <option class="zones-value" value="P7L">P7L</option>
+                <option class="zones-value" value="P7R">P7R</option>
+                <option class="zones-value" value="P8L">P8L</option>
+                <option class="zones-value" value="P8R">P8R</option>
+            </optgroup>
+        </select>
 
 
-<div id="bottom">
-    <button id="devices">Microphone</button>
-<button class="button" id="end">DÉCONNEXION</button>
-</div>
 
-</div>
-<p id="p-powered">powered by WEMED</p>
-<div id="inputDevices">
 
-</div>
+
+    </div>
 
 </body>
 <script src="./SkopAPI.js"></script>
 <script>
-    let select = document.getElementById("foyers");
-    let gainRange = document.getElementById("volume");
-    let btnDeconnexion = document.getElementById("end");
-    let btnListen = document.getElementById("listen");
+    // Session
+
+
+    let btnDeconnexion = document.getElementById("quitter");
+    let btnMute = document.getElementById("mute");
+    let btnVideo = document.getElementById("video");
+    let btnChooseMic = document.getElementById("chooseMic");
+
+    // Control Skop
+    let select = document.getElementById("select-focus");
+
+    new TomSelect('#select-focus',{
+        allowEmptyOption: true,
+        placeholder: "Choisir un foyer",
+
+    });
+    let gainRange = document.getElementById("gainRange");
+
+    let btnListen = document.getElementById("filtration");
     let btnAR = document.getElementById("AR");
     let btnMonoyer = document.getElementById("monoyer");
 
@@ -116,7 +169,7 @@
         //get session id in url
         let url = new URL(window.location.href);
         let room = url.searchParams.get("room");
-
+        let currentMicId = null;
 
 
         if(room == null){
@@ -124,9 +177,14 @@
             room = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
         }
 
-        console.log(room);
         let doctor = await SkopAPI.Doctor.init("4bbb7277-6f18-48a9-873a-04a90afe853a", room);
 
+        //get current mic id
+        navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+            currentMicId = stream.getAudioTracks()[0].getSettings().deviceId;
+        });
+
+        // Session
         btnDeconnexion.addEventListener("click", () => {
             if(doctor == undefined) window.location.href = "./endCall.html";
             else{
@@ -135,17 +193,84 @@
             }
         });
 
+        btnMute.addEventListener("click",function(){
+            let muted = document.getElementById("muted");
+            let unmuted = document.getElementById("unmuted");
+
+            if(btnMute.checked){
+                doctor.publishAudio(false);
+                muted.style.display = "block";
+                unmuted.style.display = "none";
+            }
+            else{
+                doctor.publishAudio(true);
+                muted.style.display = "none";
+                unmuted.style.display = "block";
+            }
+        });
+
+        btnVideo.addEventListener("click",function(){
+            let visibleVideo = document.getElementById("visibleVideo");
+            let hiddenVideo = document.getElementById("hiddenVideo");
+
+            if(btnVideo.checked){
+                doctor.publishVideo(false);
+                visibleVideo.style.display = "none";
+                hiddenVideo.style.display = "block";
+            }
+            else{
+                doctor.publishVideo(true);
+                visibleVideo.style.display = "block";
+                hiddenVideo.style.display = "none";
+            }
+        });
+
+        btnChooseMic.addEventListener("click",function(){
+            let divDevices = document.getElementById("divDevices");
+            if(btnChooseMic.checked){
+                divDevices.style.display = "flex";
+                doctor.getMediaDevices().then(function (devices) {
+                    let divDevices = document.getElementById("divDevices");
+                    divDevices.innerHTML = "";
+                    for(let i = 0; i < devices.length; i++){
+                        let divDevice = document.createElement("input");
+                        divDevice.type = "radio";
+                        divDevice.name = "device";
+                        divDevice.id = "device"+i;
+                        divDevice.value = devices[i].deviceId;
+                        let labelDevice = document.createElement("label");
+                        labelDevice.htmlFor = "device"+i;
+                        labelDevice.innerText = devices[i].label;
+                        if (devices[i].deviceId === currentMicId) {
+                            divDevice.checked = true;
+                        }
+                        divDevices.appendChild(divDevice);
+                        divDevices.appendChild(labelDevice);
+                        labelDevice.addEventListener("click",function(){
+                            doctor.setInputDevice(devices[i].deviceId);
+                            currentMicId = devices[i].deviceId;
+                        });
+                    }
+                });
+            }
+            else{
+                divDevices.style.display = "none";
+            }
+        });
+
+
+
+        // Control Skop
         select.addEventListener("change", (e) =>{
             doctor.setCurrentFocus(e.target.value);
             console.log(doctor.getCurrentFocus());
-            btnListen.focus();
         });
 
         gainRange.oninput = function() {
             doctor.setGain(this.value);
         };
 
-        AR.addEventListener("change", (e) =>{
+        btnAR.addEventListener("change", (e) =>{
 
             if (e.target.checked) {
                 doctor.useAR(true);
@@ -155,82 +280,25 @@
             }
         })
 
-        let stateMonoyer = false;
-        btnMonoyer.addEventListener("click", () => {
-            if(stateMonoyer == false){
+        btnListen.addEventListener("click",function(){
+            if(btnListen.checked){
+                doctor.useSkop();
+            }
+            else{
+                doctor.stopUsingSkop();
+            }
+        });
+
+        btnMonoyer.addEventListener("click",function(){
+            if(btnMonoyer.checked){
                 doctor.useMonoyer(true);
-                stateMonoyer = true;
-                AR.checked = true;
+                btnAR.checked = true;
             }
             else{
                 doctor.useMonoyer(false);
-                stateMonoyer = false;
-                AR.checked = false;
             }
         });
 
-        let listenState = false;
-        btnListen.addEventListener("click", () => {
-                listenState = !listenState;
-                if (listenState == true) {
-                    btnListen.classList.add("buttonActive");
-                    doctor.useSkop();
-                    //Add class
-                }
-                else {
-                    btnListen.classList.remove("buttonActive");
-                    doctor.stopUsingSkop();
-                    //Remove class
-                }
-            }
-        );
-
-        const setInput = (device) => {
-            console.log("selectAudioInputDevice", device);
-            doctor.setInputDevice(device.deviceId);
-        };
-        let btnDevices = document.getElementById("devices");
-        let inputDevices = document.getElementById("inputDevices");
-        btnDevices.addEventListener("click",function(){
-            doctor.getMediaDevices().then(function (devices) {
-                //console.log(devices);
-
-                // get audio input devices
-                let audioInputDevices = devices.filter(function (device) {
-                    return device.kind === 'audioinput';
-                });
-
-                // get label of audio input devices
-                let audioInputLabels = audioInputDevices.map(function (device) {
-                    return device.label;
-                });
-                console.log(audioInputLabels);
-
-                //foreach audio input device create a radio button and add it to the inputDevices div
-                // when the radio button is clicked, the setInput function is called with the device as parameter
-                inputDevices.innerHTML = "";
-                inputDevices.style.display = "block";
-                audioInputDevices.forEach(function (device) {
-
-                    let radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = 'audioSource';
-                    radio.id = device.deviceId;
-                    radio.value = device.deviceId;
-                    radio.onclick = () => setInput(device);
-                    inputDevices.appendChild(radio);
-
-                    let label = document.createElement('label');
-                    label.htmlFor = device.deviceId;
-                    label.appendChild(document.createTextNode(device.label));
-                    inputDevices.appendChild(label);
-
-                    let br = document.createElement('br');
-                    inputDevices.appendChild(br);
-                });
-
-            });
-        });
     }
     doctor();
 
