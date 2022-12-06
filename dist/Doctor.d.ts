@@ -30,4 +30,6 @@ export default class Doctor {
     mute(boolean: boolean): void;
     getMediaDevices(): Promise<MediaDeviceInfo[]>;
     setInputDevice(deviceId: string): void;
+    publishVideo(boolean: boolean): void;
+    publishAudio(boolean: boolean): void;
 }

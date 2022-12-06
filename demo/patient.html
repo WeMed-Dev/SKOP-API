@@ -9,39 +9,55 @@
 </head>
 <body>
 <header>
-    <h1>SKOP<span class="copyright">®</span> API</h1>
+    SKOP<span class="copyright">®</span> API
 </header>
 
-<div class="backgroundThrough" id="div-patient">
-    <div id="container-subscriber-publisher">
+<div  id="div-patient">
 
-        <div id="div-subscriber">
-            <div id="subscriber" class="video"></div>
-            <p class="role">MÉDECIN</p>
-        </div>
+    <div id="subscriber">
 
-        <div id="div-publisher">
-            <div id="publisher" class="video"></div>
+    </div>
 
-            <p class="role">PATIENT</p>
+    <div class="publisherContainer">
+        <div id="publisher">
         </div>
     </div>
 
 
-    <button id="devices">Microphone</button>
-    <button id="end" class="button" href="endCall.html">DÉCONNEXION</button>
 </div>
 <p id="p-powered">powered by WEMED</p>
 <div id="inputDevices">
 
 </div>
 
+<div id="controls">
+    <input type="checkbox" id="mute">
+    <label for="mute">
+        <img id="unmuted" src="https://img.icons8.com/ffffff/ios/50/null/microphone.png"/>
+        <img id="muted" src="https://img.icons8.com/ffffff/ios/50/null/no-microphone--v1.png"/>
+    </label>
+
+
+
+    <button id="quitter">
+        <img src="https://img.icons8.com/ffffff/ios/50/null/phone.png"/>
+    </button>
+
+    <input type="checkbox" id="video">
+    <label for="video">
+        <img id="visibleVideo" src="https://img.icons8.com/ffffff/ios/50/null/video-call.png"/>
+        <img id="hiddenVideo"  src="https://img.icons8.com/ffffff/ios/50/null/no-video--v1.png"/>
+    </label>
+</div>
+
+
 
 </body>
 <script src="./SkopAPI.js"></script>
 <script defer>
-    let btnEnd = document.getElementById("end");
-
+    let btnEnd = document.getElementById("quitter");
+    let btnMute = document.getElementById("mute");
+    let btnVideo = document.getElementById("video");
 
 
     async function patient(){
@@ -70,6 +86,38 @@
             }else{
                 patient.disconnect();
                 window.location.href = "endCall.html";
+            }
+        });
+
+        btnMute.addEventListener("click",function(){
+            let muted = document.getElementById("muted");
+            let unmuted = document.getElementById("unmuted");
+
+           if(btnMute.checked){
+               patient.publishAudio(false);
+               muted.style.display = "block";
+               unmuted.style.display = "none";
+           }
+           else{
+                patient.publishAudio(true);
+                muted.style.display = "none";
+                unmuted.style.display = "block";
+           }
+        });
+
+        btnVideo.addEventListener("click",function(){
+            let visibleVideo = document.getElementById("visibleVideo");
+            let hiddenVideo = document.getElementById("hiddenVideo");
+
+            if(btnVideo.checked){
+                patient.publishVideo(false);
+                visibleVideo.style.display = "none";
+                hiddenVideo.style.display = "block";
+            }
+            else{
+                patient.publishVideo(true);
+                visibleVideo.style.display = "block";
+                hiddenVideo.style.display = "none";
             }
         });
 

@@ -89,9 +89,7 @@ optgroup{
 
 }
 
-video{
-    border-radius: 10px!important;
-}
+
 .video *{
     border-radius: 10px;
     background-color: transparent!important;
