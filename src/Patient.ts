@@ -313,7 +313,10 @@ export default class Patient {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
         })
+    }
 
+    public publishVideo(boolean:boolean){
+        this.publisher.publishVideo(boolean);
     }
 }
 
