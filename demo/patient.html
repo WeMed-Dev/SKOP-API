@@ -9,7 +9,7 @@
 </head>
 <body>
 <header>
-    SKOP<span class="copyright">®</span> API
+    API SKOP<span class="copyright">®</span>
 </header>
 
 <div  id="div-patient">
@@ -25,7 +25,20 @@
 
 
 </div>
+
+<svg xmlns="http://www.w3.org/2000/svg" height="128px" width="128px" viewBox="0 0 128 128" class="pl">
+    <defs>
+        <linearGradient y2="1" x2="0" y1="0" x1="0" id="pl-grad">
+            <stop stop-color="hsl(193,90%,55%)" offset="0%"></stop>
+            <stop stop-color="hsl(223,90%,55%)" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <circle stroke-linecap="round" stroke-width="16" stroke="hsla(0,10%,10%,0.1)" fill="none" cy="64" cx="64" r="56" class="pl__ring"></circle>
+    <path stroke-dashoffset="10" stroke-dasharray="44 1111" stroke-linejoin="round" stroke-linecap="round" stroke-width="16" stroke="url(#pl-grad)" fill="none" d="M92,15.492S78.194,4.967,66.743,16.887c-17.231,17.938-28.26,96.974-28.26,96.974L119.85,59.892l-99-31.588,57.528,89.832L97.8,19.349,13.636,88.51l89.012,16.015S81.908,38.332,66.1,22.337C50.114,6.156,36,15.492,36,15.492a56,56,0,1,0,56,0Z" class="pl__worm"></path>
+</svg>
 <p id="p-powered">powered by WEMED</p>
+
+
 <div id="inputDevices">
 
 </div>
@@ -37,17 +50,26 @@
         <img id="muted" src="https://img.icons8.com/ffffff/ios/50/null/no-microphone--v1.png"/>
     </label>
 
+    <input type="checkbox" id="chooseMic">
+    <label for="chooseMic">
+        <img src="https://img.icons8.com/ffffff/ios/50/null/add-record.png"/>
+    </label>
+    <div id="divDevices">
+    </div>
 
 
-    <button id="quitter">
-        <img src="https://img.icons8.com/ffffff/ios/50/null/phone.png"/>
-    </button>
 
     <input type="checkbox" id="video">
     <label for="video">
         <img id="visibleVideo" src="https://img.icons8.com/ffffff/ios/50/null/video-call.png"/>
         <img id="hiddenVideo"  src="https://img.icons8.com/ffffff/ios/50/null/no-video--v1.png"/>
     </label>
+
+    <button id="quitter">
+        <img src="https://img.icons8.com/ffffff/ios/50/null/phone.png"/>
+    </button>
+
+
 </div>
 
 
@@ -58,12 +80,14 @@
     let btnEnd = document.getElementById("quitter");
     let btnMute = document.getElementById("mute");
     let btnVideo = document.getElementById("video");
+    let btnChooseMic = document.getElementById("chooseMic");
 
 
     async function patient(){
         //get session id in url
         let url = new URL(window.location.href);
         let room = url.searchParams.get("room");
+        let currentMicId = null;
 
 
         if(room == null){
@@ -77,7 +101,10 @@
 
         let patient = await SkopAPI.Patient.init("4bbb7277-6f18-48a9-873a-04a90afe853a",room);
 
-
+        //get current mic id
+        navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+            currentMicId = stream.getAudioTracks()[0].getSettings().deviceId;
+        });
 
 
         btnEnd.addEventListener("click",function(){
@@ -121,53 +148,39 @@
             }
         });
 
-        const setInput = (device) => {
-            console.log("selectAudioInputDevice", device);
-            patient.setInputDevice(device.deviceId);
-        }
-        let btnDevices = document.getElementById("devices");
-        let inputDevices = document.getElementById("inputDevices");
-        btnDevices.addEventListener("click",function(){
-            patient.getMediaDevices().then(function (devices) {
-                //console.log(devices);
 
-                // get audio input devices
-                let audioInputDevices = devices.filter(function (device) {
-                    return device.kind === 'audioinput';
+        btnChooseMic.addEventListener("click",function(){
+            let divDevices = document.getElementById("divDevices");
+            if(btnChooseMic.checked){
+                divDevices.style.display = "block";
+                patient.getMediaDevices().then(function (devices) {
+                    let divDevices = document.getElementById("divDevices");
+                    divDevices.innerHTML = "";
+                    for(let i = 0; i < devices.length; i++){
+                        let divDevice = document.createElement("input");
+                        divDevice.type = "radio";
+                        divDevice.name = "device";
+                        divDevice.id = "device"+i;
+                        divDevice.value = devices[i].deviceId;
+                        let labelDevice = document.createElement("label");
+                        labelDevice.htmlFor = "device"+i;
+                        labelDevice.innerText = devices[i].label;
+                        if (devices[i].deviceId === currentMicId) {
+                            divDevice.checked = true;
+                        }
+                        divDevices.appendChild(divDevice);
+                        divDevices.appendChild(labelDevice);
+                        labelDevice.addEventListener("click",function(){
+                            patient.setInputDevice(devices[i].deviceId);
+                            currentMicId = devices[i].deviceId;
+                        });
+                    }
                 });
-
-                // get label of audio input devices
-                let audioInputLabels = audioInputDevices.map(function (device) {
-                    return device.label;
-                });
-                console.log(audioInputLabels);
-
-                //foreach audio input device create a radio button and add it to the inputDevices div
-                // when the radio button is clicked, the setInput function is called with the device as parameter
-                inputDevices.innerHTML = "";
-                inputDevices.style.display = "block";
-                audioInputDevices.forEach(function (device) {
-
-                    let radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = 'audioSource';
-                    radio.id = device.deviceId;
-                    radio.value = device.deviceId;
-                    radio.onclick = () => setInput(device);
-                    inputDevices.appendChild(radio);
-
-                    let label = document.createElement('label');
-                    label.htmlFor = device.deviceId;
-                    label.appendChild(document.createTextNode(device.label));
-                    inputDevices.appendChild(label);
-
-                    let br = document.createElement('br');
-                    inputDevices.appendChild(br);
-                });
-
-            });
+            }
+            else{
+                divDevices.style.display = "none";
+            }
         });
-
 
 
     }
