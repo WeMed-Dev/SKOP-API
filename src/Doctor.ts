@@ -258,5 +258,13 @@ export default class Doctor {
         })
 
     }
+
+    public publishVideo(boolean:boolean){
+        this.publisher.publishVideo(boolean);
+    }
+
+    public publishAudio(boolean:boolean){
+        this.publisher.publishAudio(boolean);
+    }
 }
 

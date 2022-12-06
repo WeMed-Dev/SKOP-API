@@ -53,6 +53,7 @@ export default class Patient {
                 insertMode: 'append',
                 width: '100%',
                 height: '100%',
+                showControls: false,
             }
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
             if(ios){
@@ -78,6 +79,7 @@ export default class Patient {
             insertMode: 'append',
             width: '100%',
             height: '100%',
+            showControls: false,
         };
         let publisher = OT.initPublisher('publisher', publisherOptions, handleError)
         this.publisher = publisher; // This variable cannot be used for the session.connect() method. But is used to access the publisher outside of the constructor.
@@ -276,6 +278,7 @@ export default class Patient {
             insertMode: 'append',
             width: '100%',
             height: '100%',
+            showControls: false,
             videoSource: streamTrack,
             facingMode: this.faceCamera ? 'user' : 'environment',
         }
@@ -313,7 +316,14 @@ export default class Patient {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
         })
+    }
 
+    public publishVideo(boolean:boolean){
+        this.publisher.publishVideo(boolean);
+    }
+
+    public publishAudio(boolean:boolean){
+        this.publisher.publishAudio(boolean);
     }
 }
 

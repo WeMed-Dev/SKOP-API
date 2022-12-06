@@ -89,9 +89,7 @@ optgroup{
 
 }
 
-video{
-    border-radius: 10px!important;
-}
+
 .video *{
     border-radius: 10px;
     background-color: transparent!important;
@@ -101,7 +99,7 @@ video{
 
 
 #p-powered{
-    color: white;
+    color: #212121;
     font-size: 1rem;
 }
 
