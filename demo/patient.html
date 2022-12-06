@@ -18,7 +18,7 @@
 
     </div>
 
-    <div class="publisherContainer">
+    <div id="publisherContainer" class="publisherContainer">
         <div id="publisher">
         </div>
     </div>
@@ -39,6 +39,13 @@
 <p id="p-powered">powered by WEMED</p>
 
 <div id="controls">
+
+    <input type="checkbox" id="fullscreen">
+    <label id="labelFullscreen" for="fullscreen">
+        <img id="fullscreened" src="https://img.icons8.com/ffffff/ios/50/null/full-screen--v1.png"/>
+        <img id="screened" src="https://img.icons8.com/ffffff/ios/50/null/normal-screen.png"/>
+    </label>
+
     <input type="checkbox" id="mute">
     <label for="mute">
         <img id="unmuted" src="https://img.icons8.com/ffffff/ios/50/null/microphone.png"/>
@@ -77,6 +84,7 @@
     let btnMute = document.getElementById("mute");
     let btnVideo = document.getElementById("video");
     let btnChooseMic = document.getElementById("chooseMic");
+    let btnFullScreen = document.getElementById("fullscreen");
 
 
     async function patient(){
@@ -175,6 +183,25 @@
             }
             else{
                 divDevices.style.display = "none";
+            }
+        });
+
+        btnFullScreen.addEventListener("click",function(){
+            let elem = document.getElementById("publisherContainer");
+            let fullscreened = document.getElementById("fullscreened");
+            let screened = document.getElementById("screened");
+
+            if(btnFullScreen.checked) {
+                screened.style.display = "none";
+                fullscreened.style.display = "block";
+                elem.style.width = "40vw";
+                elem.style.height = "23vw";
+            }
+            else{
+                fullscreened.style.display = "none";
+                screened.style.display = "block";
+                elem.style.width = "25vw";
+                elem.style.height = "14vw";
             }
         });
 

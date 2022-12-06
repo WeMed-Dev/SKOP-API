@@ -140,6 +140,10 @@ header{
     display: none;
 }
 
+#fullscreened{
+    display: none;
+}
+
 #divDevices{
     display: none;
     flex-direction: column;
@@ -212,7 +216,15 @@ header{
         height: fit-content;
         margin-top: 4rem ;
     }
+
+    #labelFullscreen{
+        display: none!important;
+    }
+
+
 }
+
+
 
 /*ANIMATION*/
 .pl,
