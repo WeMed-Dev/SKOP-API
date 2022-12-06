@@ -3,293 +3,213 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    accent-color: #417E80;
+    background: #212121;
+
 }
 
+header{
+    background: #55D8ED;
+    background: linear-gradient(to right, #55D8ED 0%, #54EFC3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 
-#div-doctor{
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    z-index: 1001;
+    margin: 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+    user-select: none;
+}
+
+#div-patient{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: max-content;
+    width: fit-content;
 }
 
-#container-subscriber-publisher{
-    display: flex;
-    width: max-content;
-}
-
-#left{
-    width: 30%;
-    margin: 10px;
+#subscriber{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 90vh;
+    width: 90vw;
+    width: 100%;
+    height: 100%;
+    font-family: Poppins;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.publisherContainer{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 25vw;
+    height: 14vw;
+    background-color: #ffffff;
+    margin: 1rem;
+    border: 2px solid #ffffff;
+    z-index: 1000;
+    font-family: Poppins;
+    transition: 300ms ease-in-out;
 }
 
 #publisher{
-    width: 17vw;
-    height: 10vw;
-    background-color: #2D2D2D;
-    border-radius: 10px;
-    justify-self: flex-start;
-}
-
-#left span {
-
-    font-weight: 600;
-    line-height: 2;
-    color: #ffffff;
-}
-
-#container-buttons{
-
-    display: flex;
-    flex-grow: 10;
     width: 100%;
-
-    justify-content: space-around;
-    align-items: center;
-    max-width: max-content;
-}
-
-#buttons{
-    display: flex;
-    flex-direction:column;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    height: max-content;
     height: 100%;
+    font-family: Poppins;
 }
 
-#volume-container{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: flex-start;
-}
 
-#volume{
-    width: 100%;
-    background-color: #2D2D2D;
-    border-radius: 10px;
-    height: 0.35rem;
-
-}
-
-#volume-label{
-    font-size: 1.2rem;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #ffffff;
-}
-
-#buttons select{
-    width: 100%;
-}
-
-/*!* Button AR *!*/
-
-#div-ar{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color:  white;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.switch {
-    font-size: 17px;
-    position: relative;
-    display: inline-block;
-    width: 62px;
-    height: 35px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-    opacity: 1;
-    width: 0;
-    height: 0;
-}
-
-/* The slider */
-.switch{
-    margin-right: 0.3rem;
-}
-.slider {
+#controls{
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0px;
-    background: #d8d8d8;
-    transition: .4s;
-    border-radius: 30px;
-    border: 1px solid #ccc;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 1.9em;
-    width: 1.9em;
-    border-radius: 16px;
-    left: 1.2px;
-    top: 0;
+    width: 100%;
     bottom: 0;
+    right: 0;
+    margin: 1rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+#controls img{
+    width: 2rem;
+    height: 2rem;
+}
+
+#controls input{
+    display: none;
+
+}
+
+#controls label{
+    color: #FFFFFF; /* Text Color */
+    transition: 0.1s; /* Hover Transition Time */
+    text-decoration: none; /* Text Decoration */
+    cursor: pointer; /* Cursor */
+    font-family: Poppins;
+    transition: 0.5s; /* Hover Transition Time */
+    background-color: rgba(75, 75, 75, 0.68);
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 101vmax;
+    margin: 1rem;
+}
+
+#controls label:hover{
+    background-color: rgba(38, 38, 38, 0.88);
+}
+
+
+
+#quitter{
+    background-color: crimson;
+    color: white;
+    z-index: 30;
+    border: 2px solid crimson;
+    border-radius: 100px;
+    width: 4rem;
+    height: 4rem;
+    transition: all 200ms ease-in-out;
+    margin: 1rem;
+}
+
+#quitter:hover{
+    background-color: #720202;
+    border: 2px solid #720202;
+}
+
+#muted{
+    display: none;
+}
+
+#hiddenVideo{
+    display: none;
+}
+
+
+
+#divDevices{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 6rem;
+    left: 40vw;
+    margin: 1rem;
+    z-index: 1000;
+    border-radius: 0.5rem;
+    border: 2px solid #ffffff;
+    padding: 0.5rem 1rem;
     background-color: white;
-    box-shadow: 0 2px 5px #999999;
-    transition: .4s;
 }
 
-input:checked + .slider {
-    background-color: #417e80;
-    border: 1px solid transparent;
+#divDevices input{
+    display: none;
 }
 
-input:checked + .slider:before {
-    transform: translateX(1.5em);
+#divDevices input:checked + label{
+    background-color: rgba(60, 204, 56, 0.88);
 }
 
-/* Div on the right */
-#right{
-    width: 70%;
-    margin: 10px;
+#divDevices label {
+    font-size: 0.9rem;
+    background-color: white;
+    color: #212121; /* Text Color */
+    text-decoration: none; /* Text Decoration */
+    cursor: pointer; /* Cursor */
+    font-family: 'Poppins';
+    transition: 0.1s; /* Hover Transition Time */
+    height: fit-content;
+    width:100%;
+    max-width: 100%;
+    padding: 0.7rem;
+    border-radius: 3px;
+    margin: 0.2rem 0.1rem;
+}
+
+#divDevices label:hover{
+    background-color: #e6e6e6;
+}
+
+#skopControls{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1rem;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 7px;
 }
 
-/* container for the subscriber video stream */
-#subscriber{
-    width: 45vw;
-    height: 25vw;
-    background-color: #2D2D2D;
-    border-radius: 10px;
+.elementControlSkop{
+    display :flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
 }
 
-/* span containing the role of the stream */
-.role{
-    font-size: 1.3rem;
-    font-weight : 600;
-    color: white;
-    margin-top: 5px;
-}
-
-/* button to quit the call */
-#end{
-    font-size: 1.5rem;
-    font-weight: 700;
-    background-color: #417E80;
-    color: white;
-}
-
-#end:hover{
-    background-color: #FF0000;
-}
-
-
-/* IPAD AND TABLET LANDSCAPE*/
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1080px)
-and (orientation : landscape) {
-
-    #right, #left{
-           width: 100%;
-
-    }
-
-    #publisher{
-        width: 20vw;
-        height: 11vw;
-    }
-
-    #subscriber{
-        width: 52vw;
-        height: 29vw;
-
-    }
-
-    #buttons{
-        width: 90%;
-
-    }
-
-
-
-    #end{
-        font-size: 1.1rem;
-    }
-
-}
-
-
-
-@media screen and (max-width: 1280px) {
-    header{
-        font-size: 1rem;
-    }
-
-    #div-doctor{
-
-        width: 80vw;
-    }
-
-    #right{
-        width: fit-content;
-        margin: 0;
-        align-items: center;
-    }
-
-    #container-subscriber-publisher
-    {
-        flex-direction: column-reverse;
-        align-items: center;
-        justify-content: center;
-
-    }
-
-    #subscriber{
-        width: 55vw;
-        height: 31vw;
-    }
-
-    #left{
-        flex-direction: row-reverse;
-        justify-content: space-around;
-        width: max-content;
-    }
-
-
-
-    #publisher{
-        width: 25vw;
-        height: 14vw;
-    }
-
-    #container-buttons{
-        width: 100vw;
-        margin-right: 2rem;
-    }
-
-    #buttons{
-
-        width: 100%;
-        width: max-content;
-    }
-
-    #listen, #div-ar, #foyers, #volume-label{
-        font-size: 1rem;
-    }
-
-    #end{
-        font-size: 1rem;
-        margin-bottom: 0;
-    }
+.elementControlSkop p{
+margin: 1rem;
+    font-weight: 500;
 }
