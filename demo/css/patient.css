@@ -142,12 +142,18 @@ header{
 
 #divDevices{
     display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    bottom: 5rem;
+    bottom: 6rem;
     left: 40vw;
     margin: 1rem;
     z-index: 1000;
     border-radius: 0.5rem;
+    border: 2px solid #ffffff;
+    padding: 0.5rem 1rem;
+    background-color: white;
 }
 
 #divDevices input{
@@ -197,6 +203,14 @@ header{
         width: fit-content;
         flex-direction: column-reverse;
         right: 0;
+    }
+
+    #divDevices{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: fit-content;
+        margin-top: 4rem ;
     }
 }
 

@@ -38,11 +38,6 @@
 </svg>
 <p id="p-powered">powered by WEMED</p>
 
-
-<div id="inputDevices">
-
-</div>
-
 <div id="controls">
     <input type="checkbox" id="mute">
     <label for="mute">
@@ -54,8 +49,7 @@
     <label for="chooseMic">
         <img src="https://img.icons8.com/ffffff/ios/50/null/add-record.png"/>
     </label>
-    <div id="divDevices">
-    </div>
+
 
 
 
@@ -70,6 +64,8 @@
     </button>
 
 
+</div>
+<div id="divDevices">
 </div>
 
 
@@ -152,7 +148,7 @@
         btnChooseMic.addEventListener("click",function(){
             let divDevices = document.getElementById("divDevices");
             if(btnChooseMic.checked){
-                divDevices.style.display = "block";
+                divDevices.style.display = "flex";
                 patient.getMediaDevices().then(function (devices) {
                     let divDevices = document.getElementById("divDevices");
                     divDevices.innerHTML = "";
