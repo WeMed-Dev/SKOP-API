@@ -213,3 +213,45 @@ header{
 margin: 1rem;
     font-weight: 500;
 }
+
+
+@media screen and (max-width: 768px) {
+    .publisherContainer{
+        position: absolute;
+        bottom: 0;
+        width: 34vw;
+        height: 60vw;
+    }
+
+    header{
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    #controls{
+        width: fit-content;
+        flex-direction: column-reverse;
+        right: 0;
+    }
+
+    #divDevices{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: fit-content;
+        margin-top: 4rem ;
+        z-index: 2000;
+    }
+
+    #labelFullscreen{
+        display: none!important;
+    }
+
+    #skopControls{
+        position: absolute;
+        top: 0;
+        font-size: 0.8rem;
+    }
+
+
+}
