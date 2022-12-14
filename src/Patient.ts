@@ -172,10 +172,10 @@ export default class Patient {
     }
 
     private async useSkop(){
-        if(!this.skopDetected){
-            await this.detectSkop()
-            this.skopDetected = true;
-        }
+        // if(!this.skopDetected){
+        //     await this.detectSkop()
+        //     this.skopDetected = true;
+        // }
         this.setUsingSkop(true);
         await this.filter.ModifyAudio(this.focus, this , this.apiKeyWemed);
     }
