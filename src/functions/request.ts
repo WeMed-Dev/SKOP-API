@@ -4,48 +4,24 @@ import axios from "axios";
 let url:string ="https://apps.mk-1.fr/WS_HALFRED_WEB/awws/WS_Halfred.awws";
 
 async function checkAPIKEY(APIKEY:string){
-    let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-                 <soapenv:Header/>
-                        <soapenv:Body>
-                            <sApiKey>${APIKEY}</sApiKey>
-                        </soapenv:Body>
-                </soapenv:Envelope>`;
+    fetch("https://instind-pin1sq0qe-bengregory23.vercel.app/api/SKOP/checkAPIKEY", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            key: "4bbb7277-6f18-48a9-873a-04a90afe853a"
+        })
+    }).then(res => res.json()).then(data => console.log(data));
 
-   return await axios.post(url, data,{headers:
-            {
-                'Content-Type': 'text/xml',
-                SOAPAction: "urn:WS_Halfred/CheckAPIKEY"
-            }
+    return axios.post("https://instind-pin1sq0qe-bengregory23.vercel.app/api/SKOP/checkAPIKEY", {
+        key: APIKEY
     }).then(res => {
-       //We parse the response to get the data in a XML format
-        console.log(res)
-       if(res.status !== 200) {
-           throw new Error("The Web Service is not available - Please contact WeMed if this problem persists.");
-       }
-       let json;
-       //check if navigator is chrome
-       //if(navigator.userAgent.indexOf("Chrome") > -1){
-           let parser = new DOMParser();
-           let xml = parser.parseFromString(res.data, "text/xml");
-           console.log(xml)
-           let jsonInXml = xml.getElementsByTagName("CheckAPIKEYResult")[0].textContent;
-           json = JSON.parse(jsonInXml);
-           console.log(json)
-       if(json.Code == 201) return true;
-       else{
-           Swal.fire({
-               titleText: "WeMed API key invalid",
-               text: "Please be sure to have a registered key.",
-               icon: "error",
-               allowOutsideClick: false,
-               allowEscapeKey: false,
-               allowEnterKey: false,
-               showConfirmButton: true,
-           })
-           return false;
-       }
+        if(res.data.Message.toLowerCase().includes("ok")){
+            return true;
+        }
     }).catch(err => {
-        console.log(err)
+        return false;
     })
 }
 
