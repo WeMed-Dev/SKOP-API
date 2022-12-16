@@ -284,11 +284,14 @@ export default class Patient {
             showControls: false,
             videoSource: streamTrack,
             facingMode: this.faceCamera ? 'user' : 'environment',
+            audioBitrate: this.usingSkop ? 100000 : 40000,
         }
         const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
         this.publisher = publisher;
         this.session.unpublish(tmp);
         this.session.publish(publisher , handleError);
+        //TODO : remove this if it doesn't work
+        if(this.usingSkop) this.useSkop().then(r => console.log("Using Skop"));
     }
 
     public mute(boolean:boolean){

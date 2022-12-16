@@ -55,6 +55,7 @@ export default class Doctor {
             width: '100%',
             height: '100%',
             showControls: false,
+            audioBitrate: 16000,
         }
         const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
         this.publisher = publisher;
