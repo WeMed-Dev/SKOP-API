@@ -4,17 +4,7 @@ import axios from "axios";
 let url:string ="https://apps.mk-1.fr/WS_HALFRED_WEB/awws/WS_Halfred.awws";
 
 async function checkAPIKEY(APIKEY:string){
-    fetch("https://instind-pin1sq0qe-bengregory23.vercel.app/api/SKOP/checkAPIKEY", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            key: "4bbb7277-6f18-48a9-873a-04a90afe853a"
-        })
-    }).then(res => res.json()).then(data => console.log(data));
-
-    return axios.post("https://instind-pin1sq0qe-bengregory23.vercel.app/api/SKOP/checkAPIKEY", {
+    return axios.post("https://instind.vercel.app/api/SKOP/checkAPIKEY", {
         key: APIKEY
     }).then(res => {
         if(res.data.Message.toLowerCase().includes("ok")){
@@ -26,28 +16,39 @@ async function checkAPIKEY(APIKEY:string){
 }
 
 async function saveRecord(sessionId, apiKey, idFoyer, soundRec){
-    let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <sRec>{
+//     let data = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+//    <soapenv:Header/>
+//    <soapenv:Body>
+//       <sRec>{
+//
+// "IdSession": "${sessionId}",
+//
+// "APIKEY": "${apiKey}",
+//
+// "IdFoyer": "${idFoyer}",
+//
+// "SoundRec": "${soundRec}"
+//
+// }</sRec>
+//    </soapenv:Body>
+// </soapenv:Envelope> `
+//
+//     return await axios.post(url, data,{headers:
+//             {
+//                 'Content-Type': 'text/xml',
+//                 SOAPAction: "urn:WS_Halfred/Save_Records"
+//             }
+//     }).then(res => {
+//         console.log(res)
+//     }).catch(err => {
+//         console.log(err)
+//     })
 
-"IdSession": "${sessionId}",
-
-"APIKEY": "${apiKey}",
-
-"IdFoyer": "${idFoyer}",
-
-"SoundRec": "${soundRec}"
-
-}</sRec>
-   </soapenv:Body>
-</soapenv:Envelope> `
-
-    return await axios.post(url, data,{headers:
-            {
-                'Content-Type': 'text/xml',
-                SOAPAction: "urn:WS_Halfred/Save_Records"
-            }
+    return await axios.post("https://instind.vercel.app/api/SKOP/saveRecord", {
+        sessionId: sessionId,
+        apiKey: apiKey,
+        idFoyer: idFoyer,
+        soundRec: soundRec
     }).then(res => {
         console.log(res)
     }).catch(err => {
