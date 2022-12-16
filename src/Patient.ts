@@ -267,7 +267,7 @@ export default class Patient {
         }
     }
 
-    public getInpuDeviceId(){
+    public getInputDeviceId(){
         return this.inputDeviceID;
     }
 
