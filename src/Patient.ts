@@ -326,8 +326,8 @@ export default class Patient {
         navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
-            this.inputDeviceID = deviceId;
         })
+        this.inputDeviceID = deviceId;
     }
 
     public publishVideo(boolean:boolean){
