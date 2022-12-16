@@ -31,6 +31,7 @@ export default class Patient {
 
     private audioStream:MediaStream;
     private videoStream:MediaStream;
+    private inputDeviceID:string;
     private cameraDimensions;
 
     private filter:Filter;
@@ -266,6 +267,10 @@ export default class Patient {
         }
     }
 
+    public getInpuDeviceId(){
+        return this.inputDeviceID;
+    }
+
     //---- SESSION METHODS ----//
     public disconnect(){
         this.session.disconnect();
@@ -321,6 +326,7 @@ export default class Patient {
         navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
+            this.inputDeviceID = deviceId;
         })
     }
 

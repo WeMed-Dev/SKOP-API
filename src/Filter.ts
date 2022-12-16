@@ -31,9 +31,15 @@ class Filter {
         if (focus == null) {
             throw new Error("No heartZone given - cannot modify audio");
         }
-
+        let stream;
         //Version test avec getUserMedia
-        let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        if(patient.getInpuDeviceId() != null || patient.getInpuDeviceId() != undefined){
+            stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInpuDeviceId()}, video: false});
+        }
+        else{
+            stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        }
+
         let audioSource = this.audioCtx.createMediaStreamSource(stream);
         let audioDestination = this.audioCtx.createMediaStreamDestination();
 
