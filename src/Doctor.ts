@@ -1,6 +1,7 @@
 import OT from '@opentok/client';
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import Swal from "sweetalert2";
+import testNetwork from "./functions/TestNetwork";
 
 /**
  * Displays any error messages.
@@ -39,6 +40,7 @@ export default class Doctor {
                 insertMode: 'append',
                 width: '100%',
                 height: '100%',
+                showControls: false,
             };
             session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
         })
@@ -51,7 +53,8 @@ export default class Doctor {
         let publisherOptions:OT.PublisherProperties = {
             insertMode: 'append',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            showControls: false,
         }
         const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
         this.publisher = publisher;
@@ -84,6 +87,7 @@ export default class Doctor {
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
+                    testNetwork(OT, ROOM_ID);
                     return new Doctor(res.apiKey, res.token, res.sessionId,API_KEY_WEMED)
                 })
             }

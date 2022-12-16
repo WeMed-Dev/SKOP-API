@@ -3,6 +3,7 @@ import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
 import * as focus from './functions/focus';
+import testNetwork from "./functions/TestNetwork";
 
 
 
@@ -154,9 +155,11 @@ export default class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
+
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
+                    testNetwork(OT, ROOM_ID);
                     return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
                 })
             }
