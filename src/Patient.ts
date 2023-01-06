@@ -3,6 +3,7 @@ import OT from '@opentok/client'
 import {checkAPIKEY, fetchVonage} from "./functions/request";
 import {detection} from "./functions/detection";
 import * as focus from './functions/focus';
+import testNetwork from "./functions/TestNetwork";
 
 
 
@@ -30,6 +31,7 @@ export default class Patient {
 
     private audioStream:MediaStream;
     private videoStream:MediaStream;
+    private inputDeviceID:string;
     private cameraDimensions;
 
     private filter:Filter;
@@ -154,9 +156,11 @@ export default class Patient {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
+
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
+                    testNetwork(OT, ROOM_ID);
                     return new Patient(res.apiKey, res.token, res.sessionId, API_KEY_WEMED);
                 })
             }
@@ -263,6 +267,10 @@ export default class Patient {
         }
     }
 
+    public getInputDeviceId(){
+        return this.inputDeviceID;
+    }
+
     //---- SESSION METHODS ----//
     public disconnect(){
         this.session.disconnect();
@@ -281,11 +289,14 @@ export default class Patient {
             showControls: false,
             videoSource: streamTrack,
             facingMode: this.faceCamera ? 'user' : 'environment',
+            audioBitrate: this.usingSkop ? 100000 : 40000,
         }
         const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
         this.publisher = publisher;
         this.session.unpublish(tmp);
         this.session.publish(publisher , handleError);
+        //TODO : remove this if it doesn't work
+        if(this.usingSkop) this.useSkop().then(r => console.log("Using Skop"));
     }
 
     public mute(boolean:boolean){
@@ -316,6 +327,7 @@ export default class Patient {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
         })
+        this.inputDeviceID = deviceId;
     }
 
     public publishVideo(boolean:boolean){
