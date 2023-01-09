@@ -109,23 +109,24 @@ class Filter {
         this.audioRecorder.start();
     }
 
-    public async defaultAudio(patient){
+    public async defaultAudio(patient,publisher){
         try{
             if(this.audioRecorder != null) this.audioRecorder.stop();
             //
             // let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
 
             let defaultAudio;
+            let patientAudioInputDeviceId = patient.getInputDeviceId();
             //Version test avec getUserMedia
             if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
-                defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
+                defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patientAudioInputDeviceId}, video: false});
             }
             else{
                 defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
             }
 
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
-            patient.setAudioSource(defStreamTrack);
+            publisher.setAudioSource(defStreamTrack);
             console.log("SKOP : Audio input set to default - No modifications")
         }catch(err){
             console.log(err)
