@@ -1,5 +1,6 @@
 import {saveRecord} from "./functions/request";
 import base64url from "base64url";
+import Patient from "./Patient";
 
 
 class Filter {
@@ -28,21 +29,21 @@ class Filter {
      */
     public async ModifyAudio(focus, patient, apiKeyWemed) {
 
-        if (focus == null) {
+        if (focus == undefined) {
             throw new Error("No heartZone given - cannot modify audio");
         }
 
-        // //Version test avec getUserMedia
-        // let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-
-        let stream;
         //Version test avec getUserMedia
-        if(patient.getInpuDeviceId() != null || patient.getInpuDeviceId() != undefined){
-            stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
-        }
-        else{
-            stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-        }
+        let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+
+        // let stream;
+        // //Version test avec getUserMedia
+        // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
+        //     stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
+        // }
+        // else{
+        //     stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        // }
 
 
         let audioSource = this.audioCtx.createMediaStreamSource(stream);
@@ -108,23 +109,24 @@ class Filter {
         this.audioRecorder.start();
     }
 
-    public async defaultAudio(patient){
+    public async defaultAudio(patient,publisher){
         try{
             if(this.audioRecorder != null) this.audioRecorder.stop();
-            //
-            // let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
 
-            let defaultAudio;
-            //Version test avec getUserMedia
-            if(patient.getInpuDeviceId() != null || patient.getInpuDeviceId() != undefined){
-                defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
-            }
-            else{
-                defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-            }
+            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+
+            // let defaultAudio;
+            // let patientAudioInputDeviceId = patient.getInputDeviceId();
+            // //Version test avec getUserMedia
+            // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
+            //     defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patientAudioInputDeviceId}, video: false});
+            // }
+            // else{
+            //     defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+            // }
 
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
-            patient.setAudioSource(defStreamTrack);
+            publisher.setAudioSource(defStreamTrack);
             console.log("SKOP : Audio input set to default - No modifications")
         }catch(err){
             console.log(err)

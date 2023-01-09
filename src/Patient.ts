@@ -106,8 +106,9 @@ export default class Patient {
         //---- SIGNALS ----//
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:startSkop", function(event:any) {
-            self.useSkop()
-            console.log("Using Skop - " + event.data);
+            self.useSkop().then( () => {
+                console.log("Using Skop - " + event.data);
+            });
         });
 
 
@@ -186,7 +187,7 @@ export default class Patient {
 
     private async stopUsingSkop(){
         this.setUsingSkop(false)
-        await this.filter.defaultAudio(this.publisher);
+        await this.filter.defaultAudio(this,this.publisher);
     }
 
     //--------- AUGMENTED REALITY ---------//
@@ -268,6 +269,7 @@ export default class Patient {
     }
 
     public getInputDeviceId(){
+        console.log(this.inputDeviceID);
         return this.inputDeviceID;
     }
 
@@ -323,6 +325,7 @@ export default class Patient {
     }
 
     public setInputDevice(deviceId:string){
+        if(deviceId === undefined) throw new Error("Device ID is undefined");
         navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
