@@ -50,10 +50,10 @@
             <img id="muted" src="https://img.icons8.com/ffffff/ios/50/null/no-microphone--v1.png"/>
         </label>
 
-        <input type="checkbox" id="chooseMic">
-        <label for="chooseMic">
-            <img src="https://img.icons8.com/ffffff/ios/50/null/add-record.png"/>
-        </label>
+<!--        <input type="checkbox" id="chooseMic">-->
+<!--        <label for="chooseMic">-->
+<!--            <img src="https://img.icons8.com/ffffff/ios/50/null/add-record.png"/>-->
+<!--        </label>-->
 
 
         <input type="checkbox" id="video">
@@ -225,38 +225,38 @@
             }
         });
 
-        btnChooseMic.addEventListener("click",function(){
-            let divDevices = document.getElementById("divDevices");
-            if(btnChooseMic.checked){
-                divDevices.style.display = "flex";
-                doctor.getMediaDevices().then(function (devices) {
-                    let divDevices = document.getElementById("divDevices");
-                    divDevices.innerHTML = "";
-                    for(let i = 0; i < devices.length; i++){
-                        let divDevice = document.createElement("input");
-                        divDevice.type = "radio";
-                        divDevice.name = "device";
-                        divDevice.id = "device"+i;
-                        divDevice.value = devices[i].deviceId;
-                        let labelDevice = document.createElement("label");
-                        labelDevice.htmlFor = "device"+i;
-                        labelDevice.innerText = devices[i].label;
-                        if (devices[i].deviceId === currentMicId) {
-                            divDevice.checked = true;
-                        }
-                        divDevices.appendChild(divDevice);
-                        divDevices.appendChild(labelDevice);
-                        labelDevice.addEventListener("click",function(){
-                            doctor.setInputDevice(devices[i].deviceId);
-                            currentMicId = devices[i].deviceId;
-                        });
-                    }
-                });
-            }
-            else{
-                divDevices.style.display = "none";
-            }
-        });
+        // btnChooseMic.addEventListener("click",function(){
+        //     let divDevices = document.getElementById("divDevices");
+        //     if(btnChooseMic.checked){
+        //         divDevices.style.display = "flex";
+        //         doctor.getMediaDevices().then(function (devices) {
+        //             let divDevices = document.getElementById("divDevices");
+        //             divDevices.innerHTML = "";
+        //             for(let i = 0; i < devices.length; i++){
+        //                 let divDevice = document.createElement("input");
+        //                 divDevice.type = "radio";
+        //                 divDevice.name = "device";
+        //                 divDevice.id = "device"+i;
+        //                 divDevice.value = devices[i].deviceId;
+        //                 let labelDevice = document.createElement("label");
+        //                 labelDevice.htmlFor = "device"+i;
+        //                 labelDevice.innerText = devices[i].label;
+        //                 if (devices[i].deviceId === currentMicId) {
+        //                     divDevice.checked = true;
+        //                 }
+        //                 divDevices.appendChild(divDevice);
+        //                 divDevices.appendChild(labelDevice);
+        //                 labelDevice.addEventListener("click",function(){
+        //                     doctor.setInputDevice(devices[i].deviceId);
+        //                     currentMicId = devices[i].deviceId;
+        //                 });
+        //             }
+        //         });
+        //     }
+        //     else{
+        //         divDevices.style.display = "none";
+        //     }
+        // });
 
 
 

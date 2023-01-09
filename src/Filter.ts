@@ -112,18 +112,18 @@ class Filter {
     public async defaultAudio(patient,publisher){
         try{
             if(this.audioRecorder != null) this.audioRecorder.stop();
-            //
-            // let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
 
-            let defaultAudio;
-            let patientAudioInputDeviceId = patient.getInputDeviceId();
-            //Version test avec getUserMedia
-            if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
-                defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patientAudioInputDeviceId}, video: false});
-            }
-            else{
-                defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-            }
+            let defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true,video: false})
+
+            // let defaultAudio;
+            // let patientAudioInputDeviceId = patient.getInputDeviceId();
+            // //Version test avec getUserMedia
+            // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
+            //     defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patientAudioInputDeviceId}, video: false});
+            // }
+            // else{
+            //     defaultAudio = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+            // }
 
             let defStreamTrack = defaultAudio.getAudioTracks()[0];
             publisher.setAudioSource(defStreamTrack);
