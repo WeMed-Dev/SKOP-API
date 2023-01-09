@@ -152,6 +152,9 @@ export default class Patient {
             //video streamTrack
             let videoStreamTrack = stream.getVideoTracks()[0];
             this.videoStream = new MediaStream([videoStreamTrack]);
+
+            //input device ID
+            this.inputDeviceID = audioStreamTrack.getSettings().deviceId;
         })
     }
 
