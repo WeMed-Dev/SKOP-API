@@ -1,5 +1,6 @@
 import {saveRecord} from "./functions/request";
 import base64url from "base64url";
+import Patient from "./Patient";
 
 
 class Filter {
@@ -37,7 +38,7 @@ class Filter {
 
         let stream;
         //Version test avec getUserMedia
-        if(patient.getInpuDeviceId() != null || patient.getInpuDeviceId() != undefined){
+        if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
             stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
         }
         else{

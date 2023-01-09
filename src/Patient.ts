@@ -323,11 +323,11 @@ export default class Patient {
     }
 
     public setInputDevice(deviceId:string){
+        this.inputDeviceID = deviceId;
         navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
         })
-        this.inputDeviceID = deviceId;
     }
 
     public publishVideo(boolean:boolean){
