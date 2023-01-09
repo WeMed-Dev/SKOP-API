@@ -29,7 +29,7 @@ class Filter {
      */
     public async ModifyAudio(focus, patient, apiKeyWemed) {
 
-        if (focus == null) {
+        if (focus == undefined) {
             throw new Error("No heartZone given - cannot modify audio");
         }
 

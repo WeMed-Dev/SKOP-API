@@ -14,7 +14,7 @@ module.exports = {
         globalObject: "this",
     },
     mode: 'production',
-    //devtool: "inline-source-map",
+    devtool: "inline-source-map",
     target: "web",
     resolve: {
         extensions: ['.ts','.js'],

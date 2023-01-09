@@ -106,8 +106,9 @@ export default class Patient {
         //---- SIGNALS ----//
         // When a user receive a signal with a heartZone, it modifies the audio input of the user.
         session.on("signal:startSkop", function(event:any) {
-            self.useSkop()
-            console.log("Using Skop - " + event.data);
+            self.useSkop().then( () => {
+                console.log("Using Skop - " + event.data);
+            });
         });
 
 
@@ -152,9 +153,6 @@ export default class Patient {
             //video streamTrack
             let videoStreamTrack = stream.getVideoTracks()[0];
             this.videoStream = new MediaStream([videoStreamTrack]);
-
-            //input device ID
-            this.inputDeviceID = audioStreamTrack.getSettings().deviceId;
         })
     }
 
