@@ -33,17 +33,17 @@ class Filter {
             throw new Error("No heartZone given - cannot modify audio");
         }
 
-        // //Version test avec getUserMedia
-        // let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-
-        let stream;
         //Version test avec getUserMedia
-        if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
-            stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
-        }
-        else{
-            stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-        }
+        let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+
+        // let stream;
+        // //Version test avec getUserMedia
+        // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
+        //     stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
+        // }
+        // else{
+        //     stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        // }
 
 
         let audioSource = this.audioCtx.createMediaStreamSource(stream);

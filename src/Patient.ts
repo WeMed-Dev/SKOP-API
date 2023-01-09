@@ -271,6 +271,7 @@ export default class Patient {
     }
 
     public getInputDeviceId(){
+        console.log(this.inputDeviceID);
         return this.inputDeviceID;
     }
 
