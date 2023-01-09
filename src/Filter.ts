@@ -117,7 +117,7 @@ class Filter {
 
             let defaultAudio;
             //Version test avec getUserMedia
-            if(patient.getInpuDeviceId() != null || patient.getInpuDeviceId() != undefined){
+            if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
                 defaultAudio = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
             }
             else{
