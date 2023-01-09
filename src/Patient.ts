@@ -186,7 +186,7 @@ export default class Patient {
 
     private async stopUsingSkop(){
         this.setUsingSkop(false)
-        await this.filter.defaultAudio(this.publisher);
+        await this.filter.defaultAudio(this,this.publisher);
     }
 
     //--------- AUGMENTED REALITY ---------//
@@ -323,11 +323,12 @@ export default class Patient {
     }
 
     public setInputDevice(deviceId:string){
-        this.inputDeviceID = deviceId;
+        if(deviceId === undefined) throw new Error("Device ID is undefined");
         navigator.mediaDevices.getUserMedia({audio: {deviceId: deviceId}, video: true}).then(stream => {
             //replace the publisher audio source with the new stream
             this.setAudioSource(stream.getAudioTracks()[0]);
         })
+        this.inputDeviceID = deviceId;
     }
 
     public publishVideo(boolean:boolean){
