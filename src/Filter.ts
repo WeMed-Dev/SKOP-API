@@ -27,11 +27,11 @@ class Filter {
      * @param {*} patient instance of the patient class
      * @param {*} apiKeyWemed api key of the wemed server
      */
-    public async ModifyAudio(focus, patient, apiKeyWemed) {
-
+    public async ModifyAudio(focus, patient:Patient, apiKeyWemed) {
         if (focus == undefined) {
             throw new Error("No heartZone given - cannot modify audio");
         }
+
 
         //Version test avec getUserMedia
         let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
@@ -69,11 +69,11 @@ class Filter {
             this.biquadFilter.connect(audioDestination);
         }
 
-        this.recordAudio(audioDestination.stream, patient, apiKeyWemed);
+        //this.recordAudio(audioDestination.stream, patient, apiKeyWemed);
 
         // Sets the OT.publisher Audio Source to be the modified stream.
         patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-        console.log("SKOP : Audio input modified")
+        console.log("Filter.ts - ModifyAudio : Audio is modified for the focus : " + focus);
     }
 
     private recordAudio(stream:MediaStream, patient:any, apiKeyWemed:string){

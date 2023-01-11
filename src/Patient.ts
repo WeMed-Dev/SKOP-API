@@ -15,7 +15,6 @@ export default class Patient {
     // All boolean properties
     private usingSkop: boolean;
     private usingAR: boolean;
-    private skopDetected: boolean = false;
     private faceCamera:boolean = true;
 
     //All API information
@@ -177,10 +176,6 @@ export default class Patient {
     }
 
     private async useSkop(){
-        // if(!this.skopDetected){
-        //     await this.detectSkop()
-        //     this.skopDetected = true;
-        // }
         this.setUsingSkop(true);
         await this.filter.ModifyAudio(this.focus, this , this.apiKeyWemed);
     }
@@ -222,8 +217,12 @@ export default class Patient {
      * Sets the users current's Audio source.
      * @param {MediaStreamTrack} audioSource
      */
-    setAudioSource(audioSource) {
-        this.publisher.setAudioSource(audioSource);
+    setAudioSource(audioSource:MediaStreamTrack) {
+        this.publisher.setAudioSource(audioSource).then(() => {
+            console.log('Audio source changed.');
+        }).catch((error) => {
+            console.error('Error changing audio source', error);
+        });
     }
 
     /**
