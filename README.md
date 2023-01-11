@@ -1,8 +1,6 @@
 
 # SKOP API
 
-[![Size](https://img.shields.io/badge/Size-1.6MB-FFFFFF.svg)]() 
-[![Version](https://img.shields.io/badge/Version-1.1.2-FFFFF.svg)]()
 
 
 The SKOP API enables remote medical appointments using the SKOP®. The SKOP® is a connected stethoscope aimed for patients looking for remote appointments. 
