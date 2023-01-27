@@ -213,6 +213,10 @@ export default class Patient {
 
     //--------- GETTER AND SETTER  ---------//
 
+    public getAudioSource(){
+       return this.publisher.getAudioSource();
+    }
+
     /**
      * Sets the users current's Audio source.
      * @param {MediaStreamTrack} audioSource
@@ -271,6 +275,8 @@ export default class Patient {
         console.log(this.inputDeviceID);
         return this.inputDeviceID;
     }
+
+
 
     //---- SESSION METHODS ----//
     public disconnect(){

@@ -34,10 +34,11 @@ class Filter {
 
 
         //Version test avec getUserMedia
-        let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        //let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
 
+
+        //Version test en récupérant un appareil audio précis
         // let stream;
-        // //Version test avec getUserMedia
         // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
         //     stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
         // }
@@ -45,9 +46,16 @@ class Filter {
         //     stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
         // }
 
+        //Version en récupérant le stream de la classe Patient
+        let patientAudioStreamTrack = patient.getAudioSource();
+        let patientAudioStream = new MediaStream([patientAudioStreamTrack]);
 
-        let audioSource = this.audioCtx.createMediaStreamSource(stream);
+        let audioSource = this.audioCtx.createMediaStreamSource(patientAudioStream);
         let audioDestination = this.audioCtx.createMediaStreamDestination();
+
+
+        // let audioSource = this.audioCtx.createMediaStreamSource(stream);
+        // let audioDestination = this.audioCtx.createMediaStreamDestination();
 
   
 
