@@ -213,15 +213,12 @@ export default class Patient {
 
     //--------- GETTER AND SETTER  ---------//
 
-    public getAudioSource(){
-       return this.publisher.getAudioSource();
-    }
-
     /**
      * Sets the users current's Audio source.
      * @param {MediaStreamTrack} audioSource
      */
     setAudioSource(audioSource:MediaStreamTrack) {
+        console.log("Dans setAudioSource" + audioSource);
         this.publisher.setAudioSource(audioSource).then(() => {
             console.log('Audio source changed.');
         }).catch((error) => {

@@ -16,7 +16,7 @@ class Filter {
 
     constructor(){
         this.gain = 10;
-        this.audioCtx = new window.AudioContext;
+        this.audioCtx = new AudioContext;
         this.biquadFilter = this.audioCtx.createBiquadFilter();
     }
 
@@ -34,30 +34,10 @@ class Filter {
 
 
         //Version test avec getUserMedia
-        //let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
 
-
-        //Version test en récupérant un appareil audio précis
-        // let stream;
-        // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
-        //     stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
-        // }
-        // else{
-        //     stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-        // }
-
-        //Version en récupérant le stream de la classe Patient
-        let patientAudioStreamTrack = patient.getAudioSource();
-        let patientAudioStream = new MediaStream([patientAudioStreamTrack]);
-
-        let audioSource = this.audioCtx.createMediaStreamSource(patientAudioStream);
+        let audioSource = this.audioCtx.createMediaStreamSource(stream);
         let audioDestination = this.audioCtx.createMediaStreamDestination();
-
-
-        // let audioSource = this.audioCtx.createMediaStreamSource(stream);
-        // let audioDestination = this.audioCtx.createMediaStreamDestination();
-
-  
 
         if(focus === Filter.AORTIC || focus === Filter.MITRAL || focus === Filter.TRICUSPID || focus === Filter.PULMONARY){
             this.biquadFilter.type = "lowshelf"; // low shelf filter
