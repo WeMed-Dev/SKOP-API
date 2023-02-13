@@ -16,7 +16,7 @@ class Filter {
 
     constructor(){
         this.gain = 10;
-        this.audioCtx = new window.AudioContext;
+        this.audioCtx = new AudioContext;
         this.biquadFilter = this.audioCtx.createBiquadFilter();
     }
 
@@ -27,29 +27,17 @@ class Filter {
      * @param {*} patient instance of the patient class
      * @param {*} apiKeyWemed api key of the wemed server
      */
-    public async ModifyAudio(focus, patient, apiKeyWemed) {
-
+    public async ModifyAudio(focus, patient:Patient, apiKeyWemed) {
         if (focus == undefined) {
             throw new Error("No heartZone given - cannot modify audio");
         }
 
+
         //Version test avec getUserMedia
         let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
 
-        // let stream;
-        // //Version test avec getUserMedia
-        // if(patient.getInputDeviceId() != null || patient.getInputDeviceId() != undefined){
-        //     stream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: patient.getInputDeviceId()}, video: false});
-        // }
-        // else{
-        //     stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-        // }
-
-
         let audioSource = this.audioCtx.createMediaStreamSource(stream);
         let audioDestination = this.audioCtx.createMediaStreamDestination();
-
-  
 
         if(focus === Filter.AORTIC || focus === Filter.MITRAL || focus === Filter.TRICUSPID || focus === Filter.PULMONARY){
             this.biquadFilter.type = "lowshelf"; // low shelf filter
@@ -69,11 +57,11 @@ class Filter {
             this.biquadFilter.connect(audioDestination);
         }
 
-        this.recordAudio(audioDestination.stream, patient, apiKeyWemed);
+        //this.recordAudio(audioDestination.stream, patient, apiKeyWemed);
 
         // Sets the OT.publisher Audio Source to be the modified stream.
         patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-        console.log("SKOP : Audio input modified")
+        console.log("Filter.ts - ModifyAudio : Audio is modified for the focus : " + focus);
     }
 
     private recordAudio(stream:MediaStream, patient:any, apiKeyWemed:string){
