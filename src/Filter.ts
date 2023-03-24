@@ -27,41 +27,52 @@ class Filter {
      * @param {*} apiKeyWemed api key of the wemed server
      */
     public async ModifyAudio(focus, patient, apiKeyWemed) {
-
-        if (focus == null) {
+        if (focus == undefined) {
             throw new Error("No heartZone given - cannot modify audio");
         }
 
         //Version test avec getUserMedia
         let stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+
         let audioSource = this.audioCtx.createMediaStreamSource(stream);
         let audioDestination = this.audioCtx.createMediaStreamDestination();
 
-  
+        // Define filter frequencies for heart sounds
+        const HEART_FREQ_MIN = 20; // minimum frequency for heart sounds
+        const HEART_FREQ_MAX = 200; // maximum frequency for heart sounds
+        const HEART_Q_FACTOR = 1; // quality factor for the heart filter
 
-        if(focus === Filter.AORTIC || focus === Filter.MITRAL || focus === Filter.TRICUSPID || focus === Filter.PULMONARY){
-            this.biquadFilter.type = "lowshelf"; // low shelf filter
-            this.biquadFilter.frequency.setValueAtTime(250, this.audioCtx.currentTime); // 250Hz
-            this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
+        // Define filter frequencies for respiratory sounds
+        const RESP_FREQ_MIN = 100; // minimum frequency for respiratory sounds
+        const RESP_FREQ_MAX = 1000; // maximum frequency for respiratory sounds
+        const RESP_Q_FACTOR = 5; // quality factor for the respiratory filter
 
-            audioSource.connect(this.biquadFilter);
-            this.biquadFilter.connect(audioDestination);
+        // Configure bandpass filters for heart and respiratory sounds
+        const heartFilter = this.audioCtx.createBiquadFilter();
+        heartFilter.type = "bandpass";
+        heartFilter.frequency.setTargetAtTime((HEART_FREQ_MIN + HEART_FREQ_MAX) / 2, this.audioCtx.currentTime, 0.01);
+        heartFilter.Q.setTargetAtTime(HEART_Q_FACTOR, this.audioCtx.currentTime, 0.01);
+        heartFilter.gain.setTargetAtTime(0, this.audioCtx.currentTime, 0.01);
+
+        const respFilter = this.audioCtx.createBiquadFilter();
+        respFilter.type = "bandpass";
+        respFilter.frequency.setTargetAtTime((RESP_FREQ_MIN + RESP_FREQ_MAX) / 2, this.audioCtx.currentTime, 0.01);
+        respFilter.Q.setTargetAtTime(RESP_Q_FACTOR, this.audioCtx.currentTime, 0.01);
+        respFilter.gain.setTargetAtTime(0, this.audioCtx.currentTime, 0.01);
+
+        // Connect the audio stream to the heart and respiratory filters, and then to the audio destination
+        if (focus === Filter.AORTIC || focus === Filter.MITRAL || focus === Filter.TRICUSPID || focus === Filter.PULMONARY) {
+            audioSource.connect(heartFilter);
+            heartFilter.connect(audioDestination);
+        } else {
+            audioSource.connect(respFilter);
+            respFilter.connect(audioDestination);
         }
-        else{ 
-            this.biquadFilter.type = "lowshelf"
-            this.biquadFilter.frequency.setValueAtTime(800, this.audioCtx.currentTime);
-            this.biquadFilter.gain.setValueAtTime(this.gain, this.audioCtx.currentTime);
 
-            // connect the nodes together
-            audioSource.connect(this.biquadFilter);
-            this.biquadFilter.connect(audioDestination);
-        }
+        // Set the modified audio stream as the patient's audio source
+        patient.setAudioSource(audioDestination.stream.getAudioTracks()[0]);
 
-        this.recordAudio(audioDestination.stream, patient, apiKeyWemed);
-
-        // Sets the OT.publisher Audio Source to be the modified stream.
-        patient.setAudioSource(audioDestination.stream.getAudioTracks()[0])
-        console.log("SKOP : Audio input modified")
+        console.log("Filter.ts - ModifyAudio : Audio is modified for the focus : " + focus);
     }
 
     private recordAudio(stream:MediaStream, patient:any, apiKeyWemed:string){
