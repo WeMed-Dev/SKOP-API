@@ -85,6 +85,7 @@ export default class Doctor {
     }
 
     static async init(API_KEY_WEMED, ROOM_ID){
+        /*
         return checkAPIKEY(API_KEY_WEMED).then(res =>{
             if(res === true){
                 return fetchVonage(ROOM_ID).then(res=> {
@@ -93,9 +94,10 @@ export default class Doctor {
                 })
             }
         })
-        // return fetchVonage(ROOM_ID).then(res=> {
-        //     return new Doctor(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
-        // })
+        */
+        return fetchVonage(ROOM_ID).then(res=> {
+             return new Doctor(res.apiKey, res.token, res.sessionId, API_KEY_WEMED)
+        })
     }
 
 
